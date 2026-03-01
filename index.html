@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROAM Desert Stays — Cleaning Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #F5F0E8;
+    --sand-dark: #E8E0D0;
+    --desert-olive: #5C6B4F;
+    --desert-olive-light: #7A8B6C;
+    --canyon: #8B6F47;
+    --sunset-gold: #D4A04A;
+    --sunset-gold-light: #E8C77B;
+    --adobe-cream: #F2E6D0;
+    --sage: #A3B18A;
+    --sage-light: #DAD7CD;
+    --charcoal: #2C2C2C;
+    --warm-gray: #6B6560;
+    --white: #FEFCF8;
+    --red-alert: #C45B4A;
+    --red-alert-bg: #FDF0ED;
+    --green-ready: #5C8A4F;
+    --green-ready-bg: #EDF5EB;
+    --yellow-progress: #B8932B;
+    --yellow-progress-bg: #FDF8EC;
+    --blue-scheduled: #4A7C8A;
+    --blue-scheduled-bg: #EDF4F6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    color: var(--charcoal);
+    min-height: 100vh;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--desert-olive);
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--sunset-gold);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+
+  .brand span {
+    color: var(--sunset-gold-light);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .last-sync {
+    font-size: 0.8rem;
+    color: var(--sage-light);
+    opacity: 0.8;
+  }
+
+  .refresh-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .refresh-btn:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  .refresh-btn.loading .refresh-icon {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ---- MAIN CONTAINER ---- */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ---- DATE HEADER ---- */
+  .date-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .date-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    letter-spacing: -0.02em;
+  }
+
+  .date-header p {
+    font-size: 0.9rem;
+    color: var(--warm-gray);
+    margin-top: 0.25rem;
+  }
+
+  /* ---- STATS ROW ---- */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid var(--sand-dark);
+    transition: transform 0.15s;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--warm-gray);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .stat-value.green { color: var(--green-ready); }
+  .stat-value.yellow { color: var(--yellow-progress); }
+  .stat-value.blue { color: var(--blue-scheduled); }
+  .stat-value.red { color: var(--red-alert); }
+
+  /* ---- SECTION TITLES ---- */
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-title .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .section-title .dot.green { background: var(--green-ready); }
+  .section-title .dot.blue { background: var(--blue-scheduled); }
+
+  /* ---- PROPERTY CARDS ---- */
+  .property-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .property-card {
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--sand-dark);
+    overflow: hidden;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .property-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+
+  .card-status-bar {
+    height: 4px;
+    width: 100%;
+  }
+
+  .card-status-bar.completed { background: var(--green-ready); }
+  .card-status-bar.in-progress { background: var(--sunset-gold); }
+  .card-status-bar.confirmed { background: var(--blue-scheduled); }
+  .card-status-bar.scheduled { background: var(--sage-light); }
+  .card-status-bar.none { background: var(--sand-dark); }
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .property-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--charcoal);
+  }
+
+  .status-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.3rem 0.65rem;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .status-badge.completed {
+    background: var(--green-ready-bg);
+    color: var(--green-ready);
+  }
+
+  .status-badge.in-progress {
+    background: var(--yellow-progress-bg);
+    color: var(--yellow-progress);
+  }
+
+  .status-badge.confirmed {
+    background: var(--blue-scheduled-bg);
+    color: var(--blue-scheduled);
+  }
+
+  .status-badge.scheduled {
+    background: var(--sage-light);
+    color: var(--warm-gray);
+  }
+
+  .status-badge.none {
+    background: var(--sand-dark);
+    color: var(--warm-gray);
+  }
+
+  .card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .detail-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--warm-gray);
+  }
+
+  .detail-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--charcoal);
+  }
+
+  .detail-value.muted {
+    color: var(--warm-gray);
+    font-style: italic;
+  }
+
+  .report-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 1rem;
+    padding: 0.5rem 0.9rem;
+    background: var(--desert-olive);
+    color: var(--white);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .report-link:hover {
+    background: var(--desert-olive-light);
+  }
+
+  /* ---- UPCOMING TABLE ---- */
+  .upcoming-table-wrapper {
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--sand-dark);
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+  }
+
+  .upcoming-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .upcoming-table thead {
+    background: var(--adobe-cream);
+  }
+
+  .upcoming-table th {
+    text-align: left;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--warm-gray);
+    border-bottom: 1px solid var(--sand-dark);
+  }
+
+  .upcoming-table td {
+    padding: 0.85rem 1.25rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--sand);
+    vertical-align: middle;
+  }
+
+  .upcoming-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .upcoming-table tr:hover td {
+    background: var(--sand);
+  }
+
+  .table-property-name {
+    font-weight: 600;
+    color: var(--charcoal);
+  }
+
+  .table-date {
+    color: var(--warm-gray);
+  }
+
+  .days-away {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+  }
+
+  .days-away.tomorrow {
+    background: var(--yellow-progress-bg);
+    color: var(--yellow-progress);
+  }
+
+  .days-away.soon {
+    background: var(--blue-scheduled-bg);
+    color: var(--blue-scheduled);
+  }
+
+  .days-away.later {
+    background: var(--sand);
+    color: var(--warm-gray);
+  }
+
+  /* ---- EMPTY / LOADING STATES ---- */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--warm-gray);
+  }
+
+  .empty-state .icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty-state h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    color: var(--charcoal);
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-state p {
+    font-size: 0.88rem;
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .loading-shimmer {
+    background: linear-gradient(90deg, var(--sand-dark) 25%, var(--sand) 50%, var(--sand-dark) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+    height: 160px;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ---- SETUP BANNER ---- */
+  .setup-banner {
+    background: var(--adobe-cream);
+    border: 1px solid var(--sunset-gold-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .setup-banner h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    color: var(--canyon);
+    margin-bottom: 0.5rem;
+  }
+
+  .setup-banner p {
+    font-size: 0.88rem;
+    color: var(--warm-gray);
+    line-height: 1.5;
+  }
+
+  .setup-banner code {
+    background: rgba(0,0,0,0.06);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-family: monospace;
+  }
+
+  /* ---- CONFIG MODAL ---- */
+  .config-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .config-overlay.active { display: flex; }
+
+  .config-modal {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  .config-modal h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .config-modal p {
+    font-size: 0.88rem;
+    color: var(--warm-gray);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .config-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--sand-dark);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .config-input:focus {
+    border-color: var(--desert-olive);
+  }
+
+  .config-btn-row {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  .btn-primary {
+    background: var(--desert-olive);
+    color: var(--white);
+    border: none;
+    padding: 0.65rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--desert-olive-light); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--warm-gray);
+    border: 1px solid var(--sand-dark);
+    padding: 0.65rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { background: var(--sand); }
+
+  /* ---- FOOTER ---- */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.78rem;
+    color: var(--warm-gray);
+    opacity: 0.6;
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 768px) {
+    .container { padding: 1.25rem; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .property-grid { grid-template-columns: 1fr; }
+    .header { padding: 1rem; }
+    .brand { font-size: 1.1rem; }
+    .date-header h2 { font-size: 1.3rem; }
+  }
+
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .stat-value { font-size: 1.6rem; }
+    .upcoming-table th, .upcoming-table td { padding: 0.65rem 0.75rem; font-size: 0.82rem; }
+  }
+
+  /* ---- ANIMATE IN ---- */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in:nth-child(1) { animation-delay: 0.05s; }
+  .fade-in:nth-child(2) { animation-delay: 0.1s; }
+  .fade-in:nth-child(3) { animation-delay: 0.15s; }
+  .fade-in:nth-child(4) { animation-delay: 0.2s; }
+  .fade-in:nth-child(5) { animation-delay: 0.25s; }
+  .fade-in:nth-child(6) { animation-delay: 0.3s; }
+  .fade-in:nth-child(7) { animation-delay: 0.35s; }
+  .fade-in:nth-child(8) { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo-icon">R</div>
+    <div class="brand">ROAM Desert <span>Stays</span></div>
+  </div>
+  <div class="header-right">
+    <span class="last-sync" id="lastSync">Last sync: —</span>
+    <button class="refresh-btn" onclick="loadData()">
+      <span class="refresh-icon">↻</span> Refresh
+    </button>
+    <button class="refresh-btn" onclick="openConfig()">⚙</button>
+  </div>
+</div>
+
+<!-- CONFIG MODAL -->
+<div class="config-overlay" id="configOverlay">
+  <div class="config-modal">
+    <h3>Connect Google Sheet</h3>
+    <p>Paste your Google Sheet ID below. This is the long string in the Sheet URL between <code>/d/</code> and <code>/edit</code>.</p>
+    <input type="text" class="config-input" id="sheetIdInput" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms">
+    <p style="font-size: 0.8rem;">The sheet must be shared as "Anyone with the link can view" and have a tab named <code>CleaningLog</code>.</p>
+    <div class="config-btn-row">
+      <button class="btn-secondary" onclick="closeConfig()">Cancel</button>
+      <button class="btn-primary" onclick="saveConfig()">Save & Load</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- DATE HEADER -->
+  <div class="date-header">
+    <h2 id="dateTitle">Today's Cleaning Status</h2>
+    <p id="dateSubtitle"></p>
+  </div>
+
+  <!-- SETUP BANNER (shows when no sheet connected) -->
+  <div class="setup-banner" id="setupBanner" style="display: none;">
+    <h3>🏜 Welcome! Let's connect your data.</h3>
+    <p>Click the ⚙ button in the header to enter your Google Sheet ID. Once connected, this dashboard will automatically display your cleaning status from ResortCleaning emails processed by Zapier.</p>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card fade-in">
+      <div class="stat-label">Total Properties</div>
+      <div class="stat-value" id="statTotal">—</div>
+    </div>
+    <div class="stat-card fade-in">
+      <div class="stat-label">Completed Today</div>
+      <div class="stat-value green" id="statCompleted">—</div>
+    </div>
+    <div class="stat-card fade-in">
+      <div class="stat-label">Confirmed</div>
+      <div class="stat-value blue" id="statConfirmed">—</div>
+    </div>
+    <div class="stat-card fade-in">
+      <div class="stat-label">Scheduled</div>
+      <div class="stat-value yellow" id="statScheduled">—</div>
+    </div>
+  </div>
+
+  <!-- TODAY'S STATUS -->
+  <div class="section-title"><span class="dot green"></span> Today's Properties</div>
+  <div class="property-grid" id="todayGrid">
+    <div class="loading-shimmer"></div>
+    <div class="loading-shimmer"></div>
+  </div>
+
+  <!-- UPCOMING -->
+  <div class="section-title"><span class="dot blue"></span> Upcoming Cleanings</div>
+  <div class="upcoming-table-wrapper">
+    <table class="upcoming-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Service Date</th>
+          <th>Guest Arrival</th>
+          <th>Status</th>
+          <th>When</th>
+        </tr>
+      </thead>
+      <tbody id="upcomingBody">
+        <tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--warm-gray);">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="footer">ROAM Desert Stays — Cleaning Dashboard · Data via ResortCleaning + Zapier + Google Sheets</div>
+
+<script>
+  // ============================================================
+  // CONFIGURATION
+  // ============================================================
+  const PROPERTIES = ['Medina', 'The Vistas', 'Roanoke', 'Gaucho', 'Lobo', 'Kiowa', 'Alley House', 'Mesa Vista'];
+  const SHEET_TAB = 'CleaningLog';
+  const API_KEY_PLACEHOLDER = ''; // Optional: Google Sheets API key for private sheets
+
+  // ============================================================
+  // STATE
+  // ============================================================
+  let sheetId = localStorage.getItem('rds_sheet_id') || '';
+  let allEvents = [];
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  function init() {
+    setDateHeader();
+    if (!sheetId) {
+      showSetupBanner();
+    } else {
+      loadData();
+    }
+  }
+
+  function setDateHeader() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('dateSubtitle').textContent = now.toLocaleDateString('en-US', options);
+  }
+
+  function showSetupBanner() {
+    document.getElementById('setupBanner').style.display = 'block';
+    document.getElementById('todayGrid').innerHTML = '';
+    document.getElementById('upcomingBody').innerHTML = '<tr><td colspan="5" class="empty-state"><p>Connect your Google Sheet to get started.</p></td></tr>';
+    document.getElementById('statTotal').textContent = PROPERTIES.length;
+    document.getElementById('statCompleted').textContent = '—';
+    document.getElementById('statConfirmed').textContent = '—';
+    document.getElementById('statScheduled').textContent = '—';
+  }
+
+  // ============================================================
+  // CONFIG MODAL
+  // ============================================================
+  function openConfig() {
+    document.getElementById('configOverlay').classList.add('active');
+    document.getElementById('sheetIdInput').value = sheetId;
+  }
+
+  function closeConfig() {
+    document.getElementById('configOverlay').classList.remove('active');
+  }
+
+  function saveConfig() {
+    const val = document.getElementById('sheetIdInput').value.trim();
+    if (!val) return;
+    sheetId = val;
+    localStorage.setItem('rds_sheet_id', sheetId);
+    closeConfig();
+    document.getElementById('setupBanner').style.display = 'none';
+    loadData();
+  }
+
+  // ============================================================
+  // DATA LOADING — Google Sheets (public, CSV export)
+  // ============================================================
+  async function loadData() {
+    if (!sheetId) return showSetupBanner();
+
+    const btn = document.querySelector('.refresh-btn');
+    btn.classList.add('loading');
+
+    try {
+      // Fetch sheet as CSV (works for publicly shared sheets)
+      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
+      const resp = await fetch(url);
+      const text = await resp.text();
+
+      // Google wraps response in callback — extract JSON
+      const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
+      if (!jsonStr) throw new Error('Could not parse sheet data. Make sure the sheet is shared publicly.');
+
+      const data = JSON.parse(jsonStr[1]);
+      const cols = data.table.cols.map(c => c.label);
+      const rows = data.table.rows;
+
+      allEvents = rows.map(row => {
+        const obj = {};
+        cols.forEach((col, i) => {
+          const cell = row.c[i];
+          if (!cell) { obj[col] = ''; return; }
+          // Handle date values from Google Sheets
+          if (cell.f) obj[col] = cell.f;
+          else if (cell.v !== null && cell.v !== undefined) obj[col] = cell.v.toString();
+          else obj[col] = '';
+        });
+        return obj;
+      }).filter(e => e['Property'] && e['Property'].trim() !== '');
+
+      renderDashboard();
+      document.getElementById('lastSync').textContent = 'Last sync: ' + new Date().toLocaleTimeString();
+
+    } catch (err) {
+      console.error('Load error:', err);
+      document.getElementById('todayGrid').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">⚠️</div>
+          <h3>Couldn't load data</h3>
+          <p>${err.message}</p>
+        </div>`;
+    }
+
+    btn.classList.remove('loading');
+  }
+
+  // ============================================================
+  // RENDERING
+  // ============================================================
+  function renderDashboard() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const todayStr = formatDateCompare(today);
+
+    // Group events by property, find the most recent/relevant for each
+    const propertyStatus = {};
+    const upcomingEvents = [];
+
+    // Initialize all properties
+    PROPERTIES.forEach(p => {
+      propertyStatus[p] = { status: 'none', event: null };
+    });
+
+    // Process events
+    allEvents.forEach(event => {
+      const prop = event['Property']?.trim();
+      const serviceDate = parseDate(event['Service Date']);
+      const status = (event['Status'] || '').trim().toLowerCase();
+
+      if (!prop || !serviceDate) return;
+
+      const serviceDateStr = formatDateCompare(serviceDate);
+
+      // Today's status
+      if (serviceDateStr === todayStr) {
+        const priority = { 'completed': 4, 'in progress': 3, 'confirmed': 2, 'scheduled': 1 };
+        const existing = propertyStatus[prop];
+        const existingPriority = existing?.event ? (priority[existing.status] || 0) : 0;
+        const newPriority = priority[status] || 0;
+
+        if (newPriority >= existingPriority) {
+          propertyStatus[prop] = { status: status, event: event };
+        }
+      }
+
+      // Upcoming (future dates)
+      if (serviceDate > today) {
+        upcomingEvents.push({ ...event, _serviceDate: serviceDate });
+      }
+    });
+
+    // Sort upcoming by date
+    upcomingEvents.sort((a, b) => a._serviceDate - b._serviceDate);
+
+    // Stats
+    let completed = 0, confirmed = 0, scheduled = 0;
+    Object.values(propertyStatus).forEach(ps => {
+      if (ps.status === 'completed') completed++;
+      else if (ps.status === 'confirmed') confirmed++;
+      else if (ps.status === 'scheduled' || ps.status === 'in progress') scheduled++;
+    });
+
+    document.getElementById('statTotal').textContent = PROPERTIES.length;
+    document.getElementById('statCompleted').textContent = completed;
+    document.getElementById('statConfirmed').textContent = confirmed;
+    document.getElementById('statScheduled').textContent = scheduled;
+
+    // Render today's property cards
+    const grid = document.getElementById('todayGrid');
+    grid.innerHTML = '';
+
+    PROPERTIES.forEach((propName, idx) => {
+      const ps = propertyStatus[propName] || { status: 'none', event: null };
+      const card = createPropertyCard(propName, ps, idx);
+      grid.appendChild(card);
+    });
+
+    // Render upcoming table
+    const tbody = document.getElementById('upcomingBody');
+    if (upcomingEvents.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--warm-gray);">No upcoming cleanings found.</td></tr>';
+    } else {
+      tbody.innerHTML = '';
+      upcomingEvents.slice(0, 15).forEach(event => {
+        const tr = document.createElement('tr');
+        const serviceDate = event._serviceDate;
+        const daysAway = Math.ceil((serviceDate - today) / (1000 * 60 * 60 * 24));
+        const status = (event['Status'] || 'scheduled').trim().toLowerCase();
+
+        let daysLabel = '';
+        let daysClass = 'later';
+        if (daysAway === 1) { daysLabel = 'Tomorrow'; daysClass = 'tomorrow'; }
+        else if (daysAway <= 3) { daysLabel = `${daysAway} days`; daysClass = 'soon'; }
+        else { daysLabel = `${daysAway} days`; daysClass = 'later'; }
+
+        tr.innerHTML = `
+          <td class="table-property-name">${event['Property']}</td>
+          <td class="table-date">${formatDisplayDate(serviceDate)}</td>
+          <td class="table-date">${event['Arrival Date'] || '—'}</td>
+          <td><span class="status-badge ${statusClass(status)}">${statusLabel(status)}</span></td>
+          <td><span class="days-away ${daysClass}">${daysLabel}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  }
+
+  function createPropertyCard(name, ps, idx) {
+    const card = document.createElement('div');
+    card.className = 'property-card fade-in';
+    card.style.animationDelay = `${idx * 0.05}s`;
+
+    const status = ps.status || 'none';
+    const event = ps.event;
+
+    const reportUrl = event?.['Report URL'] || '';
+    const arrivalDate = event?.['Arrival Date'] || '—';
+    const serviceDate = event?.['Service Date'] || '—';
+    const appointmentId = event?.['Appointment ID'] || '';
+    const cleanerName = event?.['Cleaner'] || '—';
+
+    card.innerHTML = `
+      <div class="card-status-bar ${statusClass(status)}"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div class="property-name">${name}</div>
+          <span class="status-badge ${statusClass(status)}">${statusLabel(status)}</span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item">
+            <span class="detail-label">Service Date</span>
+            <span class="detail-value ${!event ? 'muted' : ''}">${event ? serviceDate : 'No cleaning today'}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Next Guest</span>
+            <span class="detail-value ${!event ? 'muted' : ''}">${event ? arrivalDate : '—'}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Cleaner</span>
+            <span class="detail-value ${!event ? 'muted' : ''}">${event ? cleanerName : '—'}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Appt #</span>
+            <span class="detail-value ${!event ? 'muted' : ''}">${event ? appointmentId : '—'}</span>
+          </div>
+        </div>
+        ${reportUrl ? `<a href="${reportUrl}" target="_blank" class="report-link">📋 View Cleaning Report</a>` : ''}
+      </div>
+    `;
+
+    return card;
+  }
+
+  // ============================================================
+  // HELPERS
+  // ============================================================
+  function statusClass(status) {
+    const s = (status || '').toLowerCase();
+    if (s === 'completed') return 'completed';
+    if (s === 'in progress' || s === 'in_progress') return 'in-progress';
+    if (s === 'confirmed') return 'confirmed';
+    if (s === 'scheduled') return 'scheduled';
+    return 'none';
+  }
+
+  function statusLabel(status) {
+    const s = (status || '').toLowerCase();
+    if (s === 'completed') return '✓ Cleaned';
+    if (s === 'in progress' || s === 'in_progress') return 'In Progress';
+    if (s === 'confirmed') return 'Confirmed';
+    if (s === 'scheduled') return 'Scheduled';
+    return 'No Cleaning';
+  }
+
+  function parseDate(str) {
+    if (!str) return null;
+    // Handle MM/DD/YYYY format
+    const parts = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (parts) {
+      return new Date(parseInt(parts[3]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    }
+    // Fallback
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function formatDateCompare(d) {
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function formatDisplayDate(d) {
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  // ============================================================
+  // AUTO-REFRESH every 5 minutes
+  // ============================================================
+  setInterval(() => {
+    if (sheetId) loadData();
+  }, 5 * 60 * 1000);
+
+  // GO
+  init();
+</script>
+
+</body>
+</html>
