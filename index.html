@@ -3,459 +3,777 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ROAM Desert Stays — Cleaning Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+<title>ROAM Desert Stays — Property Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sand: #F5F0E8;
-    --sand-dark: #E8E0D0;
-    --desert-olive: #5C6B4F;
-    --desert-olive-light: #7A8B6C;
-    --canyon: #8B6F47;
+    /* ROAM brand palette - matched from partner deck */
+    --olive: #5C6B4F;
+    --olive-dark: #4A5840;
+    --olive-light: #7A8B6C;
+    --olive-muted: #9EA896;
+    --taupe: #B5A999;
+    --taupe-bg: #C4BAB0;
+    --warm-bg: #D1C7BD;
+    --cream: #EDE6DC;
+    --cream-light: #F5F0E8;
+    --canyon: #8B7355;
     --sunset-gold: #D4A04A;
-    --sunset-gold-light: #E8C77B;
-    --adobe-cream: #F2E6D0;
-    --sage: #A3B18A;
-    --sage-light: #DAD7CD;
-    --charcoal: #2C2C2C;
-    --warm-gray: #6B6560;
+    --sunset-gold-light: #E2C47E;
+    --charcoal: #2A2A2A;
+    --text-warm: #4A453F;
+    --text-muted: #8A8279;
     --white: #FEFCF8;
-    --red-alert: #C45B4A;
-    --red-alert-bg: #FDF0ED;
-    --green-ready: #5C8A4F;
-    --green-ready-bg: #EDF5EB;
-    --yellow-progress: #B8932B;
-    --yellow-progress-bg: #FDF8EC;
-    --blue-scheduled: #4A7C8A;
-    --blue-scheduled-bg: #EDF4F6;
+    
+    /* Status colors - softened to match brand warmth */
+    --status-ready: #5C8A4F;
+    --status-ready-bg: #EDF5EB;
+    --status-progress: #B8932B;
+    --status-progress-bg: #FDF8EC;
+    --status-confirmed: #4A7C8A;
+    --status-confirmed-bg: #EDF4F6;
+    --status-none: #B5A999;
+    --status-none-bg: #EDE6DC;
+
+    /* Maintenance */
+    --urgent: #C0392B;
+    --urgent-bg: #FDECEA;
+    --serif: 'Cormorant Garamond', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  /* ======================== */
+  /*       TAB NAV            */
+  /* ======================== */
+  .tab-nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--cream);
+    display: flex;
+    gap: 0;
+    padding: 0 2rem;
+    position: sticky;
+    top: 64px;
+    z-index: 99;
+  }
+  .tab-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    padding: 0.85rem 1.4rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    letter-spacing: 0.02em;
+  }
+  .tab-btn:hover { color: var(--charcoal); background: var(--cream-light); }
+  .tab-btn.active { color: var(--olive); border-bottom-color: var(--olive); }
+  .tab-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: var(--urgent);
+    color: white;
+    padding: 0.1rem 0.4rem;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .tab-badge.zero { background: var(--olive-muted); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ======================== */
+  /*   MAINTENANCE STYLES     */
+  /* ======================== */
+  .maint-card { background: var(--white); border-radius: 10px; border: 1px solid var(--cream); overflow: hidden; transition: box-shadow 0.2s, transform 0.15s; margin-bottom: 0.85rem; }
+  .maint-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.07); transform: translateY(-1px); }
+  .maint-bar { height: 3px; }
+  .maint-bar.urgent { background: var(--urgent); }
+  .maint-bar.medium { background: var(--sunset-gold); }
+  .maint-bar.low { background: var(--status-ready); }
+  .maint-bar.resolved { background: var(--olive-muted); }
+  .maint-inner { padding: 1.15rem; }
+  .maint-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.5rem; gap: 0.5rem; }
+  .maint-prop { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 700; color: var(--charcoal); }
+  .maint-issue { font-size: 0.88rem; font-weight: 600; color: var(--text-warm); margin-bottom: 0.5rem; }
+  .maint-msg { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem; padding: 0.6rem 0.8rem; background: var(--cream-light); border-radius: 6px; border-left: 3px solid var(--taupe-bg); }
+  .maint-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .maint-meta-item { font-size: 0.75rem; color: var(--text-muted); }
+  .maint-meta-item strong { color: var(--text-warm); font-weight: 600; }
+  .priority-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.5rem; border-radius: 4px; }
+  .priority-badge.urgent { background: var(--urgent-bg); color: var(--urgent); }
+  .priority-badge.medium { background: var(--status-progress-bg); color: var(--status-progress); }
+  .priority-badge.low { background: var(--status-ready-bg); color: var(--status-ready); }
+  .status-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.5rem; border-radius: 4px; }
+  .status-badge.open { background: var(--urgent-bg); color: var(--urgent); }
+  .status-badge.in-progress { background: var(--status-progress-bg); color: var(--status-progress); }
+  .status-badge.resolved { background: var(--status-ready-bg); color: var(--status-ready); }
+  .maint-badges { display: flex; gap: 0.4rem; flex-shrink: 0; }
+
+  .filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
+  .filter-btn { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 600; padding: 0.4rem 0.8rem; border-radius: 20px; border: 1px solid var(--taupe-bg); background: var(--white); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover { background: var(--cream); color: var(--charcoal); }
+  .filter-btn.active { background: var(--olive); color: var(--white); border-color: var(--olive); }
+
+  .maint-empty { text-align: center; padding: 3rem 2rem; }
+  .maint-empty h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--charcoal); margin-bottom: 0.5rem; }
+  .maint-empty p { font-size: 0.85rem; color: var(--text-muted); max-width: 480px; margin: 0 auto; line-height: 1.6; }
+  .maint-setup-box { background: var(--cream); border: 1px solid var(--taupe-bg); border-radius: 8px; padding: 1.25rem; margin-top: 1.25rem; text-align: left; }
+  .maint-setup-box h4 { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-weight: 700; color: var(--canyon); margin-bottom: 0.5rem; }
+  .maint-setup-box ol { font-size: 0.82rem; color: var(--text-warm); line-height: 1.7; padding-left: 1.2rem; }
+  .maint-setup-box code { background: var(--white); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.76rem; }
+
+  .stat-num.c-red { color: var(--urgent); }
+
+  @media (max-width: 768px) {
+    .tab-nav { padding: 0 1rem; }
+    .tab-btn { padding: 0.75rem 0.9rem; font-size: 0.75rem; }
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--sand);
+    background: var(--cream-light);
     color: var(--charcoal);
     min-height: 100vh;
   }
 
-  /* ---- HEADER ---- */
+  /* ======================== */
+  /*        HEADER            */
+  /* ======================== */
   .header {
-    background: var(--desert-olive);
-    padding: 1.25rem 2rem;
+    background: var(--olive);
+    padding: 0 2rem;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
   }
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.85rem;
   }
 
-  .logo-icon {
-    width: 38px;
+  .logo-img {
     height: 38px;
-    background: var(--sunset-gold);
-    border-radius: 8px;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .brand-text {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: var(--white);
-    font-weight: 700;
+    flex-direction: column;
+    line-height: 1;
   }
 
-  .brand {
-    font-family: 'Fraunces', serif;
-    font-size: 1.35rem;
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--white);
-    letter-spacing: -0.02em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
-  .brand span {
+  .brand-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
     color: var(--sunset-gold-light);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 2px;
   }
 
   .header-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .last-sync {
-    font-size: 0.8rem;
-    color: var(--sage-light);
-    opacity: 0.8;
+    font-size: 0.75rem;
+    color: var(--olive-muted);
   }
 
-  .refresh-btn {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: var(--white);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
+  .header-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--cream);
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
-  .refresh-btn:hover {
-    background: rgba(255,255,255,0.2);
-  }
+  .header-btn:hover { background: rgba(255,255,255,0.18); }
+  .header-btn.loading .spin { animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  .refresh-btn.loading .refresh-icon {
-    animation: spin 1s linear infinite;
+  /* ======================== */
+  /*     CONFIG MODAL         */
+  /* ======================== */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(42,42,42,0.45);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
   }
+  .overlay.active { display: flex; }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  /* ---- MAIN CONTAINER ---- */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
+  .modal {
+    background: var(--white);
+    border-radius: 14px;
     padding: 2rem;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.2);
   }
 
-  /* ---- DATE HEADER ---- */
-  .date-header {
+  .modal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 0.4rem;
+  }
+
+  .modal p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .modal code {
+    background: var(--cream);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    font-size: 0.78rem;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--taupe-bg);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--cream-light);
+  }
+
+  .input-field:focus { border-color: var(--olive); }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: flex-end;
+  }
+
+  .btn { padding: 0.6rem 1.3rem; border-radius: 6px; font-family: 'DM Sans'; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s; border: none; }
+  .btn-primary { background: var(--olive); color: var(--white); }
+  .btn-primary:hover { background: var(--olive-dark); }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--taupe-bg); }
+  .btn-ghost:hover { background: var(--cream); }
+
+  /* ======================== */
+  /*     MAIN LAYOUT          */
+  /* ======================== */
+  .main { max-width: 1200px; margin: 0 auto; padding: 1.75rem 2rem; }
+
+  /* Date bar */
+  .date-bar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .date-bar h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    letter-spacing: -0.01em;
+  }
+
+  .date-bar .today {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* ======================== */
+  /*     SETUP BANNER         */
+  /* ======================== */
+  .setup-banner {
+    background: var(--cream);
+    border: 1px solid var(--taupe-bg);
+    border-left: 4px solid var(--sunset-gold);
+    border-radius: 8px;
+    padding: 1.5rem;
     margin-bottom: 1.5rem;
   }
 
-  .date-header h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.6rem;
+  .setup-banner h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
     font-weight: 700;
-    color: var(--charcoal);
-    letter-spacing: -0.02em;
+    color: var(--canyon);
+    margin-bottom: 0.35rem;
   }
 
-  .date-header p {
-    font-size: 0.9rem;
-    color: var(--warm-gray);
-    margin-top: 0.25rem;
-  }
+  .setup-banner p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 
-  /* ---- STATS ROW ---- */
-  .stats-row {
+  /* ======================== */
+  /*      STATS CARDS         */
+  /* ======================== */
+  .stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    gap: 0.85rem;
     margin-bottom: 2rem;
   }
 
-  .stat-card {
+  .stat {
     background: var(--white);
-    border-radius: 12px;
-    padding: 1.25rem;
-    border: 1px solid var(--sand-dark);
-    transition: transform 0.15s;
-  }
-
-  .stat-card:hover {
-    transform: translateY(-2px);
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--cream);
   }
 
   .stat-label {
-    font-size: 0.78rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--warm-gray);
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
   }
 
-  .stat-value {
-    font-family: 'Fraunces', serif;
-    font-size: 2rem;
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.85rem;
     font-weight: 700;
     line-height: 1;
   }
 
-  .stat-value.green { color: var(--green-ready); }
-  .stat-value.yellow { color: var(--yellow-progress); }
-  .stat-value.blue { color: var(--blue-scheduled); }
-  .stat-value.red { color: var(--red-alert); }
+  .stat-num.c-green { color: var(--status-ready); }
+  .stat-num.c-blue { color: var(--status-confirmed); }
+  .stat-num.c-gold { color: var(--status-progress); }
+  .stat-num.c-muted { color: var(--text-muted); }
 
-  /* ---- SECTION TITLES ---- */
-  .section-title {
-    font-family: 'Fraunces', serif;
-    font-size: 1.2rem;
+  /* ======================== */
+  /*     SECTION HEADERS      */
+  /* ======================== */
+  .section-head {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--charcoal);
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .section-title .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+  .section-head::before {
+    content: '';
+    width: 3px;
+    height: 18px;
+    border-radius: 2px;
     display: inline-block;
   }
 
-  .section-title .dot.green { background: var(--green-ready); }
-  .section-title .dot.blue { background: var(--blue-scheduled); }
+  .section-head.green::before { background: var(--olive); }
+  .section-head.gold::before { background: var(--sunset-gold); }
 
-  /* ---- PROPERTY CARDS ---- */
-  .property-grid {
+  /* ======================== */
+  /*    PROPERTY CARDS        */
+  /* ======================== */
+  .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 2.25rem;
   }
 
-  .property-card {
+  .card {
     background: var(--white);
-    border-radius: 14px;
-    border: 1px solid var(--sand-dark);
+    border-radius: 10px;
+    border: 1px solid var(--cream);
     overflow: hidden;
-    transition: all 0.2s;
-    position: relative;
+    transition: box-shadow 0.2s, transform 0.15s;
   }
 
-  .property-card:hover {
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    transform: translateY(-2px);
+  .card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+    transform: translateY(-1px);
   }
 
-  .card-status-bar {
-    height: 4px;
-    width: 100%;
-  }
+  .card-bar { height: 3px; }
+  .card-bar.completed { background: var(--status-ready); }
+  .card-bar.in-progress { background: var(--sunset-gold); }
+  .card-bar.confirmed { background: var(--status-confirmed); }
+  .card-bar.scheduled { background: var(--taupe-bg); }
+  .card-bar.none { background: var(--cream); }
 
-  .card-status-bar.completed { background: var(--green-ready); }
-  .card-status-bar.in-progress { background: var(--sunset-gold); }
-  .card-status-bar.confirmed { background: var(--blue-scheduled); }
-  .card-status-bar.scheduled { background: var(--sage-light); }
-  .card-status-bar.none { background: var(--sand-dark); }
-
-  .card-body {
-    padding: 1.25rem;
-  }
+  .card-inner { padding: 1.15rem; }
 
   .card-top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
   }
 
-  .property-name {
-    font-family: 'Fraunces', serif;
-    font-size: 1.15rem;
+  .prop-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--charcoal);
   }
 
-  .status-badge {
-    font-size: 0.72rem;
+  .badge {
+    font-size: 0.68rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.3rem 0.65rem;
-    border-radius: 20px;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.55rem;
+    border-radius: 4px;
     white-space: nowrap;
   }
 
-  .status-badge.completed {
-    background: var(--green-ready-bg);
-    color: var(--green-ready);
-  }
+  .badge.completed { background: var(--status-ready-bg); color: var(--status-ready); }
+  .badge.in-progress { background: var(--status-progress-bg); color: var(--status-progress); }
+  .badge.confirmed { background: var(--status-confirmed-bg); color: var(--status-confirmed); }
+  .badge.scheduled { background: var(--cream); color: var(--text-muted); }
+  .badge.none { background: var(--cream); color: var(--taupe); }
 
-  .status-badge.in-progress {
-    background: var(--yellow-progress-bg);
-    color: var(--yellow-progress);
-  }
-
-  .status-badge.confirmed {
-    background: var(--blue-scheduled-bg);
-    color: var(--blue-scheduled);
-  }
-
-  .status-badge.scheduled {
-    background: var(--sage-light);
-    color: var(--warm-gray);
-  }
-
-  .status-badge.none {
-    background: var(--sand-dark);
-    color: var(--warm-gray);
-  }
-
-  .card-details {
+  .card-fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.6rem;
+    gap: 0.5rem 1rem;
   }
 
-  .detail-item {
+  .field-label {
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .field-val {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-warm);
+    margin-top: 1px;
+  }
+
+  .field-val.dim { color: var(--taupe); font-style: italic; }
+
+  .report-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.85rem;
+    padding: 0.4rem 0.75rem;
+    background: var(--olive);
+    color: var(--white);
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .report-btn:hover { background: var(--olive-light); }
+
+  /* ======================== */
+  /*    UPCOMING GROUPED       */
+  /* ======================== */
+  .prop-group {
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid var(--cream);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .prop-group-head {
     display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.15rem;
+    background: var(--cream);
+    border-bottom: 1px solid var(--taupe-bg);
   }
-
-  .detail-label {
+  .prop-group-name {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--charcoal);
+  }
+  .prop-group-count {
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--warm-gray);
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: var(--white);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
   }
-
-  .detail-value {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--charcoal);
+  .prop-group-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 1.15rem;
+    border-bottom: 1px solid var(--cream-light);
+    font-size: 0.85rem;
+    color: var(--text-warm);
   }
-
-  .detail-value.muted {
-    color: var(--warm-gray);
+  .prop-group-row:last-child { border-bottom: none; }
+  .prop-group-row:hover { background: var(--cream-light); }
+  .pgr-date { min-width: 7.5rem; font-weight: 600; color: var(--charcoal); }
+  .pgr-arrival { min-width: 7.5rem; color: var(--text-muted); font-size: 0.8rem; }
+  .pgr-badge { margin-left: auto; }
+  .prop-group-empty {
+    padding: 0.9rem 1.15rem;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-muted);
     font-style: italic;
   }
 
-  .report-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    margin-top: 1rem;
-    padding: 0.5rem 0.9rem;
-    background: var(--desert-olive);
-    color: var(--white);
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
+  @media (max-width:600px) {
+    .prop-group-row { flex-wrap: wrap; gap: 0.4rem; }
+    .pgr-date, .pgr-arrival { min-width: auto; }
+    .pgr-badge { margin-left: 0; }
   }
 
-  .report-link:hover {
-    background: var(--desert-olive-light);
-  }
-
-  /* ---- UPCOMING TABLE ---- */
-  .upcoming-table-wrapper {
-    background: var(--white);
-    border-radius: 14px;
-    border: 1px solid var(--sand-dark);
-    overflow: hidden;
-    margin-bottom: 2.5rem;
-  }
-
-  .upcoming-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .upcoming-table thead {
-    background: var(--adobe-cream);
-  }
-
-  .upcoming-table th {
-    text-align: left;
-    padding: 0.85rem 1.25rem;
+  .pill {
     font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .pill.tomorrow { background: var(--status-progress-bg); color: var(--status-progress); }
+  .pill.soon { background: var(--status-confirmed-bg); color: var(--status-confirmed); }
+  .pill.later { background: var(--cream); color: var(--text-muted); }
+
+
+  /* ======================== */
+  /*   ALERT BANNER           */
+  /* ======================== */
+  .alert-section { margin-bottom: 1.5rem; }
+  .alert-card {
+    background: #FEF3F0;
+    border: 1px solid #F5C6BC;
+    border-left: 4px solid var(--urgent);
+    border-radius: 8px;
+    padding: 0.85rem 1.15rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .alert-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .alert-text { font-size: 0.82rem; color: var(--text-warm); line-height: 1.45; }
+  .alert-text strong { color: var(--charcoal); }
+  .alert-text .alert-sub { color: var(--text-muted); font-size: 0.75rem; }
+
+  /* ======================== */
+  /*   TIMELINE VIEW          */
+  /* ======================== */
+  .timeline-section { margin-bottom: 2.25rem; }
+  .timeline-card {
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid var(--cream);
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .timeline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.15rem;
+    background: var(--cream);
+    border-bottom: 1px solid var(--taupe-bg);
+  }
+  .timeline-prop {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--charcoal);
+  }
+  .timeline-date-range {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .timeline-flow {
+    display: flex;
+    align-items: stretch;
+    padding: 1rem 1.15rem;
+    gap: 0;
+  }
+  .timeline-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: 0.5rem 0.25rem;
+  }
+  .timeline-step::after {
+    content: '\2192';
+    position: absolute;
+    right: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--taupe-bg);
+    font-size: 1.1rem;
+    font-weight: 300;
+  }
+  .timeline-step:last-child::after { display: none; }
+  .timeline-step-icon { font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .timeline-step-label {
+    font-size: 0.65rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--warm-gray);
-    border-bottom: 1px solid var(--sand-dark);
+    color: var(--text-muted);
+    margin-bottom: 0.15rem;
   }
+  .timeline-step-val { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
+  .timeline-step-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
+  .timeline-step.ok .timeline-step-icon { color: var(--status-ready); }
+  .timeline-step.warn .timeline-step-icon { color: var(--urgent); }
+  .timeline-step.pending .timeline-step-icon { color: var(--sunset-gold); }
+  .timeline-step.dim .timeline-step-icon { color: var(--taupe); }
 
-  .upcoming-table td {
-    padding: 0.85rem 1.25rem;
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--sand);
+  .timeline-gap {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 0.25rem;
+  }
+  .timeline-gap.tight { background: #FEF3F0; color: var(--urgent); }
+  .timeline-gap.normal { background: var(--status-ready-bg); color: var(--status-ready); }
+  .timeline-gap.wide { background: var(--cream); color: var(--text-muted); }
+
+  /* ======================== */
+  /*   HISTORY TABLE           */
+  /* ======================== */
+  .history-section { margin-bottom: 2rem; }
+  .history-controls { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+  .history-table-wrap {
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid var(--cream);
+    overflow-x: auto;
+  }
+  .history-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .history-table th {
+    background: var(--cream);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    padding: 0.7rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--taupe-bg);
+  }
+  .history-table td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--cream-light);
+    color: var(--text-warm);
     vertical-align: middle;
   }
-
-  .upcoming-table tr:last-child td {
-    border-bottom: none;
+  .history-table tr:last-child td { border-bottom: none; }
+  .history-table tr:hover td { background: var(--cream-light); }
+  .history-note {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-style: italic;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
   }
+  .history-empty { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; }
 
-  .upcoming-table tr:hover td {
-    background: var(--sand);
+  .stats-5 { grid-template-columns: repeat(5, 1fr); }
+  .stat-detail { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .section-head.red::before { background: var(--urgent); }
+  .section-head.blue::before { background: var(--status-confirmed); }
+  .section-head.taupe::before { background: var(--taupe); }
+
+  @media (max-width: 768px) {
+    .stats-5 { grid-template-columns: repeat(3, 1fr); }
+    .timeline-flow { flex-direction: column; gap: 0.25rem; }
+    .timeline-step::after { display: none; }
+    .timeline-step { text-align: left; display: flex; gap: 0.5rem; align-items: center; padding: 0.35rem 0; }
+    .timeline-step-icon { margin-bottom: 0; }
+    .history-table { font-size: 0.75rem; }
+    .history-table th, .history-table td { padding: 0.5rem 0.6rem; }
   }
+  @media (max-width: 480px) { .stats-5 { grid-template-columns: repeat(2, 1fr); } }
 
-  .table-property-name {
-    font-weight: 600;
-    color: var(--charcoal);
-  }
-
-  .table-date {
-    color: var(--warm-gray);
-  }
-
-  .days-away {
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 0.2rem 0.5rem;
-    border-radius: 6px;
-  }
-
-  .days-away.tomorrow {
-    background: var(--yellow-progress-bg);
-    color: var(--yellow-progress);
-  }
-
-  .days-away.soon {
-    background: var(--blue-scheduled-bg);
-    color: var(--blue-scheduled);
-  }
-
-  .days-away.later {
-    background: var(--sand);
-    color: var(--warm-gray);
-  }
-
-  /* ---- EMPTY / LOADING STATES ---- */
-  .empty-state {
+  /* ======================== */
+  /*       FOOTER             */
+  /* ======================== */
+  .footer {
     text-align: center;
-    padding: 3rem 2rem;
-    color: var(--warm-gray);
+    padding: 1.5rem 2rem;
+    font-size: 0.72rem;
+    color: var(--taupe);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  .empty-state .icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-  }
-
-  .empty-state h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.1rem;
-    color: var(--charcoal);
-    margin-bottom: 0.5rem;
-  }
-
-  .empty-state p {
-    font-size: 0.88rem;
-    max-width: 400px;
-    margin: 0 auto;
-    line-height: 1.5;
-  }
-
-  .loading-shimmer {
-    background: linear-gradient(90deg, var(--sand-dark) 25%, var(--sand) 50%, var(--sand-dark) 75%);
+  /* ======================== */
+  /*   LOADING / EMPTY        */
+  /* ======================== */
+  .shimmer {
+    background: linear-gradient(90deg, var(--cream) 25%, var(--cream-light) 50%, var(--cream) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
-    border-radius: 8px;
-    height: 160px;
+    border-radius: 10px;
+    height: 150px;
   }
 
   @keyframes shimmer {
@@ -463,580 +781,841 @@
     100% { background-position: -200% 0; }
   }
 
-  /* ---- SETUP BANNER ---- */
-  .setup-banner {
-    background: var(--adobe-cream);
-    border: 1px solid var(--sunset-gold-light);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-  }
+  .empty { text-align: center; padding: 2.5rem; color: var(--text-muted); }
+  .empty h3 { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--charcoal); margin-bottom: 0.3rem; }
+  .empty p { font-size: 0.85rem; max-width: 360px; margin: 0 auto; line-height: 1.5; }
 
-  .setup-banner h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.05rem;
-    color: var(--canyon);
-    margin-bottom: 0.5rem;
-  }
+  /* ======================== */
+  /*      ANIMATIONS          */
+  /* ======================== */
+  .fade { opacity: 0; transform: translateY(8px); animation: fadeUp 0.35s ease forwards; }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  .fade:nth-child(1) { animation-delay: 0.03s; }
+  .fade:nth-child(2) { animation-delay: 0.06s; }
+  .fade:nth-child(3) { animation-delay: 0.09s; }
+  .fade:nth-child(4) { animation-delay: 0.12s; }
+  .fade:nth-child(5) { animation-delay: 0.15s; }
+  .fade:nth-child(6) { animation-delay: 0.18s; }
+  .fade:nth-child(7) { animation-delay: 0.21s; }
+  .fade:nth-child(8) { animation-delay: 0.24s; }
 
-  .setup-banner p {
-    font-size: 0.88rem;
-    color: var(--warm-gray);
-    line-height: 1.5;
-  }
-
-  .setup-banner code {
-    background: rgba(0,0,0,0.06);
-    padding: 0.15rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.82rem;
-    font-family: monospace;
-  }
-
-  /* ---- CONFIG MODAL ---- */
-  .config-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .config-overlay.active { display: flex; }
-
-  .config-modal {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 2rem;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  }
-
-  .config-modal h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .config-modal p {
-    font-size: 0.88rem;
-    color: var(--warm-gray);
-    margin-bottom: 1.25rem;
-    line-height: 1.5;
-  }
-
-  .config-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--sand-dark);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .config-input:focus {
-    border-color: var(--desert-olive);
-  }
-
-  .config-btn-row {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-  }
-
-  .btn-primary {
-    background: var(--desert-olive);
-    color: var(--white);
-    border: none;
-    padding: 0.65rem 1.5rem;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .btn-primary:hover { background: var(--desert-olive-light); }
-
-  .btn-secondary {
-    background: transparent;
-    color: var(--warm-gray);
-    border: 1px solid var(--sand-dark);
-    padding: 0.65rem 1.5rem;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-secondary:hover { background: var(--sand); }
-
-  /* ---- FOOTER ---- */
-  .footer {
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.78rem;
-    color: var(--warm-gray);
-    opacity: 0.6;
-  }
-
-  /* ---- RESPONSIVE ---- */
+  /* ======================== */
+  /*      RESPONSIVE          */
+  /* ======================== */
   @media (max-width: 768px) {
-    .container { padding: 1.25rem; }
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .property-grid { grid-template-columns: 1fr; }
-    .header { padding: 1rem; }
-    .brand { font-size: 1.1rem; }
-    .date-header h2 { font-size: 1.3rem; }
+    .main { padding: 1.25rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: 1fr; }
+    .header { padding: 0 1rem; }
+    .brand-name { font-size: 1.1rem; }
+    .date-bar h1 { font-size: 1.25rem; }
   }
 
   @media (max-width: 480px) {
-    .stats-row { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .stat-value { font-size: 1.6rem; }
-    .upcoming-table th, .upcoming-table td { padding: 0.65rem 0.75rem; font-size: 0.82rem; }
+    .stats { gap: 0.6rem; }
+    .stat-num { font-size: 1.5rem; }
+    th, td { padding: 0.6rem 0.7rem; font-size: 0.78rem; }
   }
-
-  /* ---- ANIMATE IN ---- */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeIn 0.4s ease forwards;
-  }
-
-  @keyframes fadeIn {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .fade-in:nth-child(1) { animation-delay: 0.05s; }
-  .fade-in:nth-child(2) { animation-delay: 0.1s; }
-  .fade-in:nth-child(3) { animation-delay: 0.15s; }
-  .fade-in:nth-child(4) { animation-delay: 0.2s; }
-  .fade-in:nth-child(5) { animation-delay: 0.25s; }
-  .fade-in:nth-child(6) { animation-delay: 0.3s; }
-  .fade-in:nth-child(7) { animation-delay: 0.35s; }
-  .fade-in:nth-child(8) { animation-delay: 0.4s; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ======== HEADER ======== -->
 <div class="header">
   <div class="header-left">
-    <div class="logo-icon">R</div>
-    <div class="brand">ROAM Desert <span>Stays</span></div>
+    <img class="logo-img" src="data:image/png;base64,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" alt="ROAM Desert Stays">
+    <div class="brand-text">
+      <span class="brand-name">ROAM</span>
+      <span class="brand-sub">Desert Stays</span>
+    </div>
   </div>
   <div class="header-right">
     <span class="last-sync" id="lastSync">Last sync: —</span>
-    <button class="refresh-btn" onclick="loadData()">
-      <span class="refresh-icon">↻</span> Refresh
-    </button>
-    <button class="refresh-btn" onclick="openConfig()">⚙</button>
+    <button class="header-btn" onclick="loadData()"><span class="spin">↻</span> Refresh</button>
+    <button class="header-btn" onclick="openConfig()">⚙</button>
   </div>
 </div>
 
-<!-- CONFIG MODAL -->
-<div class="config-overlay" id="configOverlay">
-  <div class="config-modal">
+
+<!-- ======== TAB NAV ======== -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('cleaning')">
+    <span class="tab-icon">🧹</span> Cleaning
+  </button>
+  <button class="tab-btn" onclick="switchTab('maintenance')">
+    <span class="tab-icon">🔧</span> Maintenance
+    <span class="tab-badge zero" id="maintBadge">0</span>
+  </button>
+</div>
+
+<!-- ======== CONFIG MODAL ======== -->
+<div class="overlay" id="configOverlay">
+  <div class="modal">
     <h3>Connect Google Sheet</h3>
-    <p>Paste your Google Sheet ID below. This is the long string in the Sheet URL between <code>/d/</code> and <code>/edit</code>.</p>
-    <input type="text" class="config-input" id="sheetIdInput" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms">
-    <p style="font-size: 0.8rem;">The sheet must be shared as "Anyone with the link can view" and have a tab named <code>CleaningLog</code>.</p>
-    <div class="config-btn-row">
-      <button class="btn-secondary" onclick="closeConfig()">Cancel</button>
-      <button class="btn-primary" onclick="saveConfig()">Save & Load</button>
+    <p>Paste your Google Sheet ID — the long string between <code>/d/</code> and <code>/edit</code> in the URL.</p>
+    <input type="text" class="input-field" id="sheetIdInput" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjg...">
+    <p style="font-size:0.78rem;">Sheet must be shared as "Anyone with link → Viewer" with tabs named <code>CleaningLog</code> and optionally <code>MaintenanceLog</code>.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeConfig()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveConfig()">Save & Load</button>
     </div>
   </div>
 </div>
 
-<!-- MAIN CONTENT -->
-<div class="container">
+<!-- ======== CLEANING TAB ======== -->
+<div class="tab-panel active" id="tab-cleaning">
+<div class="main">
 
-  <!-- DATE HEADER -->
-  <div class="date-header">
-    <h2 id="dateTitle">Today's Cleaning Status</h2>
-    <p id="dateSubtitle"></p>
+  <div class="date-bar">
+    <h1>Cleaning Dashboard</h1>
+    <span class="today" id="todayDate"></span>
   </div>
 
-  <!-- SETUP BANNER (shows when no sheet connected) -->
-  <div class="setup-banner" id="setupBanner" style="display: none;">
-    <h3>🏜 Welcome! Let's connect your data.</h3>
-    <p>Click the ⚙ button in the header to enter your Google Sheet ID. Once connected, this dashboard will automatically display your cleaning status from ResortCleaning emails processed by Zapier.</p>
+  <div class="setup-banner" id="setupBanner" style="display:none;">
+    <h3>Welcome — let's connect your data</h3>
+    <p>Click the ⚙ button in the header to enter your Google Sheet ID. Once connected, this dashboard will display cleaning status from ResortCleaning emails processed by Zapier.</p>
   </div>
 
-  <!-- STATS ROW -->
-  <div class="stats-row" id="statsRow">
-    <div class="stat-card fade-in">
-      <div class="stat-label">Total Properties</div>
-      <div class="stat-value" id="statTotal">—</div>
-    </div>
-    <div class="stat-card fade-in">
-      <div class="stat-label">Completed Today</div>
-      <div class="stat-value green" id="statCompleted">—</div>
-    </div>
-    <div class="stat-card fade-in">
-      <div class="stat-label">Confirmed</div>
-      <div class="stat-value blue" id="statConfirmed">—</div>
-    </div>
-    <div class="stat-card fade-in">
-      <div class="stat-label">Scheduled</div>
-      <div class="stat-value yellow" id="statScheduled">—</div>
-    </div>
+  <!-- Stats -->
+  <div class="stats stats-5" id="statsRow">
+    <div class="stat fade"><div class="stat-label">Properties</div><div class="stat-num c-muted" id="sTotal">—</div></div>
+    <div class="stat fade"><div class="stat-label">Completed</div><div class="stat-num c-green" id="sCompleted">—</div></div>
+    <div class="stat fade"><div class="stat-label">Confirmed</div><div class="stat-num c-blue" id="sConfirmed">—</div></div>
+    <div class="stat fade"><div class="stat-label">Scheduled</div><div class="stat-num c-gold" id="sScheduled">—</div></div>
+    <div class="stat fade"><div class="stat-label">7-Day Rate</div><div class="stat-num c-green" id="sWeekRate">—</div><div class="stat-detail" id="sWeekDetail"></div></div>
   </div>
 
-  <!-- TODAY'S STATUS -->
-  <div class="section-title"><span class="dot green"></span> Today's Properties</div>
-  <div class="property-grid" id="todayGrid">
-    <div class="loading-shimmer"></div>
-    <div class="loading-shimmer"></div>
+  <!-- Alerts -->
+  <div class="alert-section" id="alertSection" style="display:none;">
+    <div class="section-head red">Needs Attention</div>
+    <div id="alertCards"></div>
   </div>
 
-  <!-- UPCOMING -->
-  <div class="section-title"><span class="dot blue"></span> Upcoming Cleanings</div>
-  <div class="upcoming-table-wrapper">
-    <table class="upcoming-table">
-      <thead>
-        <tr>
-          <th>Property</th>
-          <th>Service Date</th>
-          <th>Guest Arrival</th>
-          <th>Status</th>
-          <th>When</th>
-        </tr>
-      </thead>
-      <tbody id="upcomingBody">
-        <tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--warm-gray);">Loading...</td></tr>
-      </tbody>
-    </table>
+  <!-- Today -->
+  <div class="section-head green">Today's Properties</div>
+  <div class="grid" id="todayGrid"><div class="shimmer"></div><div class="shimmer"></div></div>
+
+  <!-- Turnover Timeline -->
+  <div class="timeline-section" id="timelineSection" style="display:none;">
+    <div class="section-head blue">Turnover Timeline &mdash; Next 7 Days</div>
+    <div id="timelineCards"></div>
+  </div>
+
+  <!-- Upcoming — Next 7 Days Grouped by Property -->
+  <div class="section-head gold">Next 7 Days</div>
+  <div id="upcomingGrouped"><div class="shimmer"></div></div>
+
+  <!-- History -->
+  <div class="history-section">
+    <div class="section-head taupe">Cleaning History &mdash; Past 30 Days</div>
+    <div class="history-controls">
+      <button class="filter-btn active" onclick="filterHistory('all')">All Properties</button>
+      <span id="histPropBtns"></span>
+    </div>
+    <div class="history-table-wrap">
+      <div id="historyContent"><div class="shimmer" style="height:200px;border-radius:0;"></div></div>
+    </div>
   </div>
 
 </div>
 
-<div class="footer">ROAM Desert Stays — Cleaning Dashboard · Data via ResortCleaning + Zapier + Google Sheets</div>
+</div>
+</div>
+
+<!-- ======== MAINTENANCE TAB ======== -->
+<div class="tab-panel" id="tab-maintenance">
+<div class="main">
+
+  <div class="date-bar">
+    <h1>Maintenance Issues</h1>
+    <span class="today" id="maintDate"></span>
+  </div>
+
+  <div class="setup-banner" id="maintSetupBanner" style="display:none;">
+    <h3>Connect Maintenance Tracking</h3>
+    <p>Click the ⚙ button to enter your Google Sheet ID. Your sheet needs a <code>MaintenanceLog</code> tab to track issues from HostBuddy webhooks.</p>
+  </div>
+
+  <!-- Maintenance Stats -->
+  <div class="stats" id="maintStatsRow">
+    <div class="stat fade"><div class="stat-label">Open Issues</div><div class="stat-num c-red" id="mOpen">—</div></div>
+    <div class="stat fade"><div class="stat-label">In Progress</div><div class="stat-num c-gold" id="mProgress">—</div></div>
+    <div class="stat fade"><div class="stat-label">Resolved (30d)</div><div class="stat-num c-green" id="mResolved">—</div></div>
+    <div class="stat fade"><div class="stat-label">Avg Resolution</div><div class="stat-num c-muted" id="mAvgDays">—</div></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar" id="maintFilters">
+    <button class="filter-btn active" onclick="filterMaint('all')">All</button>
+    <button class="filter-btn" onclick="filterMaint('open')">Open</button>
+    <button class="filter-btn" onclick="filterMaint('in-progress')">In Progress</button>
+    <button class="filter-btn" onclick="filterMaint('resolved')">Resolved</button>
+  </div>
+
+  <!-- Issue Cards -->
+  <div id="maintCards">
+    <div class="maint-empty" id="maintEmpty">
+      <h3>No Maintenance Issues Yet</h3>
+      <p>Once connected, guest-reported maintenance issues from HostBuddy will appear here grouped by property and priority.</p>
+      <div class="maint-setup-box">
+        <h4>Quick Setup</h4>
+        <ol>
+          <li>In HostBuddy, set notifications to <strong>Webhook</strong></li>
+          <li>Create a Zapier zap: <strong>Webhooks by Zapier</strong> (trigger) → <strong>Google Sheets</strong> (action)</li>
+          <li>Map to a <code>MaintenanceLog</code> tab with columns:<br>
+            <code>Property</code>, <code>Issue</code>, <code>Guest Message</code>, <code>Guest Name</code>,
+            <code>Priority</code>, <code>Status</code>, <code>Reported Date</code>, <code>Resolved Date</code>, <code>Notes</code></li>
+          <li>Use the same Google Sheet ID as your Cleaning dashboard</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="footer">ROAM Desert Stays · Property Management · Data via ResortCleaning + HostBuddy + Zapier</div>
 
 <script>
-  // ============================================================
-  // CONFIGURATION
-  // ============================================================
-  const PROPERTIES = ['Medina', 'The Vistas', 'Roanoke', 'Gaucho', 'Lobo', 'Kiowa', 'Alley House', 'Mesa Vista'];
-  const SHEET_TAB = 'CleaningLog';
-  const API_KEY_PLACEHOLDER = ''; // Optional: Google Sheets API key for private sheets
+// =============================================
+// CONFIG
+// =============================================
+const PROPERTIES = ['Medina','The Vistas','Roanoke','Gaucho','Lobo','Kiowa','Alley House','Mesa Vista'];
+const SHEET_TAB = 'CleaningLog';
+let sheetId = localStorage.getItem('rds_sheet_id') || '';
+let allEvents = [];
 
-  // ============================================================
-  // STATE
-  // ============================================================
-  let sheetId = localStorage.getItem('rds_sheet_id') || '';
-  let allEvents = [];
+// =============================================
+// INIT
+// =============================================
+function init() {
+  const now = new Date();
+  document.getElementById('todayDate').textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  sheetId ? loadData() : showSetup();
+}
 
-  // ============================================================
-  // INIT
-  // ============================================================
-  function init() {
-    setDateHeader();
-    if (!sheetId) {
-      showSetupBanner();
-    } else {
-      loadData();
-    }
-  }
+function showSetup() {
+  const md = document.getElementById('maintDate'); if(md) md.textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('setupBanner').style.display = 'block';
+  document.getElementById('todayGrid').innerHTML = '';
+  document.getElementById('upcomingGrouped').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Connect your Google Sheet to get started.</div>';
+  ['sTotal','sCompleted','sConfirmed','sScheduled'].forEach(id => document.getElementById(id).textContent = '—');
+  document.getElementById('sTotal').textContent = PROPERTIES.length;
+}
 
-  function setDateHeader() {
-    const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('dateSubtitle').textContent = now.toLocaleDateString('en-US', options);
-  }
+// =============================================
+// CONFIG MODAL
+// =============================================
+function openConfig() { document.getElementById('configOverlay').classList.add('active'); document.getElementById('sheetIdInput').value = sheetId; }
+function closeConfig() { document.getElementById('configOverlay').classList.remove('active'); }
+function saveConfig() {
+  const v = document.getElementById('sheetIdInput').value.trim();
+  if (!v) return;
+  sheetId = v;
+  localStorage.setItem('rds_sheet_id', sheetId);
+  closeConfig();
+  document.getElementById('setupBanner').style.display = 'none';
+  loadData();
+}
 
-  function showSetupBanner() {
-    document.getElementById('setupBanner').style.display = 'block';
-    document.getElementById('todayGrid').innerHTML = '';
-    document.getElementById('upcomingBody').innerHTML = '<tr><td colspan="5" class="empty-state"><p>Connect your Google Sheet to get started.</p></td></tr>';
-    document.getElementById('statTotal').textContent = PROPERTIES.length;
-    document.getElementById('statCompleted').textContent = '—';
-    document.getElementById('statConfirmed').textContent = '—';
-    document.getElementById('statScheduled').textContent = '—';
-  }
+// =============================================
+// LOAD DATA
+// =============================================
+async function loadData() {
+  if (!sheetId) return showSetup();
+  const btn = document.querySelector('.header-btn');
+  btn.classList.add('loading');
 
-  // ============================================================
-  // CONFIG MODAL
-  // ============================================================
-  function openConfig() {
-    document.getElementById('configOverlay').classList.add('active');
-    document.getElementById('sheetIdInput').value = sheetId;
-  }
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
+    const resp = await fetch(url);
+    const text = await resp.text();
+    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
+    if (!match) throw new Error('Could not parse sheet. Ensure it is shared publicly with a "CleaningLog" tab.');
 
-  function closeConfig() {
-    document.getElementById('configOverlay').classList.remove('active');
-  }
+    const data = JSON.parse(match[1]);
+    const cols = data.table.cols.map(c => c.label);
+    const rows = data.table.rows;
 
-  function saveConfig() {
-    const val = document.getElementById('sheetIdInput').value.trim();
-    if (!val) return;
-    sheetId = val;
-    localStorage.setItem('rds_sheet_id', sheetId);
-    closeConfig();
-    document.getElementById('setupBanner').style.display = 'none';
-    loadData();
-  }
-
-  // ============================================================
-  // DATA LOADING — Google Sheets (public, CSV export)
-  // ============================================================
-  async function loadData() {
-    if (!sheetId) return showSetupBanner();
-
-    const btn = document.querySelector('.refresh-btn');
-    btn.classList.add('loading');
-
-    try {
-      // Fetch sheet as CSV (works for publicly shared sheets)
-      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
-      const resp = await fetch(url);
-      const text = await resp.text();
-
-      // Google wraps response in callback — extract JSON
-      const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
-      if (!jsonStr) throw new Error('Could not parse sheet data. Make sure the sheet is shared publicly.');
-
-      const data = JSON.parse(jsonStr[1]);
-      const cols = data.table.cols.map(c => c.label);
-      const rows = data.table.rows;
-
-      allEvents = rows.map(row => {
-        const obj = {};
-        cols.forEach((col, i) => {
-          const cell = row.c[i];
-          if (!cell) { obj[col] = ''; return; }
-          // Handle date values from Google Sheets
-          if (cell.f) obj[col] = cell.f;
-          else if (cell.v !== null && cell.v !== undefined) obj[col] = cell.v.toString();
-          else obj[col] = '';
-        });
-        return obj;
-      }).filter(e => e['Property'] && e['Property'].trim() !== '');
-
-      renderDashboard();
-      document.getElementById('lastSync').textContent = 'Last sync: ' + new Date().toLocaleTimeString();
-
-    } catch (err) {
-      console.error('Load error:', err);
-      document.getElementById('todayGrid').innerHTML = `
-        <div class="empty-state">
-          <div class="icon">⚠️</div>
-          <h3>Couldn't load data</h3>
-          <p>${err.message}</p>
-        </div>`;
-    }
-
-    btn.classList.remove('loading');
-  }
-
-  // ============================================================
-  // RENDERING
-  // ============================================================
-  function renderDashboard() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const todayStr = formatDateCompare(today);
-
-    // Group events by property, find the most recent/relevant for each
-    const propertyStatus = {};
-    const upcomingEvents = [];
-
-    // Initialize all properties
-    PROPERTIES.forEach(p => {
-      propertyStatus[p] = { status: 'none', event: null };
-    });
-
-    // Process events
-    allEvents.forEach(event => {
-      const prop = event['Property']?.trim();
-      const serviceDate = parseDate(event['Service Date']);
-      const status = (event['Status'] || '').trim().toLowerCase();
-
-      if (!prop || !serviceDate) return;
-
-      const serviceDateStr = formatDateCompare(serviceDate);
-
-      // Today's status
-      if (serviceDateStr === todayStr) {
-        const priority = { 'completed': 4, 'in progress': 3, 'confirmed': 2, 'scheduled': 1 };
-        const existing = propertyStatus[prop];
-        const existingPriority = existing?.event ? (priority[existing.status] || 0) : 0;
-        const newPriority = priority[status] || 0;
-
-        if (newPriority >= existingPriority) {
-          propertyStatus[prop] = { status: status, event: event };
-        }
-      }
-
-      // Upcoming (future dates)
-      if (serviceDate > today) {
-        upcomingEvents.push({ ...event, _serviceDate: serviceDate });
-      }
-    });
-
-    // Sort upcoming by date
-    upcomingEvents.sort((a, b) => a._serviceDate - b._serviceDate);
-
-    // Stats
-    let completed = 0, confirmed = 0, scheduled = 0;
-    Object.values(propertyStatus).forEach(ps => {
-      if (ps.status === 'completed') completed++;
-      else if (ps.status === 'confirmed') confirmed++;
-      else if (ps.status === 'scheduled' || ps.status === 'in progress') scheduled++;
-    });
-
-    document.getElementById('statTotal').textContent = PROPERTIES.length;
-    document.getElementById('statCompleted').textContent = completed;
-    document.getElementById('statConfirmed').textContent = confirmed;
-    document.getElementById('statScheduled').textContent = scheduled;
-
-    // Render today's property cards
-    const grid = document.getElementById('todayGrid');
-    grid.innerHTML = '';
-
-    PROPERTIES.forEach((propName, idx) => {
-      const ps = propertyStatus[propName] || { status: 'none', event: null };
-      const card = createPropertyCard(propName, ps, idx);
-      grid.appendChild(card);
-    });
-
-    // Render upcoming table
-    const tbody = document.getElementById('upcomingBody');
-    if (upcomingEvents.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--warm-gray);">No upcoming cleanings found.</td></tr>';
-    } else {
-      tbody.innerHTML = '';
-      upcomingEvents.slice(0, 15).forEach(event => {
-        const tr = document.createElement('tr');
-        const serviceDate = event._serviceDate;
-        const daysAway = Math.ceil((serviceDate - today) / (1000 * 60 * 60 * 24));
-        const status = (event['Status'] || 'scheduled').trim().toLowerCase();
-
-        let daysLabel = '';
-        let daysClass = 'later';
-        if (daysAway === 1) { daysLabel = 'Tomorrow'; daysClass = 'tomorrow'; }
-        else if (daysAway <= 3) { daysLabel = `${daysAway} days`; daysClass = 'soon'; }
-        else { daysLabel = `${daysAway} days`; daysClass = 'later'; }
-
-        tr.innerHTML = `
-          <td class="table-property-name">${event['Property']}</td>
-          <td class="table-date">${formatDisplayDate(serviceDate)}</td>
-          <td class="table-date">${event['Arrival Date'] || '—'}</td>
-          <td><span class="status-badge ${statusClass(status)}">${statusLabel(status)}</span></td>
-          <td><span class="days-away ${daysClass}">${daysLabel}</span></td>
-        `;
-        tbody.appendChild(tr);
+    allEvents = rows.map(row => {
+      const o = {};
+      cols.forEach((c, i) => {
+        const cell = row.c[i];
+        if (!cell) { o[c] = ''; return; }
+        o[c] = cell.f || (cell.v != null ? String(cell.v) : '');
       });
+      return o;
+    }).filter(e => e['Property']?.trim());
+
+    render();
+    loadMaintData();
+    document.getElementById('lastSync').textContent = 'Synced ' + new Date().toLocaleTimeString();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('todayGrid').innerHTML = `<div class="empty"><h3>Couldn't load data</h3><p>${err.message}</p></div>`;
+  }
+  btn.classList.remove('loading');
+}
+
+// =============================================
+// RENDER
+// =============================================
+let historyFilter = 'all';
+
+function render() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = fmtCmp(today);
+
+  const pStatus = {};
+  PROPERTIES.forEach(p => pStatus[p] = { status:'none', event:null });
+
+  allEvents.forEach(ev => {
+    const prop = ev['Property']?.trim();
+    const sd = parseDate(ev['Service Date']);
+    const st = (ev['Status']||'').trim().toLowerCase();
+    if (!prop || !sd) return;
+    if (fmtCmp(sd) === todayStr) {
+      const pri = {completed:4,'in progress':3,confirmed:2,scheduled:1};
+      const cur = pStatus[prop];
+      if ((pri[st]||0) >= (cur?.event ? (pri[cur.status]||0) : 0))
+        pStatus[prop] = { status:st, event:ev };
     }
+  });
+
+  let comp=0, conf=0, sched=0;
+  Object.values(pStatus).forEach(ps => {
+    if (ps.status==='completed') comp++;
+    else if (ps.status==='confirmed') conf++;
+    else if (ps.status==='scheduled'||ps.status==='in progress') sched++;
+  });
+
+  // 7-day completion rate
+  const weekAgo = new Date(today); weekAgo.setDate(weekAgo.getDate() - 7);
+  let weekTotal = 0, weekCompleted = 0;
+  allEvents.forEach(ev => {
+    const sd = parseDate(ev['Service Date']);
+    if (!sd) return;
+    if (sd >= weekAgo && sd <= today) {
+      weekTotal++;
+      if ((ev['Status']||'').trim().toLowerCase() === 'completed') weekCompleted++;
+    }
+  });
+  const weekRate = weekTotal > 0 ? Math.round((weekCompleted / weekTotal) * 100) : 0;
+
+  document.getElementById('sTotal').textContent = PROPERTIES.length;
+  document.getElementById('sCompleted').textContent = comp;
+  document.getElementById('sConfirmed').textContent = conf;
+  document.getElementById('sScheduled').textContent = sched;
+  document.getElementById('sWeekRate').textContent = weekTotal > 0 ? weekRate + '%' : '\u2014';
+  document.getElementById('sWeekDetail').textContent = weekTotal > 0 ? weekCompleted + ' of ' + weekTotal + ' cleanings' : '';
+
+  renderAlerts(today, todayStr);
+
+  const grid = document.getElementById('todayGrid');
+  grid.innerHTML = '';
+  PROPERTIES.forEach((name,i) => {
+    const ps = pStatus[name] || {status:'none',event:null};
+    grid.appendChild(makeCard(name, ps, i));
+  });
+
+  renderTimeline(today);
+  renderUpcoming(today);
+  renderHistory(today);
+}
+
+// =============================================
+// ALERTS
+// =============================================
+function renderAlerts(today, todayStr) {
+  const alertSection = document.getElementById('alertSection');
+  const alertCards = document.getElementById('alertCards');
+  alertCards.innerHTML = '';
+  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = fmtCmp(tomorrow);
+  const alerts = [];
+
+  const arrivalProps = {};
+  allEvents.forEach(ev => {
+    const arr = parseDate(ev['Arrival Date']);
+    const prop = ev['Property']?.trim();
+    if (!arr || !prop) return;
+    const arrStr = fmtCmp(arr);
+    if (arrStr === todayStr || arrStr === tomorrowStr) {
+      if (!arrivalProps[prop + arrStr]) arrivalProps[prop + arrStr] = { prop, arrStr, label: arrStr === todayStr ? 'today' : 'tomorrow' };
+    }
+  });
+
+  Object.values(arrivalProps).forEach(ap => {
+    const hasCleaning = allEvents.some(ce => {
+      const cProp = ce['Property']?.trim();
+      const cDate = parseDate(ce['Service Date']);
+      if (cProp !== ap.prop || !cDate) return false;
+      return fmtCmp(cDate) === todayStr || fmtCmp(cDate) === ap.arrStr;
+    });
+    if (!hasCleaning) alerts.push({ ...ap, type: 'no-cleaning' });
+  });
+
+  allEvents.forEach(ev => {
+    const prop = ev['Property']?.trim();
+    const sd = parseDate(ev['Service Date']);
+    const arr = parseDate(ev['Arrival Date']);
+    const st = (ev['Status']||'').trim().toLowerCase();
+    if (!prop || !sd || !arr) return;
+    if (fmtCmp(sd) === todayStr && fmtCmp(arr) === todayStr && st !== 'completed') {
+      alerts.push({ prop, label: 'same-day turnover — not yet completed', type: 'turnover' });
+    }
+  });
+
+  const seen = new Set();
+  const unique = alerts.filter(a => { const k = a.prop+a.type+a.label; if (seen.has(k)) return false; seen.add(k); return true; });
+
+  if (!unique.length) { alertSection.style.display = 'none'; return; }
+  alertSection.style.display = 'block';
+
+  unique.forEach(a => {
+    const card = document.createElement('div');
+    card.className = 'alert-card fade';
+    if (a.type === 'turnover') {
+      card.innerHTML = `<span class="alert-icon">⚡</span><div class="alert-text"><strong>${a.prop}</strong> — ${a.label}<div class="alert-sub">Guest arrives today and cleaning is not marked complete</div></div>`;
+    } else {
+      card.innerHTML = `<span class="alert-icon">⚠️</span><div class="alert-text"><strong>${a.prop}</strong> — Guest arrives <strong>${a.label}</strong> but no cleaning is scheduled<div class="alert-sub">Check if a turnover is needed</div></div>`;
+    }
+    alertCards.appendChild(card);
+  });
+}
+
+// =============================================
+// TURNOVER TIMELINE
+// =============================================
+function renderTimeline(today) {
+  const section = document.getElementById('timelineSection');
+  const container = document.getElementById('timelineCards');
+  container.innerHTML = '';
+  const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate() + 7);
+
+  const turnovers = [];
+  allEvents.forEach(ev => {
+    const prop = ev['Property']?.trim();
+    const sd = parseDate(ev['Service Date']);
+    if (!prop || !sd) return;
+    if (sd >= today && sd <= weekEnd) {
+      turnovers.push({ prop, serviceDate: sd, arrivalDate: parseDate(ev['Arrival Date']), ev });
+    }
+  });
+
+  if (!turnovers.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  turnovers.sort((a,b) => a.serviceDate - b.serviceDate);
+
+  turnovers.forEach((t, idx) => {
+    const st = (t.ev['Status']||'scheduled').trim().toLowerCase();
+    const cleaner = t.ev['Cleaner'] || '—';
+    let gapHtml = '', gapClass = 'wide';
+    if (t.arrivalDate && t.serviceDate) {
+      const gapDays = Math.round((t.arrivalDate - t.serviceDate) / 864e5);
+      if (gapDays < 0) { gapHtml = 'Arrival before cleaning!'; gapClass = 'tight'; }
+      else if (gapDays === 0) { gapHtml = 'Same day'; gapClass = 'tight'; }
+      else if (gapDays === 1) { gapHtml = '1 day buffer'; gapClass = 'normal'; }
+      else { gapHtml = gapDays + ' day buffer'; gapClass = 'wide'; }
+    }
+
+    let cleanIconClass = 'pending', cleanIcon = '🧹';
+    if (st === 'completed') { cleanIconClass = 'ok'; cleanIcon = '✅'; }
+    else if (st === 'confirmed') { cleanIconClass = 'ok'; cleanIcon = '📋'; }
+    else if (st === 'in progress') { cleanIconClass = 'pending'; cleanIcon = '🔄'; }
+
+    const card = document.createElement('div');
+    card.className = 'timeline-card fade';
+    card.style.animationDelay = `${idx * 0.04}s`;
+    card.innerHTML = `
+      <div class="timeline-header">
+        <span class="timeline-prop">${t.prop}</span>
+        <span class="timeline-date-range">${fmtDisp(t.serviceDate)}</span>
+      </div>
+      <div class="timeline-flow">
+        <div class="timeline-step dim">
+          <div class="timeline-step-icon">🚪</div>
+          <div>
+            <div class="timeline-step-label">Checkout</div>
+            <div class="timeline-step-val">${fmtDisp(t.serviceDate)}</div>
+          </div>
+        </div>
+        <div class="timeline-step ${cleanIconClass}">
+          <div class="timeline-step-icon">${cleanIcon}</div>
+          <div>
+            <div class="timeline-step-label">Cleaning</div>
+            <div class="timeline-step-val">${statusLbl(st)}</div>
+            <div class="timeline-step-sub">${cleaner}</div>
+          </div>
+        </div>
+        <div class="timeline-step ${t.arrivalDate ? 'ok' : 'dim'}">
+          <div class="timeline-step-icon">${t.arrivalDate ? '🏠' : '—'}</div>
+          <div>
+            <div class="timeline-step-label">Next Guest</div>
+            <div class="timeline-step-val">${t.arrivalDate ? fmtDisp(t.arrivalDate) : 'No booking'}</div>
+            ${gapHtml ? `<div class="timeline-gap ${gapClass}">${gapHtml}</div>` : ''}
+          </div>
+        </div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+// =============================================
+// UPCOMING 7 DAYS (with cleaner + notes)
+// =============================================
+function renderUpcoming(today) {
+  const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate() + 7);
+  const upByProp = {};
+  PROPERTIES.forEach(p => upByProp[p] = []);
+
+  allEvents.forEach(ev => {
+    const prop = ev['Property']?.trim();
+    const sd = parseDate(ev['Service Date']);
+    if (!prop || !sd) return;
+    if (sd > today && sd <= weekEnd && upByProp[prop]) upByProp[prop].push({ ...ev, _sd: sd });
+  });
+  Object.values(upByProp).forEach(arr => arr.sort((a,b) => a._sd - b._sd));
+
+  const grouped = document.getElementById('upcomingGrouped');
+  grouped.innerHTML = '';
+
+  PROPERTIES.forEach(name => {
+    const evts = upByProp[name];
+    const grp = document.createElement('div');
+    grp.className = 'prop-group fade';
+    const head = document.createElement('div');
+    head.className = 'prop-group-head';
+    const countLabel = evts.length === 1 ? '1 cleaning' : evts.length + ' cleanings';
+    head.innerHTML = `<span class="prop-group-name">${name}</span>` +
+      (evts.length ? `<span class="prop-group-count">${countLabel}</span>` :
+       `<span class="prop-group-count" style="opacity:0.5">No cleanings</span>`);
+    grp.appendChild(head);
+
+    if (evts.length) {
+      evts.forEach(ev => {
+        const days = Math.ceil((ev._sd - today) / 864e5);
+        const st = (ev['Status']||'scheduled').trim().toLowerCase();
+        const cleaner = ev['Cleaner'] || '';
+        const notes = ev['Notes'] || '';
+        let whenTxt = days === 1 ? 'Tomorrow' : fmtDisp(ev._sd) + ' · ' + days + 'd';
+
+        const row = document.createElement('div');
+        row.className = 'prop-group-row';
+        row.style.flexWrap = 'wrap';
+        let extraLine = '';
+        if (cleaner || notes) {
+          const parts = [];
+          if (cleaner) parts.push('👤 ' + cleaner);
+          if (notes) parts.push('📝 ' + notes);
+          extraLine = `<span style="font-size:0.75rem;color:var(--text-muted);width:100%;padding-top:0.2rem;">${parts.join(' · ')}</span>`;
+        }
+        row.innerHTML = `
+          <span class="pgr-date">${whenTxt}</span>
+          <span class="pgr-arrival">Arrival: ${ev['Arrival Date']||'—'}</span>
+          <span class="pgr-badge"><span class="badge ${statusCls(st)}">${statusLbl(st)}</span></span>
+          ${extraLine}`;
+        grp.appendChild(row);
+      });
+    } else {
+      const empty = document.createElement('div');
+      empty.className = 'prop-group-empty';
+      empty.textContent = 'Clear for the week';
+      grp.appendChild(empty);
+    }
+    grouped.appendChild(grp);
+  });
+}
+
+// =============================================
+// CLEANING HISTORY — Past 30 Days
+// =============================================
+function renderHistory(today) {
+  const thirtyAgo = new Date(today); thirtyAgo.setDate(thirtyAgo.getDate() - 30);
+  const content = document.getElementById('historyContent');
+  const btnContainer = document.getElementById('histPropBtns');
+  btnContainer.innerHTML = '';
+  PROPERTIES.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (historyFilter === name ? ' active' : '');
+    btn.textContent = name;
+    btn.onclick = function() { filterHistory(name); };
+    btnContainer.appendChild(btn);
+  });
+
+  let history = allEvents.filter(ev => {
+    const sd = parseDate(ev['Service Date']);
+    return sd && sd >= thirtyAgo && sd < today;
+  });
+  if (historyFilter !== 'all') history = history.filter(ev => (ev['Property']||'').trim() === historyFilter);
+  history.sort((a,b) => parseDate(b['Service Date']) - parseDate(a['Service Date']));
+
+  if (!history.length) {
+    content.innerHTML = '<div class="history-empty">No cleaning records found for the past 30 days.</div>';
+    return;
   }
 
-  function createPropertyCard(name, ps, idx) {
+  let h = '<table class="history-table"><thead><tr><th>Date</th><th>Property</th><th>Status</th><th>Cleaner</th><th>Next Guest</th><th>Notes</th><th>Report</th></tr></thead><tbody>';
+  history.forEach(ev => {
+    const st = (ev['Status']||'scheduled').trim().toLowerCase();
+    const noteText = (ev['Notes']||'').replace(/"/g, '&quot;');
+    h += `<tr>
+      <td style="font-weight:600;white-space:nowrap;">${ev['Service Date']||'—'}</td>
+      <td>${ev['Property']||'—'}</td>
+      <td><span class="badge ${statusCls(st)}">${statusLbl(st)}</span></td>
+      <td>${ev['Cleaner']||'—'}</td>
+      <td>${ev['Arrival Date']||'—'}</td>
+      <td><span class="history-note" title="${noteText}">${ev['Notes']||'—'}</span></td>
+      <td>${ev['Report URL'] ? `<a href="${ev['Report URL']}" target="_blank" style="color:var(--olive);font-weight:600;text-decoration:none;font-size:0.78rem;">View →</a>` : '—'}</td>
+    </tr>`;
+  });
+  h += '</tbody></table>';
+  content.innerHTML = h;
+}
+
+function filterHistory(filter) {
+  historyFilter = filter;
+  document.querySelectorAll('.history-controls .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === filter || (filter === 'all' && b.textContent === 'All Properties'));
+  });
+  const today = new Date(); today.setHours(0,0,0,0);
+  renderHistory(today);
+}
+
+function makeCard(name, ps, idx) {
+  const c = document.createElement('div');
+  c.className = 'card fade';
+  c.style.animationDelay = `${idx*0.04}s`;
+  const st = ps.status||'none';
+  const ev = ps.event;
+
+  c.innerHTML = `
+    <div class="card-bar ${statusCls(st)}"></div>
+    <div class="card-inner">
+      <div class="card-top">
+        <div class="prop-name">${name}</div>
+        <span class="badge ${statusCls(st)}">${statusLbl(st)}</span>
+      </div>
+      <div class="card-fields">
+        <div><div class="field-label">Service Date</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Service Date']:'No cleaning today'}</div></div>
+        <div><div class="field-label">Next Guest</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Arrival Date']||'—':'—'}</div></div>
+        <div><div class="field-label">Cleaner</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Cleaner']||'—':'—'}</div></div>
+        <div><div class="field-label">Appt #</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Appointment ID']||'—':'—'}</div></div>
+      </div>
+      ${ev?.['Report URL']?`<a href="${ev['Report URL']}" target="_blank" class="report-btn">View Cleaning Report →</a>`:''}
+    </div>`;
+  return c;
+}
+
+// =============================================
+// HELPERS
+// =============================================
+function statusCls(s) {
+  s = (s||'').toLowerCase();
+  if (s==='completed') return 'completed';
+  if (s==='in progress'||s==='in_progress') return 'in-progress';
+  if (s==='confirmed') return 'confirmed';
+  if (s==='scheduled') return 'scheduled';
+  return 'none';
+}
+
+function statusLbl(s) {
+  s = (s||'').toLowerCase();
+  if (s==='completed') return '✓ Cleaned';
+  if (s==='in progress'||s==='in_progress') return 'In Progress';
+  if (s==='confirmed') return 'Confirmed';
+  if (s==='scheduled') return 'Scheduled';
+  return 'No Cleaning';
+}
+
+function parseDate(str) {
+  if (!str) return null;
+  const m = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return new Date(+m[3], +m[1]-1, +m[2]);
+  const d = new Date(str);
+  return isNaN(d) ? null : d;
+}
+
+function fmtCmp(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function fmtDisp(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+
+// Auto-refresh every 5 min
+setInterval(() => { if(sheetId) loadData(); }, 3e5);
+
+
+// =============================================
+// TAB SWITCHING
+// =============================================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  document.querySelector('[onclick="switchTab(\'' + tabId + '\')"]').classList.add('active');
+}
+
+// =============================================
+// MAINTENANCE DATA
+// =============================================
+const MAINT_TAB = 'MaintenanceLog';
+let allMaintIssues = [];
+let maintFilter = 'all';
+
+async function loadMaintData() {
+  if (!sheetId) return;
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(MAINT_TAB)}`;
+    const resp = await fetch(url);
+    const text = await resp.text();
+    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
+    if (!match) { renderMaint(); return; }
+
+    const data = JSON.parse(match[1]);
+    const cols = data.table.cols.map(c => c.label);
+    const rows = data.table.rows;
+
+    allMaintIssues = rows.map(row => {
+      const o = {};
+      cols.forEach((c, i) => {
+        const cell = row.c[i];
+        if (!cell) { o[c] = ''; return; }
+        o[c] = cell.f || (cell.v != null ? String(cell.v) : '');
+      });
+      return o;
+    }).filter(e => e['Property']?.trim());
+
+    renderMaint();
+  } catch (err) {
+    // MaintenanceLog tab may not exist yet — that's OK
+    renderMaint();
+  }
+}
+
+function renderMaint() {
+  const now = new Date();
+  const el = document.getElementById('maintDate');
+  if (el) el.textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+  // Stats
+  const thirtyAgo = new Date(); thirtyAgo.setDate(thirtyAgo.getDate() - 30);
+  let openCount = 0, progressCount = 0, resolvedCount = 0, totalResDays = 0, resCount = 0;
+
+  allMaintIssues.forEach(issue => {
+    const st = (issue['Status']||'open').trim().toLowerCase();
+    if (st === 'open') openCount++;
+    else if (st === 'in progress' || st === 'in-progress') progressCount++;
+    else if (st === 'resolved') {
+      const rd = parseDate(issue['Resolved Date']);
+      if (rd && rd >= thirtyAgo) resolvedCount++;
+      if (rd && issue['Reported Date']) {
+        const rep = parseDate(issue['Reported Date']);
+        if (rep) { totalResDays += Math.ceil((rd - rep) / 864e5); resCount++; }
+      }
+    }
+  });
+
+  document.getElementById('mOpen').textContent = openCount;
+  document.getElementById('mProgress').textContent = progressCount;
+  document.getElementById('mResolved').textContent = resolvedCount;
+  document.getElementById('mAvgDays').textContent = resCount > 0 ? (totalResDays / resCount).toFixed(1) + 'd' : '—';
+
+  // Badge
+  const badge = document.getElementById('maintBadge');
+  badge.textContent = openCount;
+  badge.className = 'tab-badge' + (openCount === 0 ? ' zero' : '');
+
+  // Cards
+  const container = document.getElementById('maintCards');
+  const emptyEl = document.getElementById('maintEmpty');
+
+  // Filter
+  let filtered = allMaintIssues;
+  if (maintFilter !== 'all') {
+    filtered = allMaintIssues.filter(i => {
+      const st = (i['Status']||'open').trim().toLowerCase().replace(/\s+/g, '-');
+      return st === maintFilter;
+    });
+  }
+
+  if (!filtered.length) {
+    container.innerHTML = '';
+    container.appendChild(emptyEl);
+    emptyEl.style.display = 'block';
+    if (allMaintIssues.length && maintFilter !== 'all') {
+      emptyEl.querySelector('h3').textContent = 'No ' + maintFilter.replace('-',' ') + ' issues';
+      emptyEl.querySelector('p').textContent = 'All clear for this filter.';
+      emptyEl.querySelector('.maint-setup-box').style.display = 'none';
+    } else if (!allMaintIssues.length) {
+      emptyEl.querySelector('h3').textContent = 'No Maintenance Issues Yet';
+      emptyEl.querySelector('p').textContent = 'Once connected, guest-reported maintenance issues from HostBuddy will appear here grouped by property and priority.';
+      const sb = emptyEl.querySelector('.maint-setup-box');
+      if (sb) sb.style.display = 'block';
+    }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+
+  // Sort: open urgent first, then open medium, then open low, then in-progress, then resolved
+  const priOrder = {urgent:0, high:0, medium:1, low:2};
+  const stOrder = {open:0, 'in-progress':1, 'in progress':1, resolved:2};
+  filtered.sort((a,b) => {
+    const sa = stOrder[(a['Status']||'open').trim().toLowerCase()] ?? 1;
+    const sb2 = stOrder[(b['Status']||'open').trim().toLowerCase()] ?? 1;
+    if (sa !== sb2) return sa - sb2;
+    const pa = priOrder[(a['Priority']||'medium').trim().toLowerCase()] ?? 1;
+    const pb = priOrder[(b['Priority']||'medium').trim().toLowerCase()] ?? 1;
+    return pa - pb;
+  });
+
+  container.innerHTML = '';
+  filtered.forEach((issue, idx) => {
+    const pri = (issue['Priority']||'medium').trim().toLowerCase();
+    const st = (issue['Status']||'open').trim().toLowerCase();
+    const stCls = st.replace(/\s+/g, '-');
+
     const card = document.createElement('div');
-    card.className = 'property-card fade-in';
-    card.style.animationDelay = `${idx * 0.05}s`;
+    card.className = 'maint-card fade';
+    card.style.animationDelay = `${idx * 0.04}s`;
 
-    const status = ps.status || 'none';
-    const event = ps.event;
+    const barCls = pri === 'urgent' || pri === 'high' ? 'urgent' : pri === 'low' ? 'low' : stCls === 'resolved' ? 'resolved' : 'medium';
 
-    const reportUrl = event?.['Report URL'] || '';
-    const arrivalDate = event?.['Arrival Date'] || '—';
-    const serviceDate = event?.['Service Date'] || '—';
-    const appointmentId = event?.['Appointment ID'] || '';
-    const cleanerName = event?.['Cleaner'] || '—';
+    let msgHtml = '';
+    if (issue['Guest Message']?.trim()) {
+      const msg = issue['Guest Message'].trim();
+      msgHtml = `<div class="maint-msg">"${msg.length > 200 ? msg.substring(0,200) + '…' : msg}"</div>`;
+    }
 
     card.innerHTML = `
-      <div class="card-status-bar ${statusClass(status)}"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="property-name">${name}</div>
-          <span class="status-badge ${statusClass(status)}">${statusLabel(status)}</span>
-        </div>
-        <div class="card-details">
-          <div class="detail-item">
-            <span class="detail-label">Service Date</span>
-            <span class="detail-value ${!event ? 'muted' : ''}">${event ? serviceDate : 'No cleaning today'}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Next Guest</span>
-            <span class="detail-value ${!event ? 'muted' : ''}">${event ? arrivalDate : '—'}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Cleaner</span>
-            <span class="detail-value ${!event ? 'muted' : ''}">${event ? cleanerName : '—'}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Appt #</span>
-            <span class="detail-value ${!event ? 'muted' : ''}">${event ? appointmentId : '—'}</span>
+      <div class="maint-bar ${barCls}"></div>
+      <div class="maint-inner">
+        <div class="maint-top">
+          <div class="maint-prop">${issue['Property']||'Unknown'}</div>
+          <div class="maint-badges">
+            <span class="priority-badge ${barCls}">${pri}</span>
+            <span class="status-badge ${stCls}">${st}</span>
           </div>
         </div>
-        ${reportUrl ? `<a href="${reportUrl}" target="_blank" class="report-link">📋 View Cleaning Report</a>` : ''}
-      </div>
-    `;
+        <div class="maint-issue">${issue['Issue']||'Maintenance Issue'}</div>
+        ${msgHtml}
+        <div class="maint-meta">
+          ${issue['Guest Name'] ? `<div class="maint-meta-item"><strong>Guest:</strong> ${issue['Guest Name']}</div>` : ''}
+          ${issue['Reported Date'] ? `<div class="maint-meta-item"><strong>Reported:</strong> ${issue['Reported Date']}</div>` : ''}
+          ${issue['Resolved Date'] ? `<div class="maint-meta-item"><strong>Resolved:</strong> ${issue['Resolved Date']}</div>` : ''}
+          ${issue['Notes'] ? `<div class="maint-meta-item"><strong>Notes:</strong> ${issue['Notes']}</div>` : ''}
+        </div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
 
-    return card;
-  }
+function filterMaint(filter) {
+  maintFilter = filter;
+  document.querySelectorAll('#maintFilters .filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderMaint();
+}
 
-  // ============================================================
-  // HELPERS
-  // ============================================================
-  function statusClass(status) {
-    const s = (status || '').toLowerCase();
-    if (s === 'completed') return 'completed';
-    if (s === 'in progress' || s === 'in_progress') return 'in-progress';
-    if (s === 'confirmed') return 'confirmed';
-    if (s === 'scheduled') return 'scheduled';
-    return 'none';
-  }
-
-  function statusLabel(status) {
-    const s = (status || '').toLowerCase();
-    if (s === 'completed') return '✓ Cleaned';
-    if (s === 'in progress' || s === 'in_progress') return 'In Progress';
-    if (s === 'confirmed') return 'Confirmed';
-    if (s === 'scheduled') return 'Scheduled';
-    return 'No Cleaning';
-  }
-
-  function parseDate(str) {
-    if (!str) return null;
-    // Handle MM/DD/YYYY format
-    const parts = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-    if (parts) {
-      return new Date(parseInt(parts[3]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-    }
-    // Fallback
-    const d = new Date(str);
-    return isNaN(d.getTime()) ? null : d;
-  }
-
-  function formatDateCompare(d) {
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  }
-
-  function formatDisplayDate(d) {
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
-
-  // ============================================================
-  // AUTO-REFRESH every 5 minutes
-  // ============================================================
-  setInterval(() => {
-    if (sheetId) loadData();
-  }, 5 * 60 * 1000);
-
-  // GO
-  init();
+init();
 </script>
-
 </body>
 </html>
