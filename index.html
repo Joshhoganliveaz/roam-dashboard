@@ -953,7 +953,7 @@
 
   <div class="setup-banner" id="maintSetupBanner" style="display:none;">
     <h3>Connect Maintenance Tracking</h3>
-    <p>Click the ⚙ button to connect your Google Sheet. Your sheet needs a <code>MaintenanceLog</code> tab to track issues from HostBuddy webhooks.</p>
+    <p>Click the ⚙ button to connect your Google Sheet. Your sheet needs a <code>MaintenanceLog</code> tab. HostBuddy sends issues directly via Apps Script webhook.</p>
   </div>
 
   <!-- Maintenance Stats -->
@@ -963,15 +963,6 @@
     <div class="stat fade"><div class="stat-label">Resolved</div><div class="stat-num c-green" id="mResolved">—</div></div>
     <div class="stat fade"><div class="stat-label">Completed (30d)</div><div class="stat-num c-blue" id="mCompleted">—</div></div>
     <div class="stat fade"><div class="stat-label">Avg Resolution</div><div class="stat-num c-muted" id="mAvgDays">—</div></div>
-  </div>
-
-  <!-- Filters -->
-  <div class="filter-bar" id="maintFilters">
-    <button class="filter-btn active" onclick="filterMaint('all')">All</button>
-    <button class="filter-btn" onclick="filterMaint('open')">Open</button>
-    <button class="filter-btn" onclick="filterMaint('in-progress')">In Progress</button>
-    <button class="filter-btn" onclick="filterMaint('resolved')">Resolved</button>
-    <button class="filter-btn" onclick="filterMaint('completed')">Completed</button>
   </div>
 
   <!-- Issue Cards -->
@@ -989,8 +980,8 @@
             <code>Status</code> (open/in-progress/resolved/completed),
             <code>Reported Date</code>, <code>Resolved Date</code>,
             <code>Notes</code></li>
-          <li>In HostBuddy, set notifications to <strong>Webhook</strong></li>
-          <li>Create a Zapier zap: <strong>Webhooks by Zapier</strong> (trigger) → <strong>Google Sheets</strong> (action)</li>
+          <li>In your Google Sheet, go to <strong>Extensions → Apps Script</strong>, paste the webhook receiver code, and deploy as a Web App</li>
+          <li>Copy the Apps Script URL into <strong>HostBuddy's webhook settings</strong></li>
           <li>Paste your Sheet ID in <strong>Settings</strong> (gear icon)</li>
         </ol>
       </div>
@@ -1564,6 +1555,16 @@ function renderMaint() {
   document.getElementById('mCompleted').textContent = completedCount;
   document.getElementById('mAvgDays').textContent = resCount > 0 ? (totalResDays / resCount).toFixed(1) + 'd' : '—';
 
+  // Wire clickable stat cards
+  const maintStatEls = document.querySelectorAll('#maintStatsRow .stat');
+  maintStatEls[0].onclick = function() { filterMaintByStat('open'); };
+  maintStatEls[1].onclick = function() { filterMaintByStat('in-progress'); };
+  maintStatEls[2].onclick = function() { filterMaintByStat('resolved'); };
+  maintStatEls[3].onclick = function() { filterMaintByStat('completed'); };
+  maintStatEls[4].onclick = null;
+  maintStatEls.forEach((el, i) => { if (i <= 3) el.classList.add('clickable'); });
+  updateMaintStatHighlights();
+
   // Badge (open + in-progress = actionable items)
   const badge = document.getElementById('maintBadge');
   const badgeCount = openCount + progressCount;
@@ -1667,13 +1668,19 @@ function renderMaint() {
   });
 }
 
-function filterMaint(filter) {
-  maintFilter = filter;
-  document.querySelectorAll('#maintFilters .filter-btn').forEach(b => {
-    const btnFilter = b.textContent.trim().toLowerCase().replace(/\s+/g, '-');
-    b.classList.toggle('active', filter === 'all' ? btnFilter === 'all' : btnFilter === filter);
-  });
+function filterMaintByStat(status) {
+  maintFilter = (maintFilter === status) ? 'all' : status;
   renderMaint();
+}
+
+function updateMaintStatHighlights() {
+  document.querySelectorAll('#maintStatsRow .stat').forEach(s => s.classList.remove('stat-active'));
+  if (maintFilter === 'all') return;
+  const map = { 'open': 0, 'in-progress': 1, 'resolved': 2, 'completed': 3 };
+  const idx = map[maintFilter];
+  if (idx !== undefined) {
+    document.querySelectorAll('#maintStatsRow .stat')[idx]?.classList.add('stat-active');
+  }
 }
 
 init();
