@@ -1575,6 +1575,11 @@ function renderMaint() {
   const container = document.getElementById('maintCards');
   const emptyEl = document.getElementById('maintEmpty');
 
+  // Preserve emptyEl before clearing container (innerHTML destroys child nodes)
+  if (emptyEl && emptyEl.parentNode) {
+    emptyEl.parentNode.removeChild(emptyEl);
+  }
+
   // Filter
   let filtered = allMaintIssues;
   if (maintFilter !== 'all') {
@@ -1583,21 +1588,21 @@ function renderMaint() {
 
   if (!filtered.length) {
     container.innerHTML = '';
-    container.appendChild(emptyEl);
-    emptyEl.style.display = 'block';
-    if (allMaintIssues.length && maintFilter !== 'all') {
-      emptyEl.querySelector('h3').textContent = 'No ' + maintFilter.replace('-',' ') + ' issues';
-      emptyEl.querySelector('p').textContent = 'All clear for this filter.';
-      emptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'none');
-    } else if (!allMaintIssues.length) {
-      emptyEl.querySelector('h3').textContent = 'No Maintenance Issues Yet';
-      emptyEl.querySelector('p').textContent = 'Once connected, guest-reported maintenance issues from HostBuddy will appear here grouped by property and priority.';
-      emptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'block');
+    if (emptyEl) {
+      container.appendChild(emptyEl);
+      emptyEl.style.display = 'block';
+      if (allMaintIssues.length && maintFilter !== 'all') {
+        emptyEl.querySelector('h3').textContent = 'No ' + maintFilter.replace('-',' ') + ' issues';
+        emptyEl.querySelector('p').textContent = 'All clear for this filter.';
+        emptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'none');
+      } else if (!allMaintIssues.length) {
+        emptyEl.querySelector('h3').textContent = 'No Maintenance Issues Yet';
+        emptyEl.querySelector('p').textContent = 'Once connected, guest-reported maintenance issues from HostBuddy will appear here grouped by property and priority.';
+        emptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'block');
+      }
     }
     return;
   }
-
-  emptyEl.style.display = 'none';
 
   // Sort: open urgent first, then in-progress, then resolved, then completed
   const priOrder = {urgent:0, high:0, medium:1, low:2};
