@@ -870,16 +870,16 @@
   <div class="modal">
     <h3>Dashboard Settings</h3>
     <div class="modal-field-group">
-      <label class="modal-field-label">Google Sheet ID</label>
-      <p style="font-size:0.78rem; margin-bottom:0.5rem;">The long string between <code>/d/</code> and <code>/edit</code> in your Sheet URL.</p>
-      <input type="text" class="input-field" id="sheetIdInput" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjg...">
+      <label class="modal-field-label">Airtable Base ID</label>
+      <p style="font-size:0.78rem; margin-bottom:0.5rem;">Found in your Airtable base URL: <code>airtable.com/appXXXXXXXXXXXXXX</code></p>
+      <input type="text" class="input-field" id="baseIdInput" placeholder="e.g. appXXXXXXXXXXXXXX">
     </div>
     <div class="modal-field-group">
-      <label class="modal-field-label">Apps Script URL <span style="font-weight:400;color:var(--text-muted);">(optional — enables status updates)</span></label>
-      <p style="font-size:0.78rem; margin-bottom:0.5rem;">Deploy the provided Apps Script as a web app and paste the URL here.</p>
-      <input type="text" class="input-field" id="appsScriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
+      <label class="modal-field-label">Personal Access Token</label>
+      <p style="font-size:0.78rem; margin-bottom:0.5rem;">Create at <code>airtable.com/create/tokens</code> with <code>data.records:read</code> and <code>data.records:write</code> scopes.</p>
+      <input type="password" class="input-field" id="patInput" placeholder="patXXXXXXXX...">
     </div>
-    <p style="font-size:0.78rem;">Sheet must be shared as "Anyone with link → Viewer" with tabs named <code>CleaningLog</code> and optionally <code>MaintenanceLog</code>.</p>
+    <p style="font-size:0.78rem;">Your Airtable base needs tables named <code>CleaningLog</code> and <code>MaintenanceLog</code>.</p>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeConfig()">Cancel</button>
       <button class="btn btn-primary" onclick="saveConfig()">Save & Load</button>
@@ -898,7 +898,7 @@
 
   <div class="setup-banner" id="setupBanner" style="display:none;">
     <h3>Welcome — let's connect your data</h3>
-    <p>Click the ⚙ button in the header to enter your Google Sheet ID. Once connected, this dashboard will display cleaning status from ResortCleaning emails processed by Zapier.</p>
+    <p>Click the ⚙ button in the header to connect your Airtable base. Once connected, this dashboard will display cleaning status from your CleaningLog table.</p>
   </div>
 
   <!-- Stats -->
@@ -958,7 +958,7 @@
 
   <div class="setup-banner" id="maintSetupBanner" style="display:none;">
     <h3>Connect Maintenance Tracking</h3>
-    <p>Click the ⚙ button to enter your Google Sheet ID. Your sheet needs a <code>MaintenanceLog</code> tab to track issues from HostBuddy webhooks.</p>
+    <p>Click the ⚙ button to connect your Airtable base. Your base needs a <code>MaintenanceLog</code> table to track issues from HostBuddy webhooks.</p>
   </div>
 
   <!-- Maintenance Stats -->
@@ -987,22 +987,16 @@
       <div class="maint-setup-box">
         <h4>Quick Setup</h4>
         <ol>
+          <li>Create a <code>MaintenanceLog</code> table in your Airtable base</li>
+          <li>Add fields: <code>Property</code> (text), <code>Issue</code> (text),
+            <code>Guest Message</code> (long text), <code>Guest Name</code> (text),
+            <code>Priority</code> (single select: urgent/high/medium/low),
+            <code>Status</code> (single select: open/in-progress/resolved/completed),
+            <code>Reported Date</code> (date), <code>Resolved Date</code> (date),
+            <code>Notes</code> (long text)</li>
           <li>In HostBuddy, set notifications to <strong>Webhook</strong></li>
-          <li>Create a Zapier zap: <strong>Webhooks by Zapier</strong> (trigger) → <strong>Google Sheets</strong> (action)</li>
-          <li>Map to a <code>MaintenanceLog</code> tab with columns:<br>
-            <code>Property</code>, <code>Issue</code>, <code>Guest Message</code>, <code>Guest Name</code>,
-            <code>Priority</code>, <code>Status</code>, <code>Reported Date</code>, <code>Resolved Date</code>, <code>Notes</code></li>
-          <li>Use the same Google Sheet ID as your Cleaning dashboard</li>
-        </ol>
-      </div>
-      <div class="maint-setup-box" style="margin-top: 0.75rem;">
-        <h4>Enable Status Updates (Optional)</h4>
-        <ol>
-          <li>In Google Sheets, go to <strong>Extensions &gt; Apps Script</strong></li>
-          <li>Paste the ROAM Maintenance Updater script (provided separately)</li>
-          <li>Click <strong>Deploy &gt; New Deployment</strong></li>
-          <li>Type: <strong>Web app</strong> | Execute as: <strong>Me</strong> | Access: <strong>Anyone</strong></li>
-          <li>Copy the deployment URL and paste it in <strong>Settings</strong> (gear icon)</li>
+          <li>Create a Zapier zap: <strong>Webhooks by Zapier</strong> (trigger) → <strong>Airtable</strong> (action)</li>
+          <li>Paste your Base ID and PAT in <strong>Settings</strong> (gear icon)</li>
         </ol>
       </div>
     </div>
@@ -1011,16 +1005,17 @@
 </div>
 </div>
 
-<div class="footer">ROAM Desert Stays · Property Management · Data via ResortCleaning + HostBuddy + Zapier</div>
+<div class="footer">ROAM Desert Stays · Property Management · Data via Airtable + ResortCleaning + HostBuddy</div>
 
 <script>
 // =============================================
 // CONFIG
 // =============================================
 const PROPERTIES = ['Medina','The Vistas','Roanoke','Gaucho','Lobo','Kiowa','Alley House','Mesa Vista'];
-const SHEET_TAB = 'CleaningLog';
-let sheetId = localStorage.getItem('rds_sheet_id') || '';
-let appsScriptUrl = localStorage.getItem('rds_apps_script_url') || '';
+const CLEANING_TABLE = 'CleaningLog';
+const MAINT_TABLE = 'MaintenanceLog';
+let airtableBaseId = localStorage.getItem('rds_airtable_base') || '';
+let airtablePat = localStorage.getItem('rds_airtable_pat') || '';
 let allEvents = [];
 
 // Maintenance workflow
@@ -1037,14 +1032,14 @@ const MAINT_STATUS_FLOW = {
 function init() {
   const now = new Date();
   document.getElementById('todayDate').textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  sheetId ? loadData() : showSetup();
+  (airtableBaseId && airtablePat) ? loadData() : showSetup();
 }
 
 function showSetup() {
   const md = document.getElementById('maintDate'); if(md) md.textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   document.getElementById('setupBanner').style.display = 'block';
   document.getElementById('todayGrid').innerHTML = '';
-  document.getElementById('upcomingGrouped').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Connect your Google Sheet to get started.</div>';
+  document.getElementById('upcomingGrouped').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Connect your Airtable base to get started.</div>';
   ['sTotal','sCompleted','sConfirmed','sScheduled'].forEach(id => document.getElementById(id).textContent = '—');
   document.getElementById('sTotal').textContent = PROPERTIES.length;
 }
@@ -1052,49 +1047,68 @@ function showSetup() {
 // =============================================
 // CONFIG MODAL
 // =============================================
-function openConfig() { document.getElementById('configOverlay').classList.add('active'); document.getElementById('sheetIdInput').value = sheetId; document.getElementById('appsScriptUrlInput').value = appsScriptUrl; }
+function openConfig() { document.getElementById('configOverlay').classList.add('active'); document.getElementById('baseIdInput').value = airtableBaseId; document.getElementById('patInput').value = airtablePat; }
 function closeConfig() { document.getElementById('configOverlay').classList.remove('active'); }
 function saveConfig() {
-  const v = document.getElementById('sheetIdInput').value.trim();
-  if (!v) return;
-  sheetId = v;
-  localStorage.setItem('rds_sheet_id', sheetId);
-  const scriptUrl = document.getElementById('appsScriptUrlInput').value.trim();
-  appsScriptUrl = scriptUrl;
-  localStorage.setItem('rds_apps_script_url', appsScriptUrl);
+  const baseVal = document.getElementById('baseIdInput').value.trim();
+  const patVal = document.getElementById('patInput').value.trim();
+  if (!baseVal || !patVal) return;
+  airtableBaseId = baseVal;
+  airtablePat = patVal;
+  localStorage.setItem('rds_airtable_base', airtableBaseId);
+  localStorage.setItem('rds_airtable_pat', airtablePat);
   closeConfig();
   document.getElementById('setupBanner').style.display = 'none';
   loadData();
 }
 
 // =============================================
+// AIRTABLE API
+// =============================================
+async function airtableFetch(tableName) {
+  const allRecords = [];
+  let offset = null;
+  do {
+    const params = new URLSearchParams();
+    params.set('filterByFormula', "NOT({Property}='')");
+    if (offset) params.set('offset', offset);
+    const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}?${params.toString()}`;
+    const resp = await fetch(url, { headers: { 'Authorization': 'Bearer ' + airtablePat } });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'Airtable error ' + resp.status);
+    }
+    const data = await resp.json();
+    allRecords.push(...data.records);
+    offset = data.offset || null;
+  } while (offset);
+  return allRecords;
+}
+
+// =============================================
 // LOAD DATA
 // =============================================
 async function loadData() {
-  if (!sheetId) return showSetup();
+  if (!airtableBaseId || !airtablePat) return showSetup();
   const btn = document.querySelector('.header-btn');
   btn.classList.add('loading');
 
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
-    const resp = await fetch(url);
-    const text = await resp.text();
-    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
-    if (!match) throw new Error('Could not parse sheet. Ensure it is shared publicly with a "CleaningLog" tab.');
-
-    const data = JSON.parse(match[1]);
-    const cols = data.table.cols.map(c => c.label);
-    const rows = data.table.rows;
-
-    allEvents = rows.map(row => {
-      const o = {};
-      cols.forEach((c, i) => {
-        const cell = row.c[i];
-        if (!cell) { o[c] = ''; return; }
-        o[c] = cell.f || (cell.v != null ? String(cell.v) : '');
-      });
-      return o;
-    }).filter(e => e['Property']?.trim());
+    const records = await airtableFetch(CLEANING_TABLE);
+    allEvents = records.map(rec => {
+      const f = rec.fields;
+      return {
+        'Property':       f['Property'] || '',
+        'Service Date':   f['Service Date'] || '',
+        'Status':         f['Status'] || '',
+        'Arrival Date':   f['Arrival Date'] || '',
+        'Cleaner':        f['Cleaner'] || '',
+        'Notes':          f['Notes'] || '',
+        'Appointment ID': f['Appointment ID'] || '',
+        'Report URL':     f['Report URL'] || '',
+        '_airtableId':    rec.id
+      };
+    });
 
     render();
     loadMaintData();
@@ -1345,7 +1359,7 @@ function renderUpcoming(today) {
         }
         row.innerHTML = `
           <span class="pgr-date">${whenTxt}</span>
-          <span class="pgr-arrival">Arrival: ${ev['Arrival Date']||'—'}</span>
+          <span class="pgr-arrival">Arrival: ${fmtDateForDisplay(ev['Arrival Date'])}</span>
           <span class="pgr-badge"><span class="badge ${statusCls(st)}">${statusLbl(st)}</span></span>
           ${extraLine}`;
         grp.appendChild(row);
@@ -1393,11 +1407,11 @@ function renderHistory(today) {
     const st = (ev['Status']||'scheduled').trim().toLowerCase();
     const noteText = (ev['Notes']||'').replace(/"/g, '&quot;');
     h += `<tr>
-      <td style="font-weight:600;white-space:nowrap;">${ev['Service Date']||'—'}</td>
+      <td style="font-weight:600;white-space:nowrap;">${fmtDateForDisplay(ev['Service Date'])}</td>
       <td>${ev['Property']||'—'}</td>
       <td><span class="badge ${statusCls(st)}">${statusLbl(st)}</span></td>
       <td>${ev['Cleaner']||'—'}</td>
-      <td>${ev['Arrival Date']||'—'}</td>
+      <td>${fmtDateForDisplay(ev['Arrival Date'])}</td>
       <td><span class="history-note" title="${noteText}">${ev['Notes']||'—'}</span></td>
       <td>${ev['Report URL'] ? `<a href="${ev['Report URL']}" target="_blank" style="color:var(--olive);font-weight:600;text-decoration:none;font-size:0.78rem;">View →</a>` : '—'}</td>
     </tr>`;
@@ -1430,8 +1444,8 @@ function makeCard(name, ps, idx) {
         <span class="badge ${statusCls(st)}">${statusLbl(st)}</span>
       </div>
       <div class="card-fields">
-        <div><div class="field-label">Service Date</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Service Date']:'No cleaning today'}</div></div>
-        <div><div class="field-label">Next Guest</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Arrival Date']||'—':'—'}</div></div>
+        <div><div class="field-label">Service Date</div><div class="field-val ${!ev?'dim':''}">${ev?fmtDateForDisplay(ev['Service Date']):'No cleaning today'}</div></div>
+        <div><div class="field-label">Next Guest</div><div class="field-val ${!ev?'dim':''}">${ev?fmtDateForDisplay(ev['Arrival Date']):'—'}</div></div>
         <div><div class="field-label">Cleaner</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Cleaner']||'—':'—'}</div></div>
         <div><div class="field-label">Appt #</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Appointment ID']||'—':'—'}</div></div>
       </div>
@@ -1463,17 +1477,28 @@ function statusLbl(s) {
 
 function parseDate(str) {
   if (!str) return null;
-  const m = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (m) return new Date(+m[3], +m[1]-1, +m[2]);
+  // Airtable ISO format: YYYY-MM-DD
+  const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return new Date(+iso[1], +iso[2]-1, +iso[3]);
+  // Legacy M/D/YYYY format
+  const mdy = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (mdy) return new Date(+mdy[3], +mdy[1]-1, +mdy[2]);
   const d = new Date(str);
   return isNaN(d) ? null : d;
+}
+
+function fmtDateForDisplay(str) {
+  if (!str) return '---';
+  const d = parseDate(str);
+  if (!d) return str;
+  return d.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
 }
 
 function fmtCmp(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function fmtDisp(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
 
 // Auto-refresh every 5 min
-setInterval(() => { if(sheetId) loadData(); }, 3e5);
+setInterval(() => { if(airtableBaseId && airtablePat) loadData(); }, 3e5);
 
 
 // =============================================
@@ -1489,36 +1514,31 @@ function switchTab(tabId) {
 // =============================================
 // MAINTENANCE DATA
 // =============================================
-const MAINT_TAB = 'MaintenanceLog';
 let allMaintIssues = [];
 let maintFilter = 'all';
 
 async function loadMaintData() {
-  if (!sheetId) return;
+  if (!airtableBaseId || !airtablePat) return;
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(MAINT_TAB)}`;
-    const resp = await fetch(url);
-    const text = await resp.text();
-    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
-    if (!match) { renderMaint(); return; }
-
-    const data = JSON.parse(match[1]);
-    const cols = data.table.cols.map(c => c.label);
-    const rows = data.table.rows;
-
-    allMaintIssues = rows.map(row => {
-      const o = {};
-      cols.forEach((c, i) => {
-        const cell = row.c[i];
-        if (!cell) { o[c] = ''; return; }
-        o[c] = cell.f || (cell.v != null ? String(cell.v) : '');
-      });
-      return o;
-    }).filter(e => e['Property']?.trim());
-
+    const records = await airtableFetch(MAINT_TABLE);
+    allMaintIssues = records.map(rec => {
+      const f = rec.fields;
+      return {
+        'Property':       f['Property'] || '',
+        'Issue':          f['Issue'] || '',
+        'Guest Message':  f['Guest Message'] || '',
+        'Guest Name':     f['Guest Name'] || '',
+        'Priority':       f['Priority'] || 'medium',
+        'Status':         f['Status'] || 'open',
+        'Reported Date':  f['Reported Date'] || '',
+        'Resolved Date':  f['Resolved Date'] || '',
+        'Notes':          f['Notes'] || '',
+        '_airtableId':    rec.id
+      };
+    });
     renderMaint();
   } catch (err) {
-    // MaintenanceLog tab may not exist yet — that's OK
+    console.warn('MaintenanceLog table may not exist yet:', err.message);
     renderMaint();
   }
 }
@@ -1539,33 +1559,40 @@ function showToast(msg, isError) {
   });
 }
 
-function advanceStatus(idx, newStatus) {
-  const issue = allMaintIssues[idx];
+async function advanceStatus(recordId, newStatus) {
+  const issue = allMaintIssues.find(i => i._airtableId === recordId);
   if (!issue) return;
 
-  // Update locally immediately
-  issue['Status'] = newStatus;
-  if (newStatus === 'resolved' && !issue['Resolved Date']) {
-    issue['Resolved Date'] = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
-  }
-  renderMaint();
-  showToast('Status updated to ' + newStatus.replace(/-/g, ' '));
+  const card = document.querySelector('[data-record-id="' + recordId + '"]');
+  if (card) card.classList.add('updating');
 
-  // Persist to Google Sheet via Apps Script (fire and forget)
-  if (appsScriptUrl) {
-    fetch(appsScriptUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify({
-        sheetId: sheetId,
-        tab: MAINT_TAB,
-        property: issue['Property'],
-        issue: issue['Issue'],
-        reportedDate: issue['Reported Date'],
-        newStatus: newStatus,
-        resolvedDate: issue['Resolved Date'] || ''
-      })
-    }).catch(err => console.error('Apps Script sync failed:', err));
+  try {
+    const fieldsToUpdate = { Status: newStatus };
+    if (newStatus === 'resolved' && !issue['Resolved Date']) {
+      fieldsToUpdate['Resolved Date'] = new Date().toISOString().split('T')[0];
+    }
+
+    const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(MAINT_TABLE)}/${recordId}`;
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: { 'Authorization': 'Bearer ' + airtablePat, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: fieldsToUpdate })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'Update failed (' + resp.status + ')');
+    }
+
+    const updated = await resp.json();
+    issue['Status'] = updated.fields['Status'] || newStatus;
+    issue['Resolved Date'] = updated.fields['Resolved Date'] || issue['Resolved Date'];
+    renderMaint();
+    showToast('Status updated to ' + newStatus.replace(/-/g, ' '));
+  } catch (err) {
+    console.error('Status update failed:', err);
+    if (card) card.classList.remove('updating');
+    showToast('Update failed: ' + err.message, true);
   }
 }
 
@@ -1653,11 +1680,12 @@ function renderMaint() {
     const pri = (issue['Priority']||'medium').trim().toLowerCase();
     const st = (issue['Status']||'open').trim().toLowerCase();
     const stCls = st.replace(/\s+/g, '-');
-    const maintIdx = allMaintIssues.indexOf(issue);
+    const recordId = issue._airtableId || '';
 
     const card = document.createElement('div');
     card.className = 'maint-card fade';
     card.style.animationDelay = `${idx * 0.04}s`;
+    if (recordId) card.setAttribute('data-record-id', recordId);
 
     const barCls = pri === 'urgent' || pri === 'high' ? 'urgent' : pri === 'low' ? 'low' : stCls === 'completed' ? 'completed' : stCls === 'resolved' ? 'resolved' : 'medium';
 
@@ -1672,7 +1700,7 @@ function renderMaint() {
     const flow = MAINT_STATUS_FLOW[stCls];
     if (flow && flow.next) {
       actionsHtml = `<div class="maint-actions">
-        <button class="maint-action-btn primary" onclick="advanceStatus(${maintIdx}, '${flow.next}')">${flow.icon} ${flow.label}</button>
+        <button class="maint-action-btn primary" onclick="advanceStatus('${recordId}', '${flow.next}')">${flow.icon} ${flow.label}</button>
       </div>`;
     } else if (stCls === 'completed') {
       actionsHtml = `<div class="maint-actions" style="border-top-color:var(--status-confirmed-bg);">
@@ -1694,8 +1722,8 @@ function renderMaint() {
         ${msgHtml}
         <div class="maint-meta">
           ${issue['Guest Name'] ? `<div class="maint-meta-item"><strong>Guest:</strong> ${issue['Guest Name']}</div>` : ''}
-          ${issue['Reported Date'] ? `<div class="maint-meta-item"><strong>Reported:</strong> ${issue['Reported Date']}</div>` : ''}
-          ${issue['Resolved Date'] ? `<div class="maint-meta-item"><strong>Resolved:</strong> ${issue['Resolved Date']}</div>` : ''}
+          ${issue['Reported Date'] ? `<div class="maint-meta-item"><strong>Reported:</strong> ${fmtDateForDisplay(issue['Reported Date'])}</div>` : ''}
+          ${issue['Resolved Date'] ? `<div class="maint-meta-item"><strong>Resolved:</strong> ${fmtDateForDisplay(issue['Resolved Date'])}</div>` : ''}
           ${issue['Notes'] ? `<div class="maint-meta-item"><strong>Notes:</strong> ${issue['Notes']}</div>` : ''}
         </div>
         ${actionsHtml}
