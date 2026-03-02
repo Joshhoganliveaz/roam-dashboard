@@ -1446,6 +1446,7 @@ function switchTab(tabId) {
 // =============================================
 let allMaintIssues = [];
 let maintFilter = 'all';
+let maintEmptyEl = null; // cached reference to #maintEmpty (survives innerHTML clears)
 
 async function loadMaintData() {
   if (!sheetId) return;
@@ -1573,11 +1574,11 @@ function renderMaint() {
 
   // Cards
   const container = document.getElementById('maintCards');
-  const emptyEl = document.getElementById('maintEmpty');
+  if (!maintEmptyEl) maintEmptyEl = document.getElementById('maintEmpty');
 
-  // Preserve emptyEl before clearing container (innerHTML destroys child nodes)
-  if (emptyEl && emptyEl.parentNode) {
-    emptyEl.parentNode.removeChild(emptyEl);
+  // Detach emptyEl so innerHTML doesn't destroy it
+  if (maintEmptyEl && maintEmptyEl.parentNode) {
+    maintEmptyEl.parentNode.removeChild(maintEmptyEl);
   }
 
   // Filter
@@ -1588,18 +1589,16 @@ function renderMaint() {
 
   if (!filtered.length) {
     container.innerHTML = '';
-    if (emptyEl) {
-      container.appendChild(emptyEl);
-      emptyEl.style.display = 'block';
-      if (allMaintIssues.length && maintFilter !== 'all') {
-        emptyEl.querySelector('h3').textContent = 'No ' + maintFilter.replace('-',' ') + ' issues';
-        emptyEl.querySelector('p').textContent = 'All clear for this filter.';
-        emptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'none');
-      } else if (!allMaintIssues.length) {
-        emptyEl.querySelector('h3').textContent = 'No Maintenance Issues Yet';
-        emptyEl.querySelector('p').textContent = 'Once connected, guest-reported maintenance issues from HostBuddy will appear here grouped by property and priority.';
-        emptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'block');
-      }
+    container.appendChild(maintEmptyEl);
+    maintEmptyEl.style.display = 'block';
+    if (allMaintIssues.length && maintFilter !== 'all') {
+      maintEmptyEl.querySelector('h3').textContent = 'No ' + maintFilter.replace('-',' ') + ' issues';
+      maintEmptyEl.querySelector('p').textContent = 'All clear for this filter.';
+      maintEmptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'none');
+    } else if (!allMaintIssues.length) {
+      maintEmptyEl.querySelector('h3').textContent = 'No Maintenance Issues Yet';
+      maintEmptyEl.querySelector('p').textContent = 'Once connected, guest-reported maintenance issues from HostBuddy will appear here grouped by property and priority.';
+      maintEmptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'block');
     }
     return;
   }
