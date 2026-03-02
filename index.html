@@ -1487,8 +1487,13 @@ function getLocalOverride(issue) {
 }
 
 function setLocalOverride(issue, newStatus) {
+  const existing = getLocalOverride(issue);
   const data = { status: newStatus, updatedAt: new Date().toISOString() };
-  if (newStatus === 'resolved') data.resolvedDate = new Date().toLocaleDateString('en-US');
+  if (newStatus === 'resolved') {
+    data.resolvedDate = new Date().toLocaleDateString('en-US');
+  } else if (newStatus === 'completed') {
+    data.resolvedDate = (existing && existing.resolvedDate) ? existing.resolvedDate : new Date().toLocaleDateString('en-US');
+  }
   localStorage.setItem(makeStatusKey(issue), JSON.stringify(data));
 }
 
@@ -1542,7 +1547,7 @@ function renderMaint() {
     else if (st === 'resolved') resolvedCount++;
     else if (st === 'completed') {
       const rd = parseDate(getEffectiveResolvedDate(issue));
-      if (rd && rd >= thirtyAgo) completedCount++;
+      if (!rd || rd >= thirtyAgo) completedCount++;
       if (rd && issue['Reported Date']) {
         const rep = parseDate(issue['Reported Date']);
         if (rep) { totalResDays += Math.ceil((rd - rep) / 864e5); resCount++; }
