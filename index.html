@@ -1577,8 +1577,13 @@ async function updateIssueStatus(issue, newStatus) {
       resolvedDate: issue['Resolved Date'] || ''
     };
 
+    // mode: no-cors avoids CORS errors from Apps Script redirects.
+    // The POST still reaches Apps Script and updates the sheet —
+    // we just get an opaque response we can't read. The next
+    // auto-refresh (5 min) reconciles with the sheet if needed.
     await fetch(appsScriptUrl, {
       method: 'POST',
+      mode: 'no-cors',
       body: JSON.stringify(payload)
     });
   } catch (err) {
