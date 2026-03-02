@@ -98,6 +98,7 @@
   .maint-bar.medium { background: var(--sunset-gold); }
   .maint-bar.low { background: var(--status-ready); }
   .maint-bar.resolved { background: var(--olive-muted); }
+  .maint-bar.completed { background: var(--status-confirmed); }
   .maint-inner { padding: 1.15rem; }
   .maint-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.5rem; gap: 0.5rem; }
   .maint-prop { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 700; color: var(--charcoal); }
@@ -114,6 +115,7 @@
   .status-badge.open { background: var(--urgent-bg); color: var(--urgent); }
   .status-badge.in-progress { background: var(--status-progress-bg); color: var(--status-progress); }
   .status-badge.resolved { background: var(--status-ready-bg); color: var(--status-ready); }
+  .status-badge.completed { background: var(--status-confirmed-bg); color: var(--status-confirmed); }
   .maint-badges { display: flex; gap: 0.4rem; flex-shrink: 0; }
 
   .filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
@@ -128,6 +130,21 @@
   .maint-setup-box h4 { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-weight: 700; color: var(--canyon); margin-bottom: 0.5rem; }
   .maint-setup-box ol { font-size: 0.82rem; color: var(--text-warm); line-height: 1.7; padding-left: 1.2rem; }
   .maint-setup-box code { background: var(--white); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.76rem; }
+
+  .maint-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--cream); }
+  .maint-action-btn { font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 5px; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.3rem; letter-spacing: 0.02em; }
+  .maint-action-btn.primary { background: var(--olive); color: var(--white); }
+  .maint-action-btn.primary:hover { background: var(--olive-dark); }
+  .maint-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .maint-card.updating { opacity: 0.6; pointer-events: none; }
+  .maint-done-label { font-size: 0.72rem; color: var(--status-confirmed); font-weight: 600; }
+
+  .maint-toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--olive); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500; padding: 0.65rem 1.1rem; border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.15); z-index: 300; opacity: 0; transform: translateY(10px); transition: all 0.3s ease; }
+  .maint-toast.show { opacity: 1; transform: translateY(0); }
+  .maint-toast.error { background: var(--urgent); }
+
+  .modal-field-group { margin-bottom: 1rem; }
+  .modal-field-label { font-size: 0.75rem; font-weight: 600; color: var(--text-warm); margin-bottom: 0.35rem; display: block; }
 
   .stat-num.c-red { color: var(--urgent); }
 
@@ -851,9 +868,17 @@
 <!-- ======== CONFIG MODAL ======== -->
 <div class="overlay" id="configOverlay">
   <div class="modal">
-    <h3>Connect Google Sheet</h3>
-    <p>Paste your Google Sheet ID — the long string between <code>/d/</code> and <code>/edit</code> in the URL.</p>
-    <input type="text" class="input-field" id="sheetIdInput" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjg...">
+    <h3>Dashboard Settings</h3>
+    <div class="modal-field-group">
+      <label class="modal-field-label">Google Sheet ID</label>
+      <p style="font-size:0.78rem; margin-bottom:0.5rem;">The long string between <code>/d/</code> and <code>/edit</code> in your Sheet URL.</p>
+      <input type="text" class="input-field" id="sheetIdInput" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjg...">
+    </div>
+    <div class="modal-field-group">
+      <label class="modal-field-label">Apps Script URL <span style="font-weight:400;color:var(--text-muted);">(optional — enables status updates)</span></label>
+      <p style="font-size:0.78rem; margin-bottom:0.5rem;">Deploy the provided Apps Script as a web app and paste the URL here.</p>
+      <input type="text" class="input-field" id="appsScriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
+    </div>
     <p style="font-size:0.78rem;">Sheet must be shared as "Anyone with link → Viewer" with tabs named <code>CleaningLog</code> and optionally <code>MaintenanceLog</code>.</p>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeConfig()">Cancel</button>
@@ -937,10 +962,11 @@
   </div>
 
   <!-- Maintenance Stats -->
-  <div class="stats" id="maintStatsRow">
+  <div class="stats stats-5" id="maintStatsRow">
     <div class="stat fade"><div class="stat-label">Open Issues</div><div class="stat-num c-red" id="mOpen">—</div></div>
     <div class="stat fade"><div class="stat-label">In Progress</div><div class="stat-num c-gold" id="mProgress">—</div></div>
-    <div class="stat fade"><div class="stat-label">Resolved (30d)</div><div class="stat-num c-green" id="mResolved">—</div></div>
+    <div class="stat fade"><div class="stat-label">Resolved</div><div class="stat-num c-green" id="mResolved">—</div></div>
+    <div class="stat fade"><div class="stat-label">Completed (30d)</div><div class="stat-num c-blue" id="mCompleted">—</div></div>
     <div class="stat fade"><div class="stat-label">Avg Resolution</div><div class="stat-num c-muted" id="mAvgDays">—</div></div>
   </div>
 
@@ -950,6 +976,7 @@
     <button class="filter-btn" onclick="filterMaint('open')">Open</button>
     <button class="filter-btn" onclick="filterMaint('in-progress')">In Progress</button>
     <button class="filter-btn" onclick="filterMaint('resolved')">Resolved</button>
+    <button class="filter-btn" onclick="filterMaint('completed')">Completed</button>
   </div>
 
   <!-- Issue Cards -->
@@ -968,6 +995,16 @@
           <li>Use the same Google Sheet ID as your Cleaning dashboard</li>
         </ol>
       </div>
+      <div class="maint-setup-box" style="margin-top: 0.75rem;">
+        <h4>Enable Status Updates (Optional)</h4>
+        <ol>
+          <li>In Google Sheets, go to <strong>Extensions &gt; Apps Script</strong></li>
+          <li>Paste the ROAM Maintenance Updater script (provided separately)</li>
+          <li>Click <strong>Deploy &gt; New Deployment</strong></li>
+          <li>Type: <strong>Web app</strong> | Execute as: <strong>Me</strong> | Access: <strong>Anyone</strong></li>
+          <li>Copy the deployment URL and paste it in <strong>Settings</strong> (gear icon)</li>
+        </ol>
+      </div>
     </div>
   </div>
 
@@ -983,7 +1020,16 @@
 const PROPERTIES = ['Medina','The Vistas','Roanoke','Gaucho','Lobo','Kiowa','Alley House','Mesa Vista'];
 const SHEET_TAB = 'CleaningLog';
 let sheetId = localStorage.getItem('rds_sheet_id') || '';
+let appsScriptUrl = localStorage.getItem('rds_apps_script_url') || '';
 let allEvents = [];
+
+// Maintenance workflow
+const MAINT_STATUS_FLOW = {
+  'open':        { next: 'in-progress', label: 'Start Work',       icon: '\u{1F527}' },
+  'in-progress': { next: 'resolved',    label: 'Mark Resolved',    icon: '\u2713' },
+  'resolved':    { next: 'completed',   label: 'Mark Completed',   icon: '\u2705' },
+  'completed':   { next: null,          label: null,               icon: null }
+};
 
 // =============================================
 // INIT
@@ -1006,13 +1052,16 @@ function showSetup() {
 // =============================================
 // CONFIG MODAL
 // =============================================
-function openConfig() { document.getElementById('configOverlay').classList.add('active'); document.getElementById('sheetIdInput').value = sheetId; }
+function openConfig() { document.getElementById('configOverlay').classList.add('active'); document.getElementById('sheetIdInput').value = sheetId; document.getElementById('appsScriptUrlInput').value = appsScriptUrl; }
 function closeConfig() { document.getElementById('configOverlay').classList.remove('active'); }
 function saveConfig() {
   const v = document.getElementById('sheetIdInput').value.trim();
   if (!v) return;
   sheetId = v;
   localStorage.setItem('rds_sheet_id', sheetId);
+  const scriptUrl = document.getElementById('appsScriptUrlInput').value.trim();
+  appsScriptUrl = scriptUrl;
+  localStorage.setItem('rds_apps_script_url', appsScriptUrl);
   closeConfig();
   document.getElementById('setupBanner').style.display = 'none';
   loadData();
@@ -1210,14 +1259,6 @@ function renderTimeline(today) {
   turnovers.forEach((t, idx) => {
     const st = (t.ev['Status']||'scheduled').trim().toLowerCase();
     const cleaner = t.ev['Cleaner'] || '—';
-    let gapHtml = '', gapClass = 'wide';
-    if (t.arrivalDate && t.serviceDate) {
-      const gapDays = Math.round((t.arrivalDate - t.serviceDate) / 864e5);
-      if (gapDays < 0) { gapHtml = 'Arrival before cleaning!'; gapClass = 'tight'; }
-      else if (gapDays === 0) { gapHtml = 'Same day'; gapClass = 'tight'; }
-      else if (gapDays === 1) { gapHtml = '1 day buffer'; gapClass = 'normal'; }
-      else { gapHtml = gapDays + ' day buffer'; gapClass = 'wide'; }
-    }
 
     let cleanIconClass = 'pending', cleanIcon = '🧹';
     if (st === 'completed') { cleanIconClass = 'ok'; cleanIcon = '✅'; }
@@ -1246,14 +1287,6 @@ function renderTimeline(today) {
             <div class="timeline-step-label">Cleaning</div>
             <div class="timeline-step-val">${statusLbl(st)}</div>
             <div class="timeline-step-sub">${cleaner}</div>
-          </div>
-        </div>
-        <div class="timeline-step ${t.arrivalDate ? 'ok' : 'dim'}">
-          <div class="timeline-step-icon">${t.arrivalDate ? '🏠' : '—'}</div>
-          <div>
-            <div class="timeline-step-label">Next Guest</div>
-            <div class="timeline-step-val">${t.arrivalDate ? fmtDisp(t.arrivalDate) : 'No booking'}</div>
-            ${gapHtml ? `<div class="timeline-gap ${gapClass}">${gapHtml}</div>` : ''}
           </div>
         </div>
       </div>`;
@@ -1490,6 +1523,79 @@ async function loadMaintData() {
   }
 }
 
+// =============================================
+// MAINTENANCE STATUS UPDATES
+// =============================================
+function makeIssueKey(issue) {
+  const p = (issue['Property'] || '').trim();
+  const i = (issue['Issue'] || '').trim();
+  const d = (issue['Reported Date'] || '').trim();
+  return btoa(unescape(encodeURIComponent(p + '|' + i + '|' + d))).replace(/[^a-zA-Z0-9]/g, '');
+}
+
+function showToast(msg, isError) {
+  const old = document.querySelector('.maint-toast');
+  if (old) old.remove();
+  const toast = document.createElement('div');
+  toast.className = 'maint-toast' + (isError ? ' error' : '');
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2500);
+  });
+}
+
+async function updateIssueStatus(issue, newStatus) {
+  if (!appsScriptUrl) {
+    showToast('Add your Apps Script URL in Settings to enable status updates', true);
+    return;
+  }
+
+  const originalStatus = issue['Status'];
+  const originalResDate = issue['Resolved Date'];
+  const cardKey = makeIssueKey(issue);
+  const cardEl = document.querySelector(`[data-issue-key="${cardKey}"]`);
+
+  // Optimistic update
+  issue['Status'] = newStatus;
+  if (newStatus === 'resolved' && !issue['Resolved Date']) {
+    issue['Resolved Date'] = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+  }
+  if (cardEl) cardEl.classList.add('updating');
+  renderMaint();
+  showToast('Status updated to ' + newStatus);
+
+  try {
+    const payload = {
+      sheetId: sheetId,
+      tab: MAINT_TAB,
+      property: issue['Property'],
+      issue: issue['Issue'],
+      reportedDate: issue['Reported Date'],
+      newStatus: newStatus,
+      resolvedDate: issue['Resolved Date'] || ''
+    };
+
+    await fetch(appsScriptUrl, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.error('Status update failed:', err);
+    issue['Status'] = originalStatus;
+    issue['Resolved Date'] = originalResDate;
+    renderMaint();
+    showToast('Update failed — will retry on next refresh', true);
+  }
+}
+
+function advanceStatus(issueKey, newStatus) {
+  const issue = allMaintIssues.find(i => makeIssueKey(i) === issueKey);
+  if (!issue) return;
+  updateIssueStatus(issue, newStatus);
+}
+
 function renderMaint() {
   const now = new Date();
   const el = document.getElementById('maintDate');
@@ -1497,15 +1603,16 @@ function renderMaint() {
 
   // Stats
   const thirtyAgo = new Date(); thirtyAgo.setDate(thirtyAgo.getDate() - 30);
-  let openCount = 0, progressCount = 0, resolvedCount = 0, totalResDays = 0, resCount = 0;
+  let openCount = 0, progressCount = 0, resolvedCount = 0, completedCount = 0, totalResDays = 0, resCount = 0;
 
   allMaintIssues.forEach(issue => {
-    const st = (issue['Status']||'open').trim().toLowerCase();
+    const st = (issue['Status']||'open').trim().toLowerCase().replace(/\s+/g, '-');
     if (st === 'open') openCount++;
-    else if (st === 'in progress' || st === 'in-progress') progressCount++;
-    else if (st === 'resolved') {
+    else if (st === 'in-progress') progressCount++;
+    else if (st === 'resolved') resolvedCount++;
+    else if (st === 'completed') {
       const rd = parseDate(issue['Resolved Date']);
-      if (rd && rd >= thirtyAgo) resolvedCount++;
+      if (rd && rd >= thirtyAgo) completedCount++;
       if (rd && issue['Reported Date']) {
         const rep = parseDate(issue['Reported Date']);
         if (rep) { totalResDays += Math.ceil((rd - rep) / 864e5); resCount++; }
@@ -1516,12 +1623,14 @@ function renderMaint() {
   document.getElementById('mOpen').textContent = openCount;
   document.getElementById('mProgress').textContent = progressCount;
   document.getElementById('mResolved').textContent = resolvedCount;
+  document.getElementById('mCompleted').textContent = completedCount;
   document.getElementById('mAvgDays').textContent = resCount > 0 ? (totalResDays / resCount).toFixed(1) + 'd' : '—';
 
-  // Badge
+  // Badge (open + in-progress = actionable items)
   const badge = document.getElementById('maintBadge');
-  badge.textContent = openCount;
-  badge.className = 'tab-badge' + (openCount === 0 ? ' zero' : '');
+  const badgeCount = openCount + progressCount;
+  badge.textContent = badgeCount;
+  badge.className = 'tab-badge' + (badgeCount === 0 ? ' zero' : '');
 
   // Cards
   const container = document.getElementById('maintCards');
@@ -1543,21 +1652,20 @@ function renderMaint() {
     if (allMaintIssues.length && maintFilter !== 'all') {
       emptyEl.querySelector('h3').textContent = 'No ' + maintFilter.replace('-',' ') + ' issues';
       emptyEl.querySelector('p').textContent = 'All clear for this filter.';
-      emptyEl.querySelector('.maint-setup-box').style.display = 'none';
+      emptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'none');
     } else if (!allMaintIssues.length) {
       emptyEl.querySelector('h3').textContent = 'No Maintenance Issues Yet';
       emptyEl.querySelector('p').textContent = 'Once connected, guest-reported maintenance issues from HostBuddy will appear here grouped by property and priority.';
-      const sb = emptyEl.querySelector('.maint-setup-box');
-      if (sb) sb.style.display = 'block';
+      emptyEl.querySelectorAll('.maint-setup-box').forEach(sb => sb.style.display = 'block');
     }
     return;
   }
 
   emptyEl.style.display = 'none';
 
-  // Sort: open urgent first, then open medium, then open low, then in-progress, then resolved
+  // Sort: open urgent first, then open medium, then open low, then in-progress, then resolved, then completed
   const priOrder = {urgent:0, high:0, medium:1, low:2};
-  const stOrder = {open:0, 'in-progress':1, 'in progress':1, resolved:2};
+  const stOrder = {open:0, 'in-progress':1, 'in progress':1, resolved:2, completed:3};
   filtered.sort((a,b) => {
     const sa = stOrder[(a['Status']||'open').trim().toLowerCase()] ?? 1;
     const sb2 = stOrder[(b['Status']||'open').trim().toLowerCase()] ?? 1;
@@ -1572,17 +1680,32 @@ function renderMaint() {
     const pri = (issue['Priority']||'medium').trim().toLowerCase();
     const st = (issue['Status']||'open').trim().toLowerCase();
     const stCls = st.replace(/\s+/g, '-');
+    const issueKey = makeIssueKey(issue);
 
     const card = document.createElement('div');
     card.className = 'maint-card fade';
     card.style.animationDelay = `${idx * 0.04}s`;
+    card.setAttribute('data-issue-key', issueKey);
 
-    const barCls = pri === 'urgent' || pri === 'high' ? 'urgent' : pri === 'low' ? 'low' : stCls === 'resolved' ? 'resolved' : 'medium';
+    const barCls = pri === 'urgent' || pri === 'high' ? 'urgent' : pri === 'low' ? 'low' : stCls === 'completed' ? 'completed' : stCls === 'resolved' ? 'resolved' : 'medium';
 
     let msgHtml = '';
     if (issue['Guest Message']?.trim()) {
       const msg = issue['Guest Message'].trim();
-      msgHtml = `<div class="maint-msg">"${msg.length > 200 ? msg.substring(0,200) + '…' : msg}"</div>`;
+      msgHtml = `<div class="maint-msg">"${msg.length > 200 ? msg.substring(0,200) + '\u2026' : msg}"</div>`;
+    }
+
+    // Action buttons based on current status
+    let actionsHtml = '';
+    const flow = MAINT_STATUS_FLOW[stCls];
+    if (flow && flow.next) {
+      actionsHtml = `<div class="maint-actions">
+        <button class="maint-action-btn primary" onclick="advanceStatus('${issueKey}', '${flow.next}')">${flow.icon} ${flow.label}</button>
+      </div>`;
+    } else if (stCls === 'completed') {
+      actionsHtml = `<div class="maint-actions" style="border-top-color:var(--status-confirmed-bg);">
+        <span class="maint-done-label">\u2705 Work Completed</span>
+      </div>`;
     }
 
     card.innerHTML = `
@@ -1592,7 +1715,7 @@ function renderMaint() {
           <div class="maint-prop">${issue['Property']||'Unknown'}</div>
           <div class="maint-badges">
             <span class="priority-badge ${barCls}">${pri}</span>
-            <span class="status-badge ${stCls}">${st}</span>
+            <span class="status-badge ${stCls}">${st.replace(/-/g, ' ')}</span>
           </div>
         </div>
         <div class="maint-issue">${issue['Issue']||'Maintenance Issue'}</div>
@@ -1603,6 +1726,7 @@ function renderMaint() {
           ${issue['Resolved Date'] ? `<div class="maint-meta-item"><strong>Resolved:</strong> ${issue['Resolved Date']}</div>` : ''}
           ${issue['Notes'] ? `<div class="maint-meta-item"><strong>Notes:</strong> ${issue['Notes']}</div>` : ''}
         </div>
+        ${actionsHtml}
       </div>`;
     container.appendChild(card);
   });
@@ -1610,8 +1734,10 @@ function renderMaint() {
 
 function filterMaint(filter) {
   maintFilter = filter;
-  document.querySelectorAll('#maintFilters .filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('#maintFilters .filter-btn').forEach(b => {
+    const btnFilter = b.textContent.trim().toLowerCase().replace(/\s+/g, '-');
+    b.classList.toggle('active', filter === 'all' ? btnFilter === 'all' : btnFilter === filter);
+  });
   renderMaint();
 }
 
