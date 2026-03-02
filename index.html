@@ -869,17 +869,9 @@
 <div class="overlay" id="configOverlay">
   <div class="modal">
     <h3>Dashboard Settings</h3>
-    <div class="modal-field-group">
-      <label class="modal-field-label">Airtable Base ID</label>
-      <p style="font-size:0.78rem; margin-bottom:0.5rem;">Found in your Airtable base URL: <code>airtable.com/appXXXXXXXXXXXXXX</code></p>
-      <input type="text" class="input-field" id="baseIdInput" placeholder="e.g. appXXXXXXXXXXXXXX">
-    </div>
-    <div class="modal-field-group">
-      <label class="modal-field-label">Personal Access Token</label>
-      <p style="font-size:0.78rem; margin-bottom:0.5rem;">Create at <code>airtable.com/create/tokens</code> with <code>data.records:read</code> and <code>data.records:write</code> scopes.</p>
-      <input type="password" class="input-field" id="patInput" placeholder="patXXXXXXXX...">
-    </div>
-    <p style="font-size:0.78rem;">Your Airtable base needs tables named <code>CleaningLog</code> and <code>MaintenanceLog</code>.</p>
+    <p>Paste your Google Sheet ID below. You'll find it in the sheet URL between <code>/d/</code> and <code>/edit</code>.</p>
+    <input type="text" class="input-field" id="sheetIdInput" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms">
+    <p style="font-size:0.78rem;">Your sheet needs tabs named <code>CleaningLog</code> and <code>MaintenanceLog</code>.</p>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeConfig()">Cancel</button>
       <button class="btn btn-primary" onclick="saveConfig()">Save & Load</button>
@@ -898,7 +890,7 @@
 
   <div class="setup-banner" id="setupBanner" style="display:none;">
     <h3>Welcome — let's connect your data</h3>
-    <p>Click the ⚙ button in the header to connect your Airtable base. Once connected, this dashboard will display cleaning status from your CleaningLog table.</p>
+    <p>Click the ⚙ button in the header to paste your Google Sheet ID. Once connected, this dashboard will display cleaning and maintenance data from your sheet.</p>
   </div>
 
   <!-- Stats -->
@@ -958,7 +950,7 @@
 
   <div class="setup-banner" id="maintSetupBanner" style="display:none;">
     <h3>Connect Maintenance Tracking</h3>
-    <p>Click the ⚙ button to connect your Airtable base. Your base needs a <code>MaintenanceLog</code> table to track issues from HostBuddy webhooks.</p>
+    <p>Click the ⚙ button to connect your Google Sheet. Your sheet needs a <code>MaintenanceLog</code> tab to track issues from HostBuddy webhooks.</p>
   </div>
 
   <!-- Maintenance Stats -->
@@ -987,16 +979,16 @@
       <div class="maint-setup-box">
         <h4>Quick Setup</h4>
         <ol>
-          <li>Create a <code>MaintenanceLog</code> table in your Airtable base</li>
-          <li>Add fields: <code>Property</code> (text), <code>Issue</code> (text),
-            <code>Guest Message</code> (long text), <code>Guest Name</code> (text),
-            <code>Priority</code> (single select: urgent/high/medium/low),
-            <code>Status</code> (single select: open/in-progress/resolved/completed),
-            <code>Reported Date</code> (date), <code>Resolved Date</code> (date),
-            <code>Notes</code> (long text)</li>
+          <li>Add a <code>MaintenanceLog</code> tab to your Google Sheet</li>
+          <li>Add columns: <code>Property</code>, <code>Issue</code>,
+            <code>Guest Message</code>, <code>Guest Name</code>,
+            <code>Priority</code> (urgent/high/medium/low),
+            <code>Status</code> (open/in-progress/resolved/completed),
+            <code>Reported Date</code>, <code>Resolved Date</code>,
+            <code>Notes</code></li>
           <li>In HostBuddy, set notifications to <strong>Webhook</strong></li>
-          <li>Create a Zapier zap: <strong>Webhooks by Zapier</strong> (trigger) → <strong>Airtable</strong> (action)</li>
-          <li>Paste your Base ID and PAT in <strong>Settings</strong> (gear icon)</li>
+          <li>Create a Zapier zap: <strong>Webhooks by Zapier</strong> (trigger) → <strong>Google Sheets</strong> (action)</li>
+          <li>Paste your Sheet ID in <strong>Settings</strong> (gear icon)</li>
         </ol>
       </div>
     </div>
@@ -1005,17 +997,16 @@
 </div>
 </div>
 
-<div class="footer">ROAM Desert Stays · Property Management · Data via Airtable + ResortCleaning + HostBuddy</div>
+<div class="footer">ROAM Desert Stays · Property Management · Data via Google Sheets + ResortCleaning + HostBuddy</div>
 
 <script>
 // =============================================
 // CONFIG
 // =============================================
 const PROPERTIES = ['Medina','The Vistas','Roanoke','Gaucho','Lobo','Kiowa','Alley House','Mesa Vista'];
-const CLEANING_TABLE = 'CleaningLog';
-const MAINT_TABLE = 'MaintenanceLog';
-let airtableBaseId = localStorage.getItem('rds_airtable_base') || '';
-let airtablePat = localStorage.getItem('rds_airtable_pat') || '';
+const CLEANING_TAB = 'CleaningLog';
+const MAINT_TAB = 'MaintenanceLog';
+let sheetId = localStorage.getItem('rds_sheet_id') || '';
 let allEvents = [];
 
 // Maintenance workflow
@@ -1032,14 +1023,14 @@ const MAINT_STATUS_FLOW = {
 function init() {
   const now = new Date();
   document.getElementById('todayDate').textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  (airtableBaseId && airtablePat) ? loadData() : showSetup();
+  sheetId ? loadData() : showSetup();
 }
 
 function showSetup() {
   const md = document.getElementById('maintDate'); if(md) md.textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   document.getElementById('setupBanner').style.display = 'block';
   document.getElementById('todayGrid').innerHTML = '';
-  document.getElementById('upcomingGrouped').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Connect your Airtable base to get started.</div>';
+  document.getElementById('upcomingGrouped').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Connect your Google Sheet to get started.</div>';
   ['sTotal','sCompleted','sConfirmed','sScheduled'].forEach(id => document.getElementById(id).textContent = '—');
   document.getElementById('sTotal').textContent = PROPERTIES.length;
 }
@@ -1047,69 +1038,52 @@ function showSetup() {
 // =============================================
 // CONFIG MODAL
 // =============================================
-function openConfig() { document.getElementById('configOverlay').classList.add('active'); document.getElementById('baseIdInput').value = airtableBaseId; document.getElementById('patInput').value = airtablePat; }
+function openConfig() { document.getElementById('configOverlay').classList.add('active'); document.getElementById('sheetIdInput').value = sheetId; }
 function closeConfig() { document.getElementById('configOverlay').classList.remove('active'); }
 function saveConfig() {
-  const baseVal = document.getElementById('baseIdInput').value.trim();
-  const patVal = document.getElementById('patInput').value.trim();
-  if (!baseVal || !patVal) return;
-  airtableBaseId = baseVal;
-  airtablePat = patVal;
-  localStorage.setItem('rds_airtable_base', airtableBaseId);
-  localStorage.setItem('rds_airtable_pat', airtablePat);
+  const val = document.getElementById('sheetIdInput').value.trim();
+  if (!val) return;
+  sheetId = val;
+  localStorage.setItem('rds_sheet_id', sheetId);
   closeConfig();
   document.getElementById('setupBanner').style.display = 'none';
   loadData();
 }
 
 // =============================================
-// AIRTABLE API
+// GOOGLE SHEETS GVIZ FETCH
 // =============================================
-async function airtableFetch(tableName) {
-  const allRecords = [];
-  let offset = null;
-  do {
-    const params = new URLSearchParams();
-    params.set('filterByFormula', "NOT({Property}='')");
-    if (offset) params.set('offset', offset);
-    const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}?${params.toString()}`;
-    const resp = await fetch(url, { headers: { 'Authorization': 'Bearer ' + airtablePat } });
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.error?.message || 'Airtable error ' + resp.status);
-    }
-    const data = await resp.json();
-    allRecords.push(...data.records);
-    offset = data.offset || null;
-  } while (offset);
-  return allRecords;
+async function gvizFetch(tabName) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('Sheet request failed (' + resp.status + ')');
+  const text = await resp.text();
+  const match = text.match(/google\.visualization\.Query\.setResponse\((.+)\)/s);
+  if (!match) throw new Error('Could not parse Google Sheets response');
+  const json = JSON.parse(match[1]);
+  if (json.status === 'error') throw new Error(json.errors?.[0]?.detailed_message || 'Google Sheets query error');
+  const headers = json.table.cols.map(c => c.label);
+  return json.table.rows.map(r => {
+    const obj = {};
+    headers.forEach((h, i) => {
+      const cell = r.c?.[i];
+      if (!cell) { obj[h] = ''; return; }
+      obj[h] = cell.f ?? (cell.v != null ? String(cell.v) : '');
+    });
+    return obj;
+  });
 }
 
 // =============================================
 // LOAD DATA
 // =============================================
 async function loadData() {
-  if (!airtableBaseId || !airtablePat) return showSetup();
+  if (!sheetId) return showSetup();
   const btn = document.querySelector('.header-btn');
   btn.classList.add('loading');
 
   try {
-    const records = await airtableFetch(CLEANING_TABLE);
-    allEvents = records.map(rec => {
-      const f = rec.fields;
-      return {
-        'Property':       f['Property'] || '',
-        'Service Date':   f['Service Date'] || '',
-        'Status':         f['Status'] || '',
-        'Arrival Date':   f['Arrival Date'] || '',
-        'Cleaner':        f['Cleaner'] || '',
-        'Notes':          f['Notes'] || '',
-        'Appointment ID': f['Appointment ID'] || '',
-        'Report URL':     f['Report URL'] || '',
-        '_airtableId':    rec.id
-      };
-    });
-
+    allEvents = await gvizFetch(CLEANING_TAB);
     render();
     loadMaintData();
     document.getElementById('lastSync').textContent = 'Synced ' + new Date().toLocaleTimeString();
@@ -1477,10 +1451,10 @@ function statusLbl(s) {
 
 function parseDate(str) {
   if (!str) return null;
-  // Airtable ISO format: YYYY-MM-DD
+  // ISO format: YYYY-MM-DD
   const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (iso) return new Date(+iso[1], +iso[2]-1, +iso[3]);
-  // Legacy M/D/YYYY format
+  // M/D/YYYY format
   const mdy = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (mdy) return new Date(+mdy[3], +mdy[1]-1, +mdy[2]);
   const d = new Date(str);
@@ -1498,7 +1472,7 @@ function fmtCmp(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStar
 function fmtDisp(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
 
 // Auto-refresh every 5 min
-setInterval(() => { if(airtableBaseId && airtablePat) loadData(); }, 3e5);
+setInterval(() => { if(sheetId) loadData(); }, 3e5);
 
 
 // =============================================
@@ -1518,29 +1492,57 @@ let allMaintIssues = [];
 let maintFilter = 'all';
 
 async function loadMaintData() {
-  if (!airtableBaseId || !airtablePat) return;
+  if (!sheetId) return;
   try {
-    const records = await airtableFetch(MAINT_TABLE);
-    allMaintIssues = records.map(rec => {
-      const f = rec.fields;
-      return {
-        'Property':       f['Property'] || '',
-        'Issue':          f['Issue'] || '',
-        'Guest Message':  f['Guest Message'] || '',
-        'Guest Name':     f['Guest Name'] || '',
-        'Priority':       f['Priority'] || 'medium',
-        'Status':         f['Status'] || 'open',
-        'Reported Date':  f['Reported Date'] || '',
-        'Resolved Date':  f['Resolved Date'] || '',
-        'Notes':          f['Notes'] || '',
-        '_airtableId':    rec.id
-      };
-    });
+    const rows = await gvizFetch(MAINT_TAB);
+    allMaintIssues = rows.map(row => ({
+      'Property':       row['Property'] || '',
+      'Issue':          row['Issue'] || '',
+      'Guest Message':  row['Guest Message'] || '',
+      'Guest Name':     row['Guest Name'] || '',
+      'Priority':      (row['Priority'] || 'medium').trim().toLowerCase(),
+      'Status':        (row['Status'] || 'open').trim().toLowerCase(),
+      'Reported Date':  row['Reported Date'] || '',
+      'Resolved Date':  row['Resolved Date'] || '',
+      'Notes':          row['Notes'] || ''
+    }));
     renderMaint();
   } catch (err) {
-    console.warn('MaintenanceLog table may not exist yet:', err.message);
+    console.warn('MaintenanceLog tab may not exist yet:', err.message);
     renderMaint();
   }
+}
+
+// =============================================
+// LOCAL STATUS MANAGEMENT (localStorage)
+// =============================================
+function makeStatusKey(issue) {
+  const prop = (issue['Property'] || '').trim();
+  const iss = (issue['Issue'] || '').trim();
+  const date = (issue['Reported Date'] || '').trim();
+  return 'rds_maint_' + prop + '_' + iss + '_' + date;
+}
+
+function getLocalOverride(issue) {
+  const stored = localStorage.getItem(makeStatusKey(issue));
+  if (!stored) return null;
+  try { return JSON.parse(stored); } catch (e) { return null; }
+}
+
+function setLocalOverride(issue, newStatus) {
+  const data = { status: newStatus, updatedAt: new Date().toISOString() };
+  if (newStatus === 'resolved') data.resolvedDate = new Date().toLocaleDateString('en-US');
+  localStorage.setItem(makeStatusKey(issue), JSON.stringify(data));
+}
+
+function getEffectiveStatus(issue) {
+  const local = getLocalOverride(issue);
+  return local ? local.status : (issue['Status'] || 'open').trim().toLowerCase().replace(/\s+/g, '-');
+}
+
+function getEffectiveResolvedDate(issue) {
+  const local = getLocalOverride(issue);
+  return (local && local.resolvedDate) ? local.resolvedDate : (issue['Resolved Date'] || '');
 }
 
 // =============================================
@@ -1559,41 +1561,12 @@ function showToast(msg, isError) {
   });
 }
 
-async function advanceStatus(recordId, newStatus) {
-  const issue = allMaintIssues.find(i => i._airtableId === recordId);
+function advanceStatus(idx, newStatus) {
+  const issue = allMaintIssues[idx];
   if (!issue) return;
-
-  const card = document.querySelector('[data-record-id="' + recordId + '"]');
-  if (card) card.classList.add('updating');
-
-  try {
-    const fieldsToUpdate = { Status: newStatus };
-    if (newStatus === 'resolved' && !issue['Resolved Date']) {
-      fieldsToUpdate['Resolved Date'] = new Date().toISOString().split('T')[0];
-    }
-
-    const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(MAINT_TABLE)}/${recordId}`;
-    const resp = await fetch(url, {
-      method: 'PATCH',
-      headers: { 'Authorization': 'Bearer ' + airtablePat, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fields: fieldsToUpdate })
-    });
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.error?.message || 'Update failed (' + resp.status + ')');
-    }
-
-    const updated = await resp.json();
-    issue['Status'] = updated.fields['Status'] || newStatus;
-    issue['Resolved Date'] = updated.fields['Resolved Date'] || issue['Resolved Date'];
-    renderMaint();
-    showToast('Status updated to ' + newStatus.replace(/-/g, ' '));
-  } catch (err) {
-    console.error('Status update failed:', err);
-    if (card) card.classList.remove('updating');
-    showToast('Update failed: ' + err.message, true);
-  }
+  setLocalOverride(issue, newStatus);
+  renderMaint();
+  showToast('Status updated to ' + newStatus.replace(/-/g, ' '));
 }
 
 function renderMaint() {
@@ -1606,12 +1579,12 @@ function renderMaint() {
   let openCount = 0, progressCount = 0, resolvedCount = 0, completedCount = 0, totalResDays = 0, resCount = 0;
 
   allMaintIssues.forEach(issue => {
-    const st = (issue['Status']||'open').trim().toLowerCase().replace(/\s+/g, '-');
+    const st = getEffectiveStatus(issue);
     if (st === 'open') openCount++;
     else if (st === 'in-progress') progressCount++;
     else if (st === 'resolved') resolvedCount++;
     else if (st === 'completed') {
-      const rd = parseDate(issue['Resolved Date']);
+      const rd = parseDate(getEffectiveResolvedDate(issue));
       if (rd && rd >= thirtyAgo) completedCount++;
       if (rd && issue['Reported Date']) {
         const rep = parseDate(issue['Reported Date']);
@@ -1639,10 +1612,7 @@ function renderMaint() {
   // Filter
   let filtered = allMaintIssues;
   if (maintFilter !== 'all') {
-    filtered = allMaintIssues.filter(i => {
-      const st = (i['Status']||'open').trim().toLowerCase().replace(/\s+/g, '-');
-      return st === maintFilter;
-    });
+    filtered = allMaintIssues.filter(i => getEffectiveStatus(i) === maintFilter);
   }
 
   if (!filtered.length) {
@@ -1663,31 +1633,31 @@ function renderMaint() {
 
   emptyEl.style.display = 'none';
 
-  // Sort: open urgent first, then open medium, then open low, then in-progress, then resolved, then completed
+  // Sort: open urgent first, then in-progress, then resolved, then completed
   const priOrder = {urgent:0, high:0, medium:1, low:2};
-  const stOrder = {open:0, 'in-progress':1, 'in progress':1, resolved:2, completed:3};
+  const stOrder = {open:0, 'in-progress':1, resolved:2, completed:3};
   filtered.sort((a,b) => {
-    const sa = stOrder[(a['Status']||'open').trim().toLowerCase()] ?? 1;
-    const sb2 = stOrder[(b['Status']||'open').trim().toLowerCase()] ?? 1;
+    const sa = stOrder[getEffectiveStatus(a)] ?? 1;
+    const sb2 = stOrder[getEffectiveStatus(b)] ?? 1;
     if (sa !== sb2) return sa - sb2;
     const pa = priOrder[(a['Priority']||'medium').trim().toLowerCase()] ?? 1;
     const pb = priOrder[(b['Priority']||'medium').trim().toLowerCase()] ?? 1;
     return pa - pb;
   });
 
+  // Find original index in allMaintIssues for each filtered issue (used by advanceStatus)
   container.innerHTML = '';
-  filtered.forEach((issue, idx) => {
+  filtered.forEach((issue, displayIdx) => {
+    const origIdx = allMaintIssues.indexOf(issue);
     const pri = (issue['Priority']||'medium').trim().toLowerCase();
-    const st = (issue['Status']||'open').trim().toLowerCase();
-    const stCls = st.replace(/\s+/g, '-');
-    const recordId = issue._airtableId || '';
+    const st = getEffectiveStatus(issue);
+    const resolvedDate = getEffectiveResolvedDate(issue);
 
     const card = document.createElement('div');
     card.className = 'maint-card fade';
-    card.style.animationDelay = `${idx * 0.04}s`;
-    if (recordId) card.setAttribute('data-record-id', recordId);
+    card.style.animationDelay = `${displayIdx * 0.04}s`;
 
-    const barCls = pri === 'urgent' || pri === 'high' ? 'urgent' : pri === 'low' ? 'low' : stCls === 'completed' ? 'completed' : stCls === 'resolved' ? 'resolved' : 'medium';
+    const barCls = pri === 'urgent' || pri === 'high' ? 'urgent' : pri === 'low' ? 'low' : st === 'completed' ? 'completed' : st === 'resolved' ? 'resolved' : 'medium';
 
     let msgHtml = '';
     if (issue['Guest Message']?.trim()) {
@@ -1695,14 +1665,14 @@ function renderMaint() {
       msgHtml = `<div class="maint-msg">"${msg.length > 200 ? msg.substring(0,200) + '\u2026' : msg}"</div>`;
     }
 
-    // Action buttons based on current status
+    // Action buttons based on effective status
     let actionsHtml = '';
-    const flow = MAINT_STATUS_FLOW[stCls];
+    const flow = MAINT_STATUS_FLOW[st];
     if (flow && flow.next) {
       actionsHtml = `<div class="maint-actions">
-        <button class="maint-action-btn primary" onclick="advanceStatus('${recordId}', '${flow.next}')">${flow.icon} ${flow.label}</button>
+        <button class="maint-action-btn primary" onclick="advanceStatus(${origIdx}, '${flow.next}')">${flow.icon} ${flow.label}</button>
       </div>`;
-    } else if (stCls === 'completed') {
+    } else if (st === 'completed') {
       actionsHtml = `<div class="maint-actions" style="border-top-color:var(--status-confirmed-bg);">
         <span class="maint-done-label">\u2705 Work Completed</span>
       </div>`;
@@ -1715,7 +1685,7 @@ function renderMaint() {
           <div class="maint-prop">${issue['Property']||'Unknown'}</div>
           <div class="maint-badges">
             <span class="priority-badge ${barCls}">${pri}</span>
-            <span class="status-badge ${stCls}">${st.replace(/-/g, ' ')}</span>
+            <span class="status-badge ${st}">${st.replace(/-/g, ' ')}</span>
           </div>
         </div>
         <div class="maint-issue">${issue['Issue']||'Maintenance Issue'}</div>
@@ -1723,7 +1693,7 @@ function renderMaint() {
         <div class="maint-meta">
           ${issue['Guest Name'] ? `<div class="maint-meta-item"><strong>Guest:</strong> ${issue['Guest Name']}</div>` : ''}
           ${issue['Reported Date'] ? `<div class="maint-meta-item"><strong>Reported:</strong> ${fmtDateForDisplay(issue['Reported Date'])}</div>` : ''}
-          ${issue['Resolved Date'] ? `<div class="maint-meta-item"><strong>Resolved:</strong> ${fmtDateForDisplay(issue['Resolved Date'])}</div>` : ''}
+          ${resolvedDate ? `<div class="maint-meta-item"><strong>Resolved:</strong> ${fmtDateForDisplay(resolvedDate)}</div>` : ''}
           ${issue['Notes'] ? `<div class="maint-meta-item"><strong>Notes:</strong> ${issue['Notes']}</div>` : ''}
         </div>
         ${actionsHtml}
