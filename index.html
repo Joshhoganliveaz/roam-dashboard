@@ -1431,6 +1431,7 @@ function makeCard(name, ps, idx) {
         <div><div class="field-label">Cleaner</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Cleaner']||'—':'—'}</div></div>
         <div><div class="field-label">Appt #</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Appointment ID']||'—':'—'}</div></div>
       </div>
+      ${ev?.['Notes']?`<div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.6rem; padding-top:0.6rem; border-top:1px solid var(--cream); line-height:1.45;">📝 ${ev['Notes']}</div>`:''}
       ${ev?.['Report URL']?`<a href="${ev['Report URL']}" target="_blank" class="report-btn">View Cleaning Report →</a>`:''}
     </div>`;
   return c;
