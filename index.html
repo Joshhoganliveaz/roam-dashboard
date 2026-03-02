@@ -405,6 +405,9 @@
   .stat-num.c-blue { color: var(--status-confirmed); }
   .stat-num.c-gold { color: var(--status-progress); }
   .stat-num.c-muted { color: var(--text-muted); }
+  .stat.clickable { cursor: pointer; transition: all 0.2s; }
+  .stat.clickable:hover { border-color: var(--olive-muted); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .stat.stat-active { border-color: var(--olive); box-shadow: 0 2px 12px rgba(92,107,79,0.15); background: var(--cream-light); }
 
   /* ======================== */
   /*     SECTION HEADERS      */
@@ -495,7 +498,7 @@
 
   .card-fields {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 0.5rem 1rem;
   }
 
@@ -912,9 +915,9 @@
   <div class="section-head green">Today's Properties</div>
   <div class="grid" id="todayGrid"><div class="shimmer"></div><div class="shimmer"></div></div>
 
-  <!-- Turnover Timeline -->
+  <!-- Upcoming Cleanings -->
   <div class="timeline-section" id="timelineSection" style="display:none;">
-    <div class="section-head blue">Turnover Timeline &mdash; Next 7 Days</div>
+    <div class="section-head blue">Upcoming Cleanings &mdash; Next 7 Days</div>
     <div id="timelineCards"></div>
   </div>
 
@@ -1098,6 +1101,7 @@ async function loadData() {
 // RENDER
 // =============================================
 let historyFilter = 'all';
+let gridFilter = null;
 
 function render() {
   const today = new Date(); today.setHours(0,0,0,0);
@@ -1150,75 +1154,58 @@ function render() {
 
   const grid = document.getElementById('todayGrid');
   grid.innerHTML = '';
-  PROPERTIES.forEach((name,i) => {
+  let cardIdx = 0;
+  PROPERTIES.forEach(name => {
     const ps = pStatus[name] || {status:'none',event:null};
-    grid.appendChild(makeCard(name, ps, i));
+    if (gridFilter) {
+      const st = ps.status;
+      const matches =
+        (gridFilter === 'completed' && st === 'completed') ||
+        (gridFilter === 'confirmed' && st === 'confirmed') ||
+        (gridFilter === 'scheduled' && (st === 'scheduled' || st === 'in progress'));
+      if (!matches) return;
+    }
+    grid.appendChild(makeCard(name, ps, cardIdx++));
   });
+  if (grid.children.length === 0 && gridFilter) {
+    grid.innerHTML = '<div class="empty"><h3>No properties match this filter</h3><p>Click the stat again to show all properties.</p></div>';
+  }
+
+  // Wire stat card click handlers
+  const statEls = document.querySelectorAll('#statsRow .stat');
+  statEls[0].onclick = function() { filterGrid(null); };
+  statEls[1].onclick = function() { filterGrid('completed'); };
+  statEls[2].onclick = function() { filterGrid('confirmed'); };
+  statEls[3].onclick = function() { filterGrid('scheduled'); };
+  statEls[4].onclick = null;
+  statEls.forEach((el, i) => { if (i >= 0 && i <= 3) el.classList.add('clickable'); });
+  updateStatHighlights();
 
   renderTimeline(today);
   renderUpcoming(today);
   renderHistory(today);
 }
 
+function filterGrid(status) {
+  gridFilter = (gridFilter === status) ? null : status;
+  render();
+}
+
+function updateStatHighlights() {
+  document.querySelectorAll('#statsRow .stat').forEach(s => s.classList.remove('stat-active'));
+  if (!gridFilter) return;
+  const map = { completed: 1, confirmed: 2, scheduled: 3 };
+  const idx = map[gridFilter];
+  if (idx !== undefined) {
+    document.querySelectorAll('#statsRow .stat')[idx]?.classList.add('stat-active');
+  }
+}
+
 // =============================================
 // ALERTS
 // =============================================
 function renderAlerts(today, todayStr) {
-  const alertSection = document.getElementById('alertSection');
-  const alertCards = document.getElementById('alertCards');
-  alertCards.innerHTML = '';
-  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowStr = fmtCmp(tomorrow);
-  const alerts = [];
-
-  const arrivalProps = {};
-  allEvents.forEach(ev => {
-    const arr = parseDate(ev['Arrival Date']);
-    const prop = ev['Property']?.trim();
-    if (!arr || !prop) return;
-    const arrStr = fmtCmp(arr);
-    if (arrStr === todayStr || arrStr === tomorrowStr) {
-      if (!arrivalProps[prop + arrStr]) arrivalProps[prop + arrStr] = { prop, arrStr, label: arrStr === todayStr ? 'today' : 'tomorrow' };
-    }
-  });
-
-  Object.values(arrivalProps).forEach(ap => {
-    const hasCleaning = allEvents.some(ce => {
-      const cProp = ce['Property']?.trim();
-      const cDate = parseDate(ce['Service Date']);
-      if (cProp !== ap.prop || !cDate) return false;
-      return fmtCmp(cDate) === todayStr || fmtCmp(cDate) === ap.arrStr;
-    });
-    if (!hasCleaning) alerts.push({ ...ap, type: 'no-cleaning' });
-  });
-
-  allEvents.forEach(ev => {
-    const prop = ev['Property']?.trim();
-    const sd = parseDate(ev['Service Date']);
-    const arr = parseDate(ev['Arrival Date']);
-    const st = (ev['Status']||'').trim().toLowerCase();
-    if (!prop || !sd || !arr) return;
-    if (fmtCmp(sd) === todayStr && fmtCmp(arr) === todayStr && st !== 'completed') {
-      alerts.push({ prop, label: 'same-day turnover — not yet completed', type: 'turnover' });
-    }
-  });
-
-  const seen = new Set();
-  const unique = alerts.filter(a => { const k = a.prop+a.type+a.label; if (seen.has(k)) return false; seen.add(k); return true; });
-
-  if (!unique.length) { alertSection.style.display = 'none'; return; }
-  alertSection.style.display = 'block';
-
-  unique.forEach(a => {
-    const card = document.createElement('div');
-    card.className = 'alert-card fade';
-    if (a.type === 'turnover') {
-      card.innerHTML = `<span class="alert-icon">⚡</span><div class="alert-text"><strong>${a.prop}</strong> — ${a.label}<div class="alert-sub">Guest arrives today and cleaning is not marked complete</div></div>`;
-    } else {
-      card.innerHTML = `<span class="alert-icon">⚠️</span><div class="alert-text"><strong>${a.prop}</strong> — Guest arrives <strong>${a.label}</strong> but no cleaning is scheduled<div class="alert-sub">Check if a turnover is needed</div></div>`;
-    }
-    alertCards.appendChild(card);
-  });
+  document.getElementById('alertSection').style.display = 'none';
 }
 
 // =============================================
@@ -1236,50 +1223,31 @@ function renderTimeline(today) {
     const sd = parseDate(ev['Service Date']);
     if (!prop || !sd) return;
     if (sd >= today && sd <= weekEnd) {
-      turnovers.push({ prop, serviceDate: sd, arrivalDate: parseDate(ev['Arrival Date']), ev });
+      turnovers.push({ prop, serviceDate: sd, ev });
     }
   });
 
   if (!turnovers.length) { section.style.display = 'none'; return; }
   section.style.display = 'block';
-  turnovers.sort((a,b) => a.serviceDate - b.serviceDate);
+  turnovers.sort((a, b) => a.serviceDate - b.serviceDate);
 
-  turnovers.forEach((t, idx) => {
-    const st = (t.ev['Status']||'scheduled').trim().toLowerCase();
+  let html = '<div class="history-table-wrap"><table class="history-table"><thead><tr>';
+  html += '<th>Date</th><th>Property</th><th>Cleaner</th><th>Status</th>';
+  html += '</tr></thead><tbody>';
+
+  turnovers.forEach(t => {
+    const st = (t.ev['Status'] || 'scheduled').trim().toLowerCase();
     const cleaner = t.ev['Cleaner'] || '—';
-
-    let cleanIconClass = 'pending', cleanIcon = '🧹';
-    if (st === 'completed') { cleanIconClass = 'ok'; cleanIcon = '✅'; }
-    else if (st === 'confirmed') { cleanIconClass = 'ok'; cleanIcon = '📋'; }
-    else if (st === 'in progress') { cleanIconClass = 'pending'; cleanIcon = '🔄'; }
-
-    const card = document.createElement('div');
-    card.className = 'timeline-card fade';
-    card.style.animationDelay = `${idx * 0.04}s`;
-    card.innerHTML = `
-      <div class="timeline-header">
-        <span class="timeline-prop">${t.prop}</span>
-        <span class="timeline-date-range">${fmtDisp(t.serviceDate)}</span>
-      </div>
-      <div class="timeline-flow">
-        <div class="timeline-step dim">
-          <div class="timeline-step-icon">🚪</div>
-          <div>
-            <div class="timeline-step-label">Checkout</div>
-            <div class="timeline-step-val">${fmtDisp(t.serviceDate)}</div>
-          </div>
-        </div>
-        <div class="timeline-step ${cleanIconClass}">
-          <div class="timeline-step-icon">${cleanIcon}</div>
-          <div>
-            <div class="timeline-step-label">Cleaning</div>
-            <div class="timeline-step-val">${statusLbl(st)}</div>
-            <div class="timeline-step-sub">${cleaner}</div>
-          </div>
-        </div>
-      </div>`;
-    container.appendChild(card);
+    html += `<tr>
+      <td style="font-weight:600;white-space:nowrap;">${fmtDisp(t.serviceDate)}</td>
+      <td>${t.prop}</td>
+      <td>${cleaner}</td>
+      <td><span class="badge ${statusCls(st)}">${statusLbl(st)}</span></td>
+    </tr>`;
   });
+
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
 }
 
 // =============================================
@@ -1333,7 +1301,6 @@ function renderUpcoming(today) {
         }
         row.innerHTML = `
           <span class="pgr-date">${whenTxt}</span>
-          <span class="pgr-arrival">Arrival: ${fmtDateForDisplay(ev['Arrival Date'])}</span>
           <span class="pgr-badge"><span class="badge ${statusCls(st)}">${statusLbl(st)}</span></span>
           ${extraLine}`;
         grp.appendChild(row);
@@ -1376,7 +1343,7 @@ function renderHistory(today) {
     return;
   }
 
-  let h = '<table class="history-table"><thead><tr><th>Date</th><th>Property</th><th>Status</th><th>Cleaner</th><th>Next Guest</th><th>Notes</th><th>Report</th></tr></thead><tbody>';
+  let h = '<table class="history-table"><thead><tr><th>Date</th><th>Property</th><th>Status</th><th>Cleaner</th><th>Notes</th><th>Report</th></tr></thead><tbody>';
   history.forEach(ev => {
     const st = (ev['Status']||'scheduled').trim().toLowerCase();
     const noteText = (ev['Notes']||'').replace(/"/g, '&quot;');
@@ -1385,7 +1352,6 @@ function renderHistory(today) {
       <td>${ev['Property']||'—'}</td>
       <td><span class="badge ${statusCls(st)}">${statusLbl(st)}</span></td>
       <td>${ev['Cleaner']||'—'}</td>
-      <td>${fmtDateForDisplay(ev['Arrival Date'])}</td>
       <td><span class="history-note" title="${noteText}">${ev['Notes']||'—'}</span></td>
       <td>${ev['Report URL'] ? `<a href="${ev['Report URL']}" target="_blank" style="color:var(--olive);font-weight:600;text-decoration:none;font-size:0.78rem;">View →</a>` : '—'}</td>
     </tr>`;
@@ -1419,7 +1385,6 @@ function makeCard(name, ps, idx) {
       </div>
       <div class="card-fields">
         <div><div class="field-label">Service Date</div><div class="field-val ${!ev?'dim':''}">${ev?fmtDateForDisplay(ev['Service Date']):'No cleaning today'}</div></div>
-        <div><div class="field-label">Next Guest</div><div class="field-val ${!ev?'dim':''}">${ev?fmtDateForDisplay(ev['Arrival Date']):'—'}</div></div>
         <div><div class="field-label">Cleaner</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Cleaner']||'—':'—'}</div></div>
         <div><div class="field-label">Appt #</div><div class="field-val ${!ev?'dim':''}">${ev?ev['Appointment ID']||'—':'—'}</div></div>
       </div>
