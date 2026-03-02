@@ -1419,12 +1419,19 @@ function makeCard(name, ps, idx) {
   const st = ps.status||'none';
   const ev = ps.event;
 
+  // Extract time from Notes if completed (e.g. "Completed at 2:30 PM", "Done 14:30", or bare "2:30 PM")
+  let badgeText = statusLbl(st);
+  if (st === 'completed' && ev?.['Notes']) {
+    const timeMatch = ev['Notes'].match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/);
+    if (timeMatch) badgeText = '✓ ' + timeMatch[1].trim();
+  }
+
   c.innerHTML = `
     <div class="card-bar ${statusCls(st)}"></div>
     <div class="card-inner">
       <div class="card-top">
         <div class="prop-name">${name}</div>
-        <span class="badge ${statusCls(st)}">${statusLbl(st)}</span>
+        <span class="badge ${statusCls(st)}">${badgeText}</span>
       </div>
       <div class="card-fields">
         <div><div class="field-label">Service Date</div><div class="field-val ${!ev?'dim':''}">${ev?fmtDateForDisplay(ev['Service Date']):'No cleaning today'}</div></div>
