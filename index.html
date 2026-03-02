@@ -1526,13 +1526,6 @@ async function loadMaintData() {
 // =============================================
 // MAINTENANCE STATUS UPDATES
 // =============================================
-function makeIssueKey(issue) {
-  const p = (issue['Property'] || '').trim();
-  const i = (issue['Issue'] || '').trim();
-  const d = (issue['Reported Date'] || '').trim();
-  return btoa(unescape(encodeURIComponent(p + '|' + i + '|' + d))).replace(/[^a-zA-Z0-9]/g, '');
-}
-
 function showToast(msg, isError) {
   const old = document.querySelector('.maint-toast');
   if (old) old.remove();
@@ -1546,59 +1539,34 @@ function showToast(msg, isError) {
   });
 }
 
-async function updateIssueStatus(issue, newStatus) {
-  if (!appsScriptUrl) {
-    showToast('Add your Apps Script URL in Settings to enable status updates', true);
-    return;
-  }
+function advanceStatus(idx, newStatus) {
+  const issue = allMaintIssues[idx];
+  if (!issue) return;
 
-  const originalStatus = issue['Status'];
-  const originalResDate = issue['Resolved Date'];
-  const cardKey = makeIssueKey(issue);
-  const cardEl = document.querySelector(`[data-issue-key="${cardKey}"]`);
-
-  // Optimistic update
+  // Update locally immediately
   issue['Status'] = newStatus;
   if (newStatus === 'resolved' && !issue['Resolved Date']) {
     issue['Resolved Date'] = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
   }
-  if (cardEl) cardEl.classList.add('updating');
   renderMaint();
-  showToast('Status updated to ' + newStatus);
+  showToast('Status updated to ' + newStatus.replace(/-/g, ' '));
 
-  try {
-    const payload = {
-      sheetId: sheetId,
-      tab: MAINT_TAB,
-      property: issue['Property'],
-      issue: issue['Issue'],
-      reportedDate: issue['Reported Date'],
-      newStatus: newStatus,
-      resolvedDate: issue['Resolved Date'] || ''
-    };
-
-    // mode: no-cors avoids CORS errors from Apps Script redirects.
-    // The POST still reaches Apps Script and updates the sheet —
-    // we just get an opaque response we can't read. The next
-    // auto-refresh (5 min) reconciles with the sheet if needed.
-    await fetch(appsScriptUrl, {
+  // Persist to Google Sheet via Apps Script (fire and forget)
+  if (appsScriptUrl) {
+    fetch(appsScriptUrl, {
       method: 'POST',
       mode: 'no-cors',
-      body: JSON.stringify(payload)
-    });
-  } catch (err) {
-    console.error('Status update failed:', err);
-    issue['Status'] = originalStatus;
-    issue['Resolved Date'] = originalResDate;
-    renderMaint();
-    showToast('Update failed — will retry on next refresh', true);
+      body: JSON.stringify({
+        sheetId: sheetId,
+        tab: MAINT_TAB,
+        property: issue['Property'],
+        issue: issue['Issue'],
+        reportedDate: issue['Reported Date'],
+        newStatus: newStatus,
+        resolvedDate: issue['Resolved Date'] || ''
+      })
+    }).catch(err => console.error('Apps Script sync failed:', err));
   }
-}
-
-function advanceStatus(issueKey, newStatus) {
-  const issue = allMaintIssues.find(i => makeIssueKey(i) === issueKey);
-  if (!issue) return;
-  updateIssueStatus(issue, newStatus);
 }
 
 function renderMaint() {
@@ -1685,12 +1653,11 @@ function renderMaint() {
     const pri = (issue['Priority']||'medium').trim().toLowerCase();
     const st = (issue['Status']||'open').trim().toLowerCase();
     const stCls = st.replace(/\s+/g, '-');
-    const issueKey = makeIssueKey(issue);
+    const maintIdx = allMaintIssues.indexOf(issue);
 
     const card = document.createElement('div');
     card.className = 'maint-card fade';
     card.style.animationDelay = `${idx * 0.04}s`;
-    card.setAttribute('data-issue-key', issueKey);
 
     const barCls = pri === 'urgent' || pri === 'high' ? 'urgent' : pri === 'low' ? 'low' : stCls === 'completed' ? 'completed' : stCls === 'resolved' ? 'resolved' : 'medium';
 
@@ -1705,7 +1672,7 @@ function renderMaint() {
     const flow = MAINT_STATUS_FLOW[stCls];
     if (flow && flow.next) {
       actionsHtml = `<div class="maint-actions">
-        <button class="maint-action-btn primary" onclick="advanceStatus('${issueKey}', '${flow.next}')">${flow.icon} ${flow.label}</button>
+        <button class="maint-action-btn primary" onclick="advanceStatus(${maintIdx}, '${flow.next}')">${flow.icon} ${flow.label}</button>
       </div>`;
     } else if (stCls === 'completed') {
       actionsHtml = `<div class="maint-actions" style="border-top-color:var(--status-confirmed-bg);">
