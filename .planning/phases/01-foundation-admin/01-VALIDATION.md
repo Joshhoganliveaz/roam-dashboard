@@ -38,23 +38,14 @@ created: 2026-03-11
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 0 | -- | setup | `npx vitest run` | ❌ W0 | ⬜ pending |
-| 01-02-01 | 02 | 1 | PROD-02 | unit | `npx vitest run src/lib/slugify.test.ts` | ❌ W0 | ⬜ pending |
-| 01-02-02 | 02 | 1 | PROD-02 | unit | `npx vitest run src/lib/slugify.test.ts -t "duplicate"` | ❌ W0 | ⬜ pending |
-| 01-03-01 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "equity"` | ❌ W0 | ⬜ pending |
-| 01-03-02 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "appreciation"` | ❌ W0 | ⬜ pending |
-| 01-03-03 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "net proceeds"` | ❌ W0 | ⬜ pending |
-| 01-03-04 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "earnings"` | ❌ W0 | ⬜ pending |
-| 01-03-05 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "sp500"` | ❌ W0 | ⬜ pending |
-| 01-03-06 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "rent"` | ❌ W0 | ⬜ pending |
-| 01-03-07 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "mortgage"` | ❌ W0 | ⬜ pending |
-| 01-03-08 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "hold"` | ❌ W0 | ⬜ pending |
-| 01-03-09 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "move-up"` | ❌ W0 | ⬜ pending |
-| 01-03-10 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "equity play"` | ❌ W0 | ⬜ pending |
-| 01-03-11 | 03 | 1 | -- | unit | `npx vitest run src/lib/calculations.test.ts -t "defaults"` | ❌ W0 | ⬜ pending |
-| 01-04-01 | 04 | 2 | PROD-01 | unit | `npx vitest run src/lib/csv-parser.test.ts` | ❌ W0 | ⬜ pending |
-| 01-05-01 | 05 | 2 | PROD-01 | integration | Manual -- requires Supabase connection | N/A | ⬜ pending |
-| 01-05-02 | 05 | 2 | PROD-01 | manual-only | Timed test by Josh (< 5 minutes) | N/A | ⬜ pending |
+| 01-01-T1 | 01 | 1 | -- | setup | `npm run build` | ❌ W0 | ⬜ pending |
+| 01-01-T2 | 01 | 1 | PROD-02 | setup | `npm run build` | ❌ W0 | ⬜ pending |
+| 01-01-T3 | 01 | 1 | PROD-02 | unit | `npx vitest run src/lib/slugify.test.ts` | ❌ W0 | ⬜ pending |
+| 01-02-T1 | 02 | 2 | -- | unit | `npx vitest run src/lib/calculations.test.ts` | ❌ W0 | ⬜ pending |
+| 01-03-T1 | 03 | 2 | PROD-01 | unit | `npx vitest run src/lib/csv-parser.test.ts` | ❌ W0 | ⬜ pending |
+| 01-03-T2 | 03 | 2 | PROD-01 | build | `npm run build` | ❌ W0 | ⬜ pending |
+| 01-03-T3 | 03 | 2 | PROD-01 | build | `npm run build` | ❌ W0 | ⬜ pending |
+| 01-03-T4 | 03 | 2 | PROD-01 | manual-only | Timed test by Josh (< 5 minutes) | N/A | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
