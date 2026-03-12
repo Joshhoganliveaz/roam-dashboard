@@ -12,7 +12,7 @@
 - [ ] **DATA-03**: Page includes appreciation visualization (line or growth chart over time)
 - [x] **DATA-04**: Page shows net proceeds estimate (what homeowner would walk away with after selling)
 - [x] **DATA-05**: Page reframes equity as earnings per week/month ("Your home earned $847/week")
-- [ ] **DATA-06**: Page compares home appreciation vs S&P 500 performance over same period
+- [x] **DATA-06**: Page compares home appreciation vs S&P 500 performance over same period
 - [x] **DATA-07**: Page compares cost of ownership vs renting the same home
 
 ### Future Scenarios
@@ -42,10 +42,10 @@
 - [ ] **FMT-01**: formatPercent uses whole numbers by default (24% not 24.3%)
 - [ ] **FMT-02**: formatCurrency never shows cents (default 0 decimals)
 - [ ] **FMT-03**: Negative currency displays with minus sign (-$23,000)
-- [ ] **SP5-01**: getSP500Price returns correct price for known month from static data
-- [ ] **SP5-02**: getSP500Price falls back to nearest available month
-- [ ] **SP5-03**: calcRealSP500Return computes actual growth from real data
-- [ ] **SP5-04**: calcRealSP500Return falls back to historical average when data unavailable
+- [x] **SP5-01**: getSP500Price returns correct price for known month from static data
+- [x] **SP5-02**: getSP500Price falls back to nearest available month
+- [x] **SP5-03**: calcRealSP500Return computes actual growth from real data
+- [x] **SP5-04**: calcRealSP500Return falls back to historical average when data unavailable
 - [ ] **EDGE-01**: computeHomeownerMetrics handles negative appreciation correctly
 - [ ] **EDGE-02**: computeHomeownerMetrics handles zero loan (cash purchase) correctly
 - [ ] **VAL-01**: validateHomeownerInputs flags out-of-range values
@@ -83,7 +83,7 @@
 | DATA-03 | Phase 2 | Pending |
 | DATA-04 | Phase 2, 2.1 | Complete (hardened in 2.1) |
 | DATA-05 | Phase 2, 2.1 | Complete (hardened in 2.1) |
-| DATA-06 | Phase 2.1 | Pending |
+| DATA-06 | Phase 2.1 | Complete |
 | DATA-07 | Phase 2 | Complete |
 | SCEN-01 | Phase 3 | Pending |
 | SCEN-02 | Phase 3 | Pending |
@@ -101,10 +101,10 @@
 | FMT-01 | Phase 2.1 | Pending |
 | FMT-02 | Phase 2.1 | Pending |
 | FMT-03 | Phase 2.1 | Pending |
-| SP5-01 | Phase 2.1 | Pending |
-| SP5-02 | Phase 2.1 | Pending |
-| SP5-03 | Phase 2.1 | Pending |
-| SP5-04 | Phase 2.1 | Pending |
+| SP5-01 | Phase 2.1 | Complete |
+| SP5-02 | Phase 2.1 | Complete |
+| SP5-03 | Phase 2.1 | Complete |
+| SP5-04 | Phase 2.1 | Complete |
 | EDGE-01 | Phase 2.1 | Pending |
 | EDGE-02 | Phase 2.1 | Pending |
 | VAL-01 | Phase 2.1 | Pending |
