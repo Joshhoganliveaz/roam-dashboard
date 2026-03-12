@@ -17,9 +17,9 @@
 
 ### Future Scenarios
 
-- [ ] **SCEN-01**: Hold & Rent projection -- when rental income would cover the mortgage
-- [ ] **SCEN-02**: Move-Up projection -- net proceeds and what that buys as a down payment
-- [ ] **SCEN-03**: Equity Play projection -- HELOC potential for investment property leverage
+- [x] **SCEN-01**: Hold & Rent projection -- when rental income would cover the mortgage
+- [x] **SCEN-02**: Move-Up projection -- net proceeds and what that buys as a down payment
+- [x] **SCEN-03**: Equity Play projection -- HELOC potential for investment property leverage
 
 ### Narrative & Design
 
@@ -30,7 +30,7 @@
 - [x] **NARR-05**: Timeline includes milestone markers (purchase anniversary, equity milestones)
 - [x] **NARR-06**: Live AZ Co branding throughout (Olive, Canyon, Gold, Cream, Charcoal palette; Source Serif 4 + DM Sans)
 - [x] **NARR-07**: Mobile-first responsive design (primary viewing via text message on phone)
-- [ ] **NARR-08**: Soft CTA to contact Josh ("Ready to explore your options? Let's talk.")
+- [x] **NARR-08**: Soft CTA to contact Josh ("Ready to explore your options? Let's talk.")
 
 ### Production
 
@@ -85,9 +85,9 @@
 | DATA-05 | Phase 2, 2.1 | Complete (hardened in 2.1) |
 | DATA-06 | Phase 2.1 | Complete |
 | DATA-07 | Phase 2 | Complete |
-| SCEN-01 | Phase 3 | Pending |
-| SCEN-02 | Phase 3 | Pending |
-| SCEN-03 | Phase 3 | Pending |
+| SCEN-01 | Phase 3 | Complete |
+| SCEN-02 | Phase 3 | Complete |
+| SCEN-03 | Phase 3 | Complete |
 | NARR-01 | Phase 2 | Complete |
 | NARR-02 | Phase 2 | Complete |
 | NARR-03 | Phase 3 | Complete |
@@ -95,7 +95,7 @@
 | NARR-05 | Phase 3 | Complete |
 | NARR-06 | Phase 2 | Complete |
 | NARR-07 | Phase 2 | Complete |
-| NARR-08 | Phase 3 | Pending |
+| NARR-08 | Phase 3 | Complete |
 | PROD-01 | Phase 1, 2.1 | Complete (hardened in 2.1) |
 | PROD-02 | Phase 1 | Complete |
 | FMT-01 | Phase 2.1 | Complete |

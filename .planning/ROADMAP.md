@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation + Admin** - Project scaffolding, Supabase schema, calculation engine, admin input form, and slug-based URL system
 - [ ] **Phase 2: Core Homeowner Page** - Branded, mobile-first page at /h/[slug] displaying all financial data -- value, equity, appreciation chart, comparisons, and net proceeds
-- [ ] **Phase 3: Narrative Experience** - Scroll-triggered animations, SB7 adaptive narrative, future scenario projections, milestone markers, and CTA
+- [x] **Phase 3: Narrative Experience** - Scroll-triggered animations, SB7 adaptive narrative, future scenario projections, milestone markers, and CTA (completed 2026-03-12)
 
 ## Phase Details
 
@@ -89,4 +89,4 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3
 | 1. Foundation + Admin | 3/3 | Complete | 2026-03-12 |
 | 2. Core Homeowner Page | 2/3 | In Progress|  |
 | 2.1 Financial Data Audit | 0/4 | Not started | - |
-| 3. Narrative Experience | 1/2 | In Progress | - |
+| 3. Narrative Experience | 2/2 | Complete   | 2026-03-12 |
