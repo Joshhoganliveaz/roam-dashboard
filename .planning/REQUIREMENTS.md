@@ -35,7 +35,7 @@
 ### Production
 
 - [ ] **PROD-01**: Admin input form creates a new page in under 5 minutes
-- [ ] **PROD-02**: Each homeowner page has a unique shareable URL
+- [x] **PROD-02**: Each homeowner page has a unique shareable URL
 
 ## v2 Requirements
 
@@ -83,7 +83,7 @@
 | NARR-07 | Phase 2 | Pending |
 | NARR-08 | Phase 3 | Pending |
 | PROD-01 | Phase 1 | Pending |
-| PROD-02 | Phase 1 | Pending |
+| PROD-02 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 20 total

@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Scaffold project, types, Supabase, auth middleware, slug generation
+- [x] 01-01-PLAN.md — Scaffold project, types, Supabase, auth middleware, slug generation
 - [ ] 01-02-PLAN.md — Calculation engine (TDD) with full unit test coverage
 - [ ] 01-03-PLAN.md — Admin form, CSV upload, photo upload, list view
 
@@ -73,6 +73,6 @@ Phases execute in numeric order: 1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + Admin | 0/3 | Not started | - |
+| 1. Foundation + Admin | 1/3 | In progress | - |
 | 2. Core Homeowner Page | 0/3 | Not started | - |
 | 3. Narrative Experience | 0/2 | Not started | - |
