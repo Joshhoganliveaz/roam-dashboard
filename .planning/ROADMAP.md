@@ -74,5 +74,5 @@ Phases execute in numeric order: 1 -> 2 -> 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation + Admin | 3/3 | Complete | 2026-03-12 |
-| 2. Core Homeowner Page | 0/3 | Not started | - |
+| 2. Core Homeowner Page | 1/3 | In Progress|  |
 | 3. Narrative Experience | 0/2 | Not started | - |
