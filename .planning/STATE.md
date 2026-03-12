@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02.1-03-PLAN.md
-last_updated: "2026-03-12T15:56:38.703Z"
-last_activity: 2026-03-12 -- Plan 02.1-03 executed (SB7 narrative adaptation for underwater/negative scenarios)
+stopped_at: Completed 02.1-04-PLAN.md
+last_updated: "2026-03-12T16:03:31.410Z"
+last_activity: 2026-03-12 -- Plan 02.1-04 executed (admin validation warnings and preview-before-publish workflow)
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 10
-  completed_plans: 8
-  percent: 80
+  completed_plans: 9
+  percent: 90
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 02.1 of 4 (Financial Data Audit & Edge Cases)
-Plan: 3 of 4 in current phase (next: 02.1-04)
+Plan: 4 of 4 in current phase (phase complete)
 Status: Executing
-Last activity: 2026-03-12 -- Plan 02.1-03 executed (SB7 narrative adaptation for underwater/negative scenarios)
+Last activity: 2026-03-12 -- Plan 02.1-04 executed (admin validation warnings and preview-before-publish workflow)
 
-Progress: [████████░░] 80%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [████████░░] 80%
 | Phase 02.1 P01 | 3min | 2 tasks | 5 files |
 | Phase 02.1 P02 | 4 | 2 tasks | 5 files |
 | Phase 02.1 P03 | 2min | 2 tasks | 8 files |
+| Phase 02.1 P04 | 4min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,8 @@ Recent decisions affecting current work:
 - [Phase 02.1]: Static JSON data file for S&P 500 prices (zero runtime deps, works offline)
 - [Phase 02.1]: Negative hero numbers use Math.abs with qualifier text (e.g. 'below purchase price') instead of raw negative currency
 - [Phase 02.1]: SP500Callout always shows isRealData source indicator (actual vs historical average)
+- [Phase 02.1]: Preview link shown both after save and persistently for edit mode
+- [Phase 02.1]: Publish uses inline server action form with redirect for immediate state refresh
 
 ### Pending Todos
 
@@ -109,6 +112,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T15:56:38.700Z
-Stopped at: Completed 02.1-03-PLAN.md
+Last session: 2026-03-12T16:03:31.386Z
+Stopped at: Completed 02.1-04-PLAN.md
 Resume file: None
