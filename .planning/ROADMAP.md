@@ -90,7 +90,7 @@ Plans:
   2. 02-VERIFICATION.md exists and formally verifies all Phase 2 requirements (DATA-03, DATA-07, NARR-01, NARR-02, NARR-06, NARR-07)
   3. DATA-03 is marked [x] Complete in REQUIREMENTS.md with traceability updated
   4. All ROADMAP.md checkboxes and status fields accurately reflect actual execution state
-**Plans**: 0 plans
+**Plans**: 1 plan
 
 Plans:
 - [ ] 04-01-PLAN.md — Create missing summaries, Phase 2 verification, update all tracking artifacts
@@ -98,7 +98,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
