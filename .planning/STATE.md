@@ -52,6 +52,7 @@ Progress: [███████░░░] 70%
 *Updated after each plan completion*
 | Phase 02 P01 | 5min | 2 tasks | 9 files |
 | Phase 02 P02 | 4min | 2 tasks | 7 files |
+| Phase 02.1 P01 | 3min | 2 tasks | 5 files |
 | Phase 02.1 P02 | 4 | 2 tasks | 5 files |
 
 ## Accumulated Context
@@ -84,6 +85,9 @@ Recent decisions affecting current work:
 - 02-02: RentVsOwn villain card uses canyon/muted, triumph card uses olive/cream
 - 02-02: NetProceeds expandable breakdown with useState toggle
 - 02-02: Responsive hero numbers text-4xl/5xl/6xl to handle 7-digit values on mobile
+- 02.1-01: formatPercent default changed from 1 to 0 decimals for cleaner homeowner display
+- 02.1-01: Validation warnings are advisory-only -- never block form submission
+- 02.1-01: Price range $10K-$50M, interest rate 0-15%, loan-exceeds-value flagged as unusual
 - [Phase 02.1]: Static JSON data file for S&P 500 prices (zero runtime deps, works offline)
 
 ### Pending Todos

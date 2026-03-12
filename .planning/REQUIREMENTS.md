@@ -39,17 +39,17 @@
 
 ### Phase 02.1: Hardening & Edge Cases
 
-- [ ] **FMT-01**: formatPercent uses whole numbers by default (24% not 24.3%)
-- [ ] **FMT-02**: formatCurrency never shows cents (default 0 decimals)
-- [ ] **FMT-03**: Negative currency displays with minus sign (-$23,000)
+- [x] **FMT-01**: formatPercent uses whole numbers by default (24% not 24.3%)
+- [x] **FMT-02**: formatCurrency never shows cents (default 0 decimals)
+- [x] **FMT-03**: Negative currency displays with minus sign (-$23,000)
 - [x] **SP5-01**: getSP500Price returns correct price for known month from static data
 - [x] **SP5-02**: getSP500Price falls back to nearest available month
 - [x] **SP5-03**: calcRealSP500Return computes actual growth from real data
 - [x] **SP5-04**: calcRealSP500Return falls back to historical average when data unavailable
-- [ ] **EDGE-01**: computeHomeownerMetrics handles negative appreciation correctly
-- [ ] **EDGE-02**: computeHomeownerMetrics handles zero loan (cash purchase) correctly
-- [ ] **VAL-01**: validateHomeownerInputs flags out-of-range values
-- [ ] **VAL-02**: validateHomeownerInputs returns empty for valid inputs
+- [x] **EDGE-01**: computeHomeownerMetrics handles negative appreciation correctly
+- [x] **EDGE-02**: computeHomeownerMetrics handles zero loan (cash purchase) correctly
+- [x] **VAL-01**: validateHomeownerInputs flags out-of-range values
+- [x] **VAL-02**: validateHomeownerInputs returns empty for valid inputs
 
 ## v2 Requirements
 
@@ -98,17 +98,17 @@
 | NARR-08 | Phase 3 | Pending |
 | PROD-01 | Phase 1, 2.1 | Complete (hardened in 2.1) |
 | PROD-02 | Phase 1 | Complete |
-| FMT-01 | Phase 2.1 | Pending |
-| FMT-02 | Phase 2.1 | Pending |
-| FMT-03 | Phase 2.1 | Pending |
+| FMT-01 | Phase 2.1 | Complete |
+| FMT-02 | Phase 2.1 | Complete |
+| FMT-03 | Phase 2.1 | Complete |
 | SP5-01 | Phase 2.1 | Complete |
 | SP5-02 | Phase 2.1 | Complete |
 | SP5-03 | Phase 2.1 | Complete |
 | SP5-04 | Phase 2.1 | Complete |
-| EDGE-01 | Phase 2.1 | Pending |
-| EDGE-02 | Phase 2.1 | Pending |
-| VAL-01 | Phase 2.1 | Pending |
-| VAL-02 | Phase 2.1 | Pending |
+| EDGE-01 | Phase 2.1 | Complete |
+| EDGE-02 | Phase 2.1 | Complete |
+| VAL-01 | Phase 2.1 | Complete |
+| VAL-02 | Phase 2.1 | Complete |
 
 **Coverage:**
 - v1 requirements: 20 total
