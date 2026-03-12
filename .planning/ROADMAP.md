@@ -73,11 +73,11 @@ Plans:
   3. Three future scenario sections are visible and populated: Hold and Rent (when rental income covers the mortgage), Move-Up (net proceeds and what that buys as a down payment), and Equity Play (HELOC potential for investment property leverage)
   4. Timeline includes milestone markers (purchase anniversary, equity milestones) that anchor the homeowner's story in real moments
   5. The page ends with a soft CTA to contact Josh ("Ready to explore your options? Let's talk.") that feels like a natural conclusion to the narrative, not a sales pitch
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md — Animation infrastructure, adaptive narrative voice, milestone markers, wired into all sections
+- [ ] 03-02-PLAN.md — Future scenario cards (Hold & Rent, Move-Up, Equity Play), branded CTA section, visual verification
 
 ## Progress
 
