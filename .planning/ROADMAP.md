@@ -27,11 +27,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. The admin interface is password-protected and shows a list of all created pages with status
   3. Each saved homeowner record generates a unique, URL-safe slug that will serve as the shareable URL
   4. Pure calculation functions return correct results for equity, appreciation, net proceeds, earnings-per-period, S&P comparison, rent-vs-own, and all three scenario projections -- verified by unit tests
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Scaffold project, types, Supabase, auth middleware, slug generation
+- [ ] 01-02-PLAN.md — Calculation engine (TDD) with full unit test coverage
+- [ ] 01-03-PLAN.md — Admin form, CSV upload, photo upload, list view
 
 ### Phase 2: Core Homeowner Page
 **Goal**: Homeowners can visit their unique URL and see a complete, branded, mobile-first page showing their home's financial story -- current value, equity gained, appreciation over time, comparisons, and net proceeds
@@ -72,6 +73,6 @@ Phases execute in numeric order: 1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + Admin | 0/2 | Not started | - |
+| 1. Foundation + Admin | 0/3 | Not started | - |
 | 2. Core Homeowner Page | 0/3 | Not started | - |
 | 3. Narrative Experience | 0/2 | Not started | - |
