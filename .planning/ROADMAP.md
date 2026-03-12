@@ -12,7 +12,7 @@ This roadmap delivers a personalized, scrollytelling web page for homeowners tha
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation + Admin** - Project scaffolding, Supabase schema, calculation engine, admin input form, and slug-based URL system
+- [x] **Phase 1: Foundation + Admin** - Project scaffolding, Supabase schema, calculation engine, admin input form, and slug-based URL system
 - [ ] **Phase 2: Core Homeowner Page** - Branded, mobile-first page at /h/[slug] displaying all financial data -- value, equity, appreciation chart, comparisons, and net proceeds
 - [ ] **Phase 3: Narrative Experience** - Scroll-triggered animations, SB7 adaptive narrative, future scenario projections, milestone markers, and CTA
 
@@ -31,8 +31,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Scaffold project, types, Supabase, auth middleware, slug generation
-- [ ] 01-02-PLAN.md — Calculation engine (TDD) with full unit test coverage
-- [ ] 01-03-PLAN.md — Admin form, CSV upload, photo upload, list view
+- [x] 01-02-PLAN.md — Calculation engine (TDD) with full unit test coverage
+- [x] 01-03-PLAN.md — Admin form, CSV upload, photo upload, list view
 
 ### Phase 2: Core Homeowner Page
 **Goal**: Homeowners can visit their unique URL and see a complete, branded, mobile-first page showing their home's financial story -- current value, equity gained, appreciation over time, comparisons, and net proceeds
@@ -43,12 +43,12 @@ Plans:
   2. The page uses a scrolling narrative timeline structure with SB7 framing -- homeowner is the hero, Live AZ Co is the guide, every section opens with narrative context rather than raw numbers
   3. The page is fully branded with Live AZ Co design language (Olive, Canyon, Gold, Cream, Charcoal palette; Source Serif 4 headings; DM Sans body)
   4. The page is mobile-first responsive and renders correctly on phone screens (primary viewing context is opening a text message link)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01-PLAN.md — Format utilities, server component pipeline, hero section, personal note, page shell
+- [ ] 02-02-PLAN.md — Six data section components (purchase story through net proceeds) with SB7 narrative
+- [ ] 02-03-PLAN.md — Appreciation chart (Recharts), S&P callout card, visual verification
 
 ### Phase 3: Narrative Experience
 **Goal**: The page transforms from a data display into a cinematic narrative experience -- sections animate on scroll, the story adapts to how long the homeowner has owned their home, future scenarios spark conversations, and a soft CTA brings them back to Josh
@@ -73,6 +73,6 @@ Phases execute in numeric order: 1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + Admin | 1/3 | In progress | - |
+| 1. Foundation + Admin | 3/3 | Complete | 2026-03-12 |
 | 2. Core Homeowner Page | 0/3 | Not started | - |
 | 3. Narrative Experience | 0/2 | Not started | - |
