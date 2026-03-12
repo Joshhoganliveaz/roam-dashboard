@@ -76,7 +76,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Animation infrastructure, adaptive narrative voice, milestone markers, wired into all sections
+- [x] 03-01-PLAN.md — Animation infrastructure, adaptive narrative voice, milestone markers, wired into all sections
 - [ ] 03-02-PLAN.md — Future scenario cards (Hold & Rent, Move-Up, Equity Play), branded CTA section, visual verification
 
 ## Progress
@@ -89,4 +89,4 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3
 | 1. Foundation + Admin | 3/3 | Complete | 2026-03-12 |
 | 2. Core Homeowner Page | 2/3 | In Progress|  |
 | 2.1 Financial Data Audit | 0/4 | Not started | - |
-| 3. Narrative Experience | 0/2 | Not started | - |
+| 3. Narrative Experience | 1/2 | In Progress | - |

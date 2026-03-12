@@ -25,9 +25,9 @@
 
 - [x] **NARR-01**: Page uses scrolling narrative timeline (scrollytelling) that unfolds the home's story
 - [x] **NARR-02**: All content follows SB7 framework -- homeowner is hero, Live AZ Co is guide
-- [ ] **NARR-03**: Data reveals animate on scroll (counters count up, charts draw themselves)
-- [ ] **NARR-04**: Narrative adapts by ownership duration (recent buyers get forward-looking; long-term get retrospective)
-- [ ] **NARR-05**: Timeline includes milestone markers (purchase anniversary, equity milestones)
+- [x] **NARR-03**: Data reveals animate on scroll (counters count up, charts draw themselves)
+- [x] **NARR-04**: Narrative adapts by ownership duration (recent buyers get forward-looking; long-term get retrospective)
+- [x] **NARR-05**: Timeline includes milestone markers (purchase anniversary, equity milestones)
 - [x] **NARR-06**: Live AZ Co branding throughout (Olive, Canyon, Gold, Cream, Charcoal palette; Source Serif 4 + DM Sans)
 - [x] **NARR-07**: Mobile-first responsive design (primary viewing via text message on phone)
 - [ ] **NARR-08**: Soft CTA to contact Josh ("Ready to explore your options? Let's talk.")
@@ -90,9 +90,9 @@
 | SCEN-03 | Phase 3 | Pending |
 | NARR-01 | Phase 2 | Complete |
 | NARR-02 | Phase 2 | Complete |
-| NARR-03 | Phase 3 | Pending |
-| NARR-04 | Phase 3 | Pending |
-| NARR-05 | Phase 3 | Pending |
+| NARR-03 | Phase 3 | Complete |
+| NARR-04 | Phase 3 | Complete |
+| NARR-05 | Phase 3 | Complete |
 | NARR-06 | Phase 2 | Complete |
 | NARR-07 | Phase 2 | Complete |
 | NARR-08 | Phase 3 | Pending |
@@ -118,4 +118,4 @@
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-12 after Phase 02.1 planning*
+*Last updated: 2026-03-12 after Phase 03-01 execution*

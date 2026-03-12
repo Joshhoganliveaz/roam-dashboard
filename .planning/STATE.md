@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-12T20:02:31.342Z"
-last_activity: 2026-03-12 -- Plan 02.1-04 executed (admin validation warnings and preview-before-publish workflow)
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-12T20:56:00Z"
+last_activity: 2026-03-12 -- Plan 03-01 executed (animation infrastructure, adaptive narrative, milestones)
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 10
-  completed_plans: 9
-  percent: 90
+  completed_plans: 10
+  percent: 95
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 02.1: Financial Data Audit & Edge Cases
+**Current focus:** Phase 03: Narrative Experience
 
 ## Current Position
 
-Phase: 02.1 of 4 (Financial Data Audit & Edge Cases)
-Plan: 4 of 4 in current phase (phase complete)
+Phase: 03 of 4 (Narrative Experience)
+Plan: 1 of 2 in current phase
 Status: Executing
-Last activity: 2026-03-12 -- Plan 02.1-04 executed (admin validation warnings and preview-before-publish workflow)
+Last activity: 2026-03-12 -- Plan 03-01 executed (animation infrastructure, adaptive narrative, milestones)
 
-Progress: [█████████░] 90%
+Progress: [█████████▌] 95%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [█████████░] 90%
 | Phase 02.1 P02 | 4 | 2 tasks | 5 files |
 | Phase 02.1 P03 | 2min | 2 tasks | 8 files |
 | Phase 02.1 P04 | 4min | 2 tasks | 3 files |
+| Phase 03 P01 | 9min | 2 tasks | 20 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,11 @@ Recent decisions affecting current work:
 - [Phase 02.1]: SP500Callout always shows isRealData source indicator (actual vs historical average)
 - [Phase 02.1]: Preview link shown both after save and persistently for edit mode
 - [Phase 02.1]: Publish uses inline server action form with redirect for immediate state refresh
+- [Phase 03]: motion (v12.x) for all scroll animations via whileInView + viewport={{ once: true }}
+- [Phase 03]: Custom useCountUp hook with easeInQuad instead of react-countup dependency
+- [Phase 03]: Voice thresholds: <24mo recent, 24-83mo midterm, 84+mo longterm
+- [Phase 03]: Stagger pattern for key data sections (intro->number->copy), unit animation for quieter sections
+- [Phase 03]: Milestone impressiveness scoring: equity threshold/50K, anniversary years, appreciation*10
 
 ### Pending Todos
 
@@ -112,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T20:02:31.339Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-narrative-experience/03-CONTEXT.md
+Last session: 2026-03-12T20:56:00Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-narrative-experience/03-01-SUMMARY.md
