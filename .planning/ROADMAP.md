@@ -46,9 +46,22 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Format utilities, server component pipeline, hero section, personal note, page shell
-- [ ] 02-02-PLAN.md — Six data section components (purchase story through net proceeds) with SB7 narrative
+- [x] 02-01-PLAN.md — Format utilities, server component pipeline, hero section, personal note, page shell
+- [x] 02-02-PLAN.md — Six data section components (purchase story through net proceeds) with SB7 narrative
 - [ ] 02-03-PLAN.md — Appreciation chart (Recharts), S&P callout card, visual verification
+
+### Phase 02.1: Financial Data Audit & Edge Cases (INSERTED)
+
+**Goal:** All financial data displays correctly for edge cases (underwater homes, negative appreciation, cash purchases), number formatting matches production standards, S&P 500 comparison uses real historical data, and Josh can preview pages before publishing
+**Requirements**: DATA-06, DATA-01, DATA-02, DATA-04, DATA-05, PROD-01, FMT-01, FMT-02, FMT-03, SP5-01, SP5-02, SP5-03, SP5-04, EDGE-01, EDGE-02, VAL-01, VAL-02
+**Depends on:** Phase 2
+**Plans:** 4 plans
+
+Plans:
+- [ ] 02.1-01-PLAN.md — Formatting fixes, validation module, edge case tests
+- [ ] 02.1-02-PLAN.md — S&P 500 real data file, lookup module, calculation wiring
+- [ ] 02.1-03-PLAN.md — SB7 underwater narrative for all data section components
+- [ ] 02.1-04-PLAN.md — Admin validation warnings and preview-before-publish workflow
 
 ### Phase 3: Narrative Experience
 **Goal**: The page transforms from a data display into a cinematic narrative experience -- sections animate on scroll, the story adapts to how long the homeowner has owned their home, future scenarios spark conversations, and a soft CTA brings them back to Josh
@@ -69,10 +82,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation + Admin | 3/3 | Complete | 2026-03-12 |
-| 2. Core Homeowner Page | 1/3 | In Progress|  |
+| 2. Core Homeowner Page | 2/3 | In Progress|  |
+| 2.1 Financial Data Audit | 0/4 | Not started | - |
 | 3. Narrative Experience | 0/2 | Not started | - |
