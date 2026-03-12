@@ -9,7 +9,7 @@
 
 - [x] **DATA-01**: Page displays current home value estimate
 - [x] **DATA-02**: Page shows equity gained since purchase (current value minus remaining mortgage)
-- [ ] **DATA-03**: Page includes appreciation visualization (line or growth chart over time)
+- [x] **DATA-03**: Page includes appreciation visualization (line or growth chart over time)
 - [x] **DATA-04**: Page shows net proceeds estimate (what homeowner would walk away with after selling)
 - [x] **DATA-05**: Page reframes equity as earnings per week/month ("Your home earned $847/week")
 - [x] **DATA-06**: Page compares home appreciation vs S&P 500 performance over same period
@@ -80,7 +80,7 @@
 |-------------|-------|--------|
 | DATA-01 | Phase 2, 2.1 | Complete (hardened in 2.1) |
 | DATA-02 | Phase 2, 2.1 | Complete (hardened in 2.1) |
-| DATA-03 | Phase 2, 4 | Pending |
+| DATA-03 | Phase 2 | Complete |
 | DATA-04 | Phase 2, 2.1 | Complete (hardened in 2.1) |
 | DATA-05 | Phase 2, 2.1 | Complete (hardened in 2.1) |
 | DATA-06 | Phase 2.1 | Complete |
@@ -118,4 +118,4 @@
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-12 after Phase 03-01 execution*
+*Last updated: 2026-03-12 after Phase 04-01 execution*
