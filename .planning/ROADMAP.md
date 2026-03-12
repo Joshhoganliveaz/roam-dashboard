@@ -13,8 +13,9 @@ This roadmap delivers a personalized, scrollytelling web page for homeowners tha
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation + Admin** - Project scaffolding, Supabase schema, calculation engine, admin input form, and slug-based URL system
-- [ ] **Phase 2: Core Homeowner Page** - Branded, mobile-first page at /h/[slug] displaying all financial data -- value, equity, appreciation chart, comparisons, and net proceeds
+- [x] **Phase 2: Core Homeowner Page** - Branded, mobile-first page at /h/[slug] displaying all financial data -- value, equity, appreciation chart, comparisons, and net proceeds
 - [x] **Phase 3: Narrative Experience** - Scroll-triggered animations, SB7 adaptive narrative, future scenario projections, milestone markers, and CTA (completed 2026-03-12)
+- [ ] **Phase 4: Documentation & Tracking Cleanup** - Close audit documentation gaps: missing summaries, Phase 2 verification, stale ROADMAP checkboxes, requirements tracking
 
 ## Phase Details
 
@@ -48,7 +49,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Format utilities, server component pipeline, hero section, personal note, page shell
 - [x] 02-02-PLAN.md — Six data section components (purchase story through net proceeds) with SB7 narrative
-- [ ] 02-03-PLAN.md — Appreciation chart (Recharts), S&P callout card, visual verification
+- [x] 02-03-PLAN.md — Appreciation chart (Recharts), S&P callout card, visual verification
 
 ### Phase 02.1: Financial Data Audit & Edge Cases (INSERTED)
 
@@ -58,10 +59,10 @@ Plans:
 **Plans:** 4/4 plans complete
 
 Plans:
-- [ ] 02.1-01-PLAN.md — Formatting fixes, validation module, edge case tests
-- [ ] 02.1-02-PLAN.md — S&P 500 real data file, lookup module, calculation wiring
-- [ ] 02.1-03-PLAN.md — SB7 underwater narrative for all data section components
-- [ ] 02.1-04-PLAN.md — Admin validation warnings and preview-before-publish workflow
+- [x] 02.1-01-PLAN.md — Formatting fixes, validation module, edge case tests
+- [x] 02.1-02-PLAN.md — S&P 500 real data file, lookup module, calculation wiring
+- [x] 02.1-03-PLAN.md — SB7 underwater narrative for all data section components
+- [x] 02.1-04-PLAN.md — Admin validation warnings and preview-before-publish workflow
 
 ### Phase 3: Narrative Experience
 **Goal**: The page transforms from a data display into a cinematic narrative experience -- sections animate on scroll, the story adapts to how long the homeowner has owned their home, future scenarios spark conversations, and a soft CTA brings them back to Josh
@@ -77,7 +78,22 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Animation infrastructure, adaptive narrative voice, milestone markers, wired into all sections
-- [ ] 03-02-PLAN.md — Future scenario cards (Hold & Rent, Move-Up, Equity Play), branded CTA section, visual verification
+- [x] 03-02-PLAN.md — Future scenario cards (Hold & Rent, Move-Up, Equity Play), branded CTA section, visual verification
+
+### Phase 4: Documentation & Tracking Cleanup
+**Goal**: Close all documentation and tracking gaps identified by the v1.0 milestone audit so that every requirement has proper verification evidence and all tracking artifacts are accurate
+**Depends on**: Phase 3
+**Requirements**: DATA-03, DATA-07, NARR-01, NARR-02, NARR-06, NARR-07
+**Gap Closure:** Closes gaps from audit
+**Success Criteria** (what must be TRUE):
+  1. 02-03-SUMMARY.md exists documenting the completed appreciation chart plan
+  2. 02-VERIFICATION.md exists and formally verifies all Phase 2 requirements (DATA-03, DATA-07, NARR-01, NARR-02, NARR-06, NARR-07)
+  3. DATA-03 is marked [x] Complete in REQUIREMENTS.md with traceability updated
+  4. All ROADMAP.md checkboxes and status fields accurately reflect actual execution state
+**Plans**: 0 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Create missing summaries, Phase 2 verification, update all tracking artifacts
 
 ## Progress
 
@@ -87,6 +103,7 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation + Admin | 3/3 | Complete | 2026-03-12 |
-| 2. Core Homeowner Page | 2/3 | In Progress|  |
-| 2.1 Financial Data Audit | 0/4 | Not started | - |
-| 3. Narrative Experience | 2/2 | Complete   | 2026-03-12 |
+| 2. Core Homeowner Page | 3/3 | Complete | 2026-03-12 |
+| 2.1 Financial Data Audit | 4/4 | Complete | 2026-03-12 |
+| 3. Narrative Experience | 2/2 | Complete | 2026-03-12 |
+| 4. Documentation & Tracking Cleanup | 0/1 | Not started | - |

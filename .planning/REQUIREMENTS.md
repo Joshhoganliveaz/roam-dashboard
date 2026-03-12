@@ -80,7 +80,7 @@
 |-------------|-------|--------|
 | DATA-01 | Phase 2, 2.1 | Complete (hardened in 2.1) |
 | DATA-02 | Phase 2, 2.1 | Complete (hardened in 2.1) |
-| DATA-03 | Phase 2 | Pending |
+| DATA-03 | Phase 2, 4 | Pending |
 | DATA-04 | Phase 2, 2.1 | Complete (hardened in 2.1) |
 | DATA-05 | Phase 2, 2.1 | Complete (hardened in 2.1) |
 | DATA-06 | Phase 2.1 | Complete |
