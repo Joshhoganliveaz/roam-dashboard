@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02.1-02-PLAN.md
-last_updated: "2026-03-12T15:50:58.018Z"
-last_activity: 2026-03-12 -- Plan 02.1-02 executed (real S&P 500 data file and lookup module)
+stopped_at: Completed 02.1-03-PLAN.md
+last_updated: "2026-03-12T15:56:38.703Z"
+last_activity: 2026-03-12 -- Plan 02.1-03 executed (SB7 narrative adaptation for underwater/negative scenarios)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 10
-  completed_plans: 7
-  percent: 70
+  completed_plans: 8
+  percent: 80
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 02.1 of 4 (Financial Data Audit & Edge Cases)
-Plan: 2 of 4 in current phase (next: 02.1-03)
+Plan: 3 of 4 in current phase (next: 02.1-04)
 Status: Executing
-Last activity: 2026-03-12 -- Plan 02.1-02 executed (real S&P 500 data file and lookup module)
+Last activity: 2026-03-12 -- Plan 02.1-03 executed (SB7 narrative adaptation for underwater/negative scenarios)
 
-Progress: [███████░░░] 70%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [███████░░░] 70%
 | Phase 02 P02 | 4min | 2 tasks | 7 files |
 | Phase 02.1 P01 | 3min | 2 tasks | 5 files |
 | Phase 02.1 P02 | 4 | 2 tasks | 5 files |
+| Phase 02.1 P03 | 2min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,8 @@ Recent decisions affecting current work:
 - 02.1-01: Validation warnings are advisory-only -- never block form submission
 - 02.1-01: Price range $10K-$50M, interest rate 0-15%, loan-exceeds-value flagged as unusual
 - [Phase 02.1]: Static JSON data file for S&P 500 prices (zero runtime deps, works offline)
+- [Phase 02.1]: Negative hero numbers use Math.abs with qualifier text (e.g. 'below purchase price') instead of raw negative currency
+- [Phase 02.1]: SP500Callout always shows isRealData source indicator (actual vs historical average)
 
 ### Pending Todos
 
@@ -106,6 +109,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T15:50:58.013Z
-Stopped at: Completed 02.1-02-PLAN.md
+Last session: 2026-03-12T15:56:38.700Z
+Stopped at: Completed 02.1-03-PLAN.md
 Resume file: None
