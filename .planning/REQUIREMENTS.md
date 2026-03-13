@@ -55,9 +55,9 @@
 
 ### Value Range
 
-- [ ] **VALU-01**: Josh can enter low comp value and high comp value in admin form (replaces single currentValue)
-- [ ] **VALU-02**: Homeowner sees three condition choices (Mostly original / Made some updates / Completely remodeled) that map to positions within the comp range
-- [ ] **VALU-03**: Selecting a condition recalculates all downstream numbers (equity, scenarios, comparisons, net proceeds) using the condition-mapped value
+- [x] **VALU-01**: Josh can enter low comp value and high comp value in admin form (replaces single currentValue)
+- [x] **VALU-02**: Homeowner sees three condition choices (Mostly original / Made some updates / Completely remodeled) that map to positions within the comp range
+- [x] **VALU-03**: Selecting a condition recalculates all downstream numbers (equity, scenarios, comparisons, net proceeds) using the condition-mapped value
 - [ ] **VALU-04**: Condition change triggers cascading ripple animation flowing down the page section by section
 
 ### Cromford Chart
@@ -147,9 +147,9 @@
 | EDGE-02 | Phase 2.1 | Complete |
 | VAL-01 | Phase 2.1 | Complete |
 | VAL-02 | Phase 2.1 | Complete |
-| VALU-01 | Phase 5 | Pending |
-| VALU-02 | Phase 5 | Pending |
-| VALU-03 | Phase 5 | Pending |
+| VALU-01 | Phase 5 | Complete |
+| VALU-02 | Phase 5 | Complete |
+| VALU-03 | Phase 5 | Complete |
 | VALU-04 | Phase 5 | Pending |
 | CROM-01 | Phase 5 | Complete |
 | CROM-02 | Phase 5 | Complete |
