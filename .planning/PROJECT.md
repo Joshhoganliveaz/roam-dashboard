@@ -10,36 +10,57 @@ Unlike Homebot, Zillow, or automated home value emails, this isn't a report — 
 
 Show homeowners the full journey of their home — where they've been, where they are, and where they could go — so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
 
+## Current Milestone: v1.1 Enhanced Intelligence
+
+**Goal:** Transform the page from a static snapshot into an interactive, data-rich experience — real market data, homeowner-driven value selection, deeper scenario projections, and a merged investment comparison story.
+
+**Target features:**
+- Value range selector with condition picker (original/updated/remodeled)
+- Cromford appreciation chart via Tableau scraper + screenshot fallback
+- Merged Investment Comparison section (S&P + Rent vs Own leverage story)
+- Future scenarios rework: 5/10/15yr projections, market rate slider, rate lock callout, 4th combo scenario
+- UX polish: cascading animations, information cliffs removed
+
 ## Requirements
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Personalized page per homeowner generated from minimal input — v1.0
+- ✓ Scrolling narrative timeline from purchase date to present — v1.0
+- ✓ SB7 framing throughout — v1.0
+- ✓ Equity and appreciation visualization — v1.0
+- ✓ Reframing comparisons (home vs S&P 500, ownership cost vs renting) — v1.0
+- ✓ Future scenario projections: Hold & Rent, Move-Up, Equity Play — v1.0
+- ✓ Shareable via unique URL — v1.0
+- ✓ Adaptive narrative by ownership duration — v1.0
+- ✓ Production speed under 5 minutes — v1.0
+- ✓ Live AZ Co branding — v1.0
+- ✓ Mobile-first design — v1.0
+- ✓ Volume: 200+ pages, 20-30 new/month — v1.0
 
 ### Active
 
-- [ ] Personalized page per homeowner generated from minimal input (address, purchase price, purchase date, client name)
-- [ ] Scrolling narrative timeline from purchase date to present with data-backed beats
-- [ ] SB7 framing throughout — homeowner is the hero, Live AZ Co is the guide
-- [ ] Equity and appreciation visualization (how much the home has gained since purchase)
-- [ ] Reframing comparisons (home vs S&P 500, ownership cost vs renting, equity earned per week/month)
-- [ ] Future scenario projections: "Hold & Rent" path (when rents cover mortgage)
-- [ ] Future scenario projections: "Move-Up" path (what they'd net from a sale, what that buys)
-- [ ] Future scenario projections: "Equity Play" path (HELOC potential, investment property leverage)
-- [ ] Shareable via unique URL (text/email to homeowner)
-- [ ] Adapts narrative based on ownership duration (recent buyers get forward-looking "where you're headed" story; long-term owners get rich retrospective)
-- [ ] Production speed: create a new page in under 5 minutes
-- [ ] Live AZ Co branding (Olive, Canyon, Gold, Cream, Charcoal color palette)
-- [ ] Mobile-first design (most will open via text message)
-- [ ] Volume: supports 200+ pages, 20-30 new per month
+- [ ] Value range selector: Josh enters low/high comp values, homeowner picks condition (original/updated/remodeled)
+- [ ] Cascading recalculation when condition changes (equity, scenarios, all downstream numbers)
+- [ ] Cromford appreciation chart with real market data (Tableau scraper primary, screenshot OCR fallback)
+- [ ] Merged Investment Comparison section replacing separate S&P and Rent vs Own sections
+- [ ] Future scenarios: 5/10/15 year projection timelines for all three scenarios
+- [ ] Future scenarios: market rate slider affecting all scenarios differently
+- [ ] Future scenarios: rate lock advantage callout
+- [ ] Future scenarios: 4th combo scenario ("Keep, rent, and buy another")
+- [ ] Enhanced Hold & Rent: projected cash flow and appreciation at 5/10/15yr
+- [ ] Enhanced Move-Up: education on sell-to-buy paths
+- [ ] Enhanced Equity Play: HELOC with rate-adjusted costs
+- [ ] UX: cascading ripple animation on condition change
+- [ ] Information cliffs removed — full information, conversations happen when ready
 
 ### Out of Scope
 
-- Real-time MLS data integration (manual data input is fine for v1) — keeps it simple and avoids API complexity
+- Real-time MLS data integration — manual data input plus Cromford chart is sufficient
 - User accounts or login for homeowners — they just get a link
 - Automated email/text sending — Josh sends the links manually for now
-- Interactive calculators or user-adjustable inputs on the page — this is a curated experience, not a tool
 - Homebot-style automated recurring updates — each page is a moment-in-time touchpoint
+- Appraisal-grade accuracy on appreciation chart — narrative, not legal
 
 ## Context
 
@@ -71,4 +92,4 @@ Show homeowners the full journey of their home — where they've been, where the
 | Parked ideas documented in IDEAS.md | Five alternative concepts captured for future reference if direction pivots | — Pending |
 
 ---
-*Last updated: 2026-03-11 after initialization*
+*Last updated: 2026-03-13 after v1.1 milestone start*
