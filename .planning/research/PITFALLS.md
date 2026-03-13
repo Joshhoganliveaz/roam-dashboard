@@ -1,309 +1,340 @@
-# Pitfalls Research
+# Domain Pitfalls
 
-**Domain:** Personalized homeowner journey pages (real estate narrative experiences)
-**Researched:** 2026-03-11
-**Confidence:** HIGH (domain-specific research + existing project patterns + industry evidence)
+**Domain:** v1.1 Enhanced Intelligence -- adding interactivity, data scraping, and multi-timeline projections to existing Homeowner Journey Map
+**Researched:** 2026-03-13
+**Confidence:** HIGH (based on direct codebase inspection + domain-specific research)
 
 ## Critical Pitfalls
 
-### Pitfall 1: Appreciation Numbers That Don't Match the Homeowner's Reality
+Mistakes that cause rewrites, data corruption, or broken existing pages.
 
-**What goes wrong:**
-You show a homeowner their home has appreciated 22% since purchase, but they checked Zillow last week and it said 18%. Or worse, you show $85K in equity gain but their neighbor just sold for less than expected. The homeowner immediately distrusts the entire page and, by extension, Josh's expertise. Zillow's own Zestimate has a 7% median error rate on off-market homes -- a $500K home could be off by $35K. Any number you present will be compared against whatever the homeowner already believes.
+### Pitfall 1: Tableau Scraper Breaks Silently -- No Data, No Error, No Fallback
 
-**Why it happens:**
-Developers treat appreciation as a simple math problem (current value - purchase price = gain). But "current value" is an estimate, not a fact. Different sources (Zillow, Redfin, county assessor, recent comps) give different numbers. Presenting a single number as definitive truth is the mistake.
+**What goes wrong:** The Cromford appreciation chart feature depends on scraping a Tableau Public dashboard via a reverse-engineered, undocumented API. Tableau changes their internal API structure without notice. The scraper returns empty arrays, malformed data, or stale cached responses. Because there is no official API contract, there are no deprecation warnings. One day it works, the next day it returns nothing -- and if the fallback path was not exercised regularly, the OCR fallback silently fails too, leaving pages with a blank chart section or worse, a runtime error that crashes the page.
 
-**How to avoid:**
-- Never present a single "your home is worth $X" number. Instead, frame appreciation as a range or use purchase-price-anchored metrics: "Based on comparable sales in your area, homes like yours have appreciated approximately 18-24% since [purchase date]."
-- Use hedging language that reinforces Josh's expertise: "Based on recent comparable sales in [neighborhood]..." rather than "Your home is worth..."
-- Store the data source and date for every value used. Display "as of [date]" on all value-dependent sections.
-- When manually entering data, create a simple validation checklist: Does this match within 5% of at least two public sources?
+**Why it happens:** The `tableau-scraping` library (Python, bertrandmartel/tableau-scraping) and its JS equivalents rely on intercepting Tableau's internal HTTP calls and parsing undocumented response structures. GitHub issues document recurring failures: `getWorksheets()` returns empty arrays (Issue #64), filter operations produce `TypeError` exceptions (Issue #76), and the README example itself has stopped working (Issue #77, Feb 2024). This is not a stable foundation. Tableau actively updates their rendering engine (they moved toward React-based rendering in 2024-2025), and each update can silently break scraper parsing.
 
-**Warning signs:**
-- A homeowner texts back asking "where did you get that number?" -- this means the figure conflicts with their mental model
-- Appreciation percentages that seem too good (or bad) relative to the Phoenix metro average
-- No source attribution anywhere on the page
+**Consequences:**
+- Homeowner pages display blank or broken chart sections
+- If the error is not caught, the entire server component crashes and the page 404s
+- Josh has no visibility into which pages have broken charts until a homeowner reports it
+- OCR fallback, if untested, likely fails on its own (see Pitfall 2)
 
-**Phase to address:**
-Phase 1 (data model and input). Build the data schema with source attribution and date fields from day one. The narrative template must include hedging language as a default, not an afterthought.
+**Prevention:**
+- Build the Cromford chart feature as a **separate data-fetch step in the admin flow**, not at page render time. When Josh creates/edits a page, the admin tool attempts to scrape Cromford data and stores the result in Supabase. If scraping fails, Josh sees the failure immediately and can use the screenshot/OCR fallback or manually enter key data points
+- Never scrape at page render time (`/h/[slug]`). The public page reads pre-fetched data from Supabase only
+- Implement a health check: a scheduled job (or manual admin button) that tests the scraper against a known Cromford dashboard and alerts on failure
+- Store scraped data with a `scraped_at` timestamp and `scrape_method` field (`'tableau_api' | 'ocr_fallback' | 'manual'`) so stale/failed scrapes are visible
+- Design the page component to gracefully degrade: if no chart data exists, show the narrative section without the chart rather than crashing or showing a blank space
+- Pin the scraper library version and test against a snapshot of known Cromford dashboard HTML before upgrading
 
----
+**Detection:**
+- Admin dashboard shows "chart data missing" indicator for pages without Cromford data
+- Error logging on every scrape attempt with structured output (success/failure, method, timestamp)
+- Periodic automated test against the live Cromford dashboard
 
-### Pitfall 2: The "Automated Report" Feel That Kills Differentiation
-
-**What goes wrong:**
-The page looks and feels like Homebot, a Zillow email, or a generic CMA -- exactly the thing Josh wants to differentiate from. Homeowners glance at it, think "another automated home value thing," and close the tab. The entire value proposition -- a personal, narrative experience from their agent -- is lost.
-
-**Why it happens:**
-Developers default to dashboard patterns: data cards, stat grids, chart-heavy layouts. These are efficient for displaying information but terrible for storytelling. The SB7 framework demands narrative flow where each section builds on the previous one, but most web templates are designed for random-access information consumption.
-
-**How to avoid:**
-- Design the page as a vertical story, not a dashboard. No sidebar navigation, no "jump to section" links, no data cards in a grid layout.
-- Every section must open with a narrative hook (SB7 requirement), not a number. Wrong: "Equity: $87,000". Right: "Since you moved into [address] in [year], your home has been quietly building wealth."
-- Use scroll-triggered reveals so content appears as the homeowner progresses through the story, reinforcing the narrative arc.
-- Test the differentiation: show the page to someone unfamiliar with it. If they say "oh, like Homebot?" the design has failed.
-- Limit charts to 2-3 maximum. Each chart must be embedded within narrative context, not standing alone.
-
-**Warning signs:**
-- The page has more than 3 standalone charts/graphs without narrative framing
-- Section headers are data labels ("Equity Summary") rather than story beats ("What your home has been doing while you sleep")
-- The page works equally well if you randomize section order -- this means there is no narrative arc
-
-**Phase to address:**
-Phase 2 (template and narrative design). This is a design decision, not a data decision. The template structure must enforce narrative flow before any data visualization work begins.
+**Phase to address:** First phase of v1.1 -- build the scraper as an admin-side data pipeline before touching the public page. The fallback chain (Tableau API -> OCR -> manual entry) must be fully functional before any page template changes.
 
 ---
 
-### Pitfall 3: Mobile Scroll Performance Death by Animation
+### Pitfall 2: OCR Chart Extraction Produces Confident Garbage
 
-**What goes wrong:**
-The scrollytelling experience is beautiful on a MacBook Pro but stutters, jitters, or freezes on a 3-year-old iPhone opening the link from a text message. 60%+ of recipients will view this on mobile. A laggy scroll experience feels broken and unprofessional -- the opposite of the premium brand impression Josh needs.
+**What goes wrong:** When the Tableau scraper fails, the fallback is OCR on a screenshot of the Cromford chart. Tesseract (or similar) reads the chart axis labels and data points. But chart images are the worst case for OCR: small text, overlapping labels, colored backgrounds, non-standard fonts, and visual elements (gridlines, data points) that OCR interprets as characters. The OCR returns numbers that look plausible but are wrong -- "4.2%" becomes "42%", "$485,000" becomes "$485.000" (European decimal), or axis labels are misaligned with values. Because the numbers are plausible-looking, nobody catches the error until a homeowner questions why their chart says Phoenix appreciated 42% last year.
 
-**Why it happens:**
-Scroll-triggered animations are CPU/GPU intensive. Developers test on fast machines with large screens. Common offenders: parallax effects on large images, SVG chart animations triggered on every scroll event, CSS transforms without `will-change` hints, and loading all chart data/assets upfront instead of lazily. The Pudding (a leader in scrollytelling) specifically warns that mobile scroll behavior differs fundamentally from desktop.
+**Why it happens:** Tesseract works best on high-contrast printed text at 300+ DPI. Chart screenshots are typically 72-150 DPI with small axis labels (often 8-10pt equivalent), colored backgrounds that reduce contrast, and mixed content (lines, dots, text, gridlines). Tesseract's page segmentation modes (PSM) default to treating the image as a text block, not a structured chart. Without explicit preprocessing (deskewing, contrast enhancement, region isolation), accuracy on chart labels can drop below 60%.
 
-**How to avoid:**
-- Mobile-first development, literally. Build and test on a throttled mobile device (Chrome DevTools device emulation with CPU throttling at 4x slowdown) before touching desktop styles.
-- Use Intersection Observer API for scroll triggers, never scroll event listeners. Intersection Observer is battery-efficient and doesn't fire on every pixel of scroll.
-- Limit animations to opacity and transform only (these are GPU-composited). No animating width, height, margin, or layout properties.
-- Implement `prefers-reduced-motion` media query from the start -- some users have motion sensitivity, and it is an accessibility requirement.
-- Lazy-load chart components: only render a chart when its container scrolls into view.
-- Set a performance budget: Lighthouse mobile score must stay above 85.
+**Consequences:**
+- Appreciation rates shown on the page are wrong, undermining trust in all other data
+- Since this is a narrative page (not a dashboard), wrong chart data poisons the story: "Phoenix has seen remarkable 42% annual growth" reads as either laughable or scammy
+- Josh has no easy way to verify OCR output against source data at scale
 
-**Warning signs:**
-- Lighthouse mobile performance score drops below 80
-- Total Blocking Time exceeds 300ms on mobile
-- Largest Contentful Paint exceeds 2.5s
-- Any scroll event listener in the codebase (should be Intersection Observer instead)
+**Prevention:**
+- Do NOT use raw OCR as an automated pipeline. Use OCR as an assisted input: the system extracts candidate values, but Josh confirms/corrects them in the admin form before they reach the page
+- Pre-process screenshots before OCR: crop to the axis/label region only, convert to grayscale, increase contrast, upscale to 300 DPI, remove gridlines via image processing
+- For Cromford charts specifically, the data points are likely annual appreciation rates and median prices. Define expected ranges (appreciation: -5% to +20%, median price: $200K-$800K for Phoenix) and flag any OCR result outside these bounds
+- Consider a simpler alternative: instead of OCR, have Josh manually enter 3-5 key data points from the chart (e.g., current appreciation rate, 1yr change, 5yr change). At 20-30 pages/month and shared market data, these numbers change monthly not per-page, so manual entry is 2 minutes of work once a month
+- Store OCR confidence scores alongside extracted values. Display a warning in admin when confidence is below threshold
 
-**Phase to address:**
-Phase 2-3 (template design and data visualization). Establish the performance budget and mobile-first constraint before building any scroll interactions. Test every visual component on throttled mobile before merging.
+**Detection:**
+- Validation rules on extracted values: appreciation rates between -10% and +25%, prices between $100K and $2M
+- Admin UI highlights OCR-extracted values in a distinct color with "verify" checkboxes
+- Side-by-side display: screenshot on left, extracted values on right, Josh confirms
 
----
-
-### Pitfall 4: SB7 Narrative Drift -- The Hero/Guide Roles Get Confused
-
-**What goes wrong:**
-The page subtly shifts from "you (homeowner) are the hero" to "Live AZ Co is impressive." Sections start showcasing Josh's market knowledge rather than the homeowner's journey. The word "just" creeps in ("Your home has just appreciated..."). Future scenarios read like sales pitches ("Call us to discuss selling") rather than empowering possibilities ("Here's what you could do with your equity"). The homeowner feels marketed-to rather than empowered.
-
-**Why it happens:**
-SB7 discipline is hard to maintain across an entire page, especially when generating narrative programmatically. Template strings naturally drift toward brand-centric language. Developers writing copy placeholders default to marketing-speak. And when future scenarios involve actions that benefit the agent (selling, refinancing), the temptation to pitch is strong.
-
-**How to avoid:**
-- Create an SB7 compliance checklist that every page narrative is tested against before publishing:
-  - Does every section open by naming a problem or promise relevant to the homeowner?
-  - Is the homeowner the subject of the first sentence in every section?
-  - Does Live AZ Co appear only in the "guide" position (offering a plan, showing authority)?
-  - Is the word "just" absent? (SB7 rule from existing CMA project)
-  - Do future scenarios end with possibility language, not sales CTAs?
-- Build the narrative templates with locked structural elements: `[Homeowner name], since [date]...` openers that cannot be overridden.
-- Keep the CTA to a single, soft guide-position element at the very end: "When you're ready to explore any of these paths, Josh is here."
-
-**Warning signs:**
-- More than 2 mentions of "Live AZ Co" or "Josh" in any single section
-- Any section where the first sentence subject is the brand, not the homeowner
-- Future scenario sections that end with "Contact us" rather than possibility statements
-- The word "just" appears anywhere
-
-**Phase to address:**
-Phase 2 (narrative template design). The SB7 structure must be baked into the template as constraints, not guidelines. Review the existing CMA project's `SB7_Project_Instructions_Update.md` rules and encode them as template rules.
+**Phase to address:** Same phase as the Tableau scraper. The OCR fallback must be built and tested alongside the primary scraper, not as an afterthought. Both should feed into the same admin-verified data pipeline.
 
 ---
 
-### Pitfall 5: Production Bottleneck -- "Under 5 Minutes" Becomes 20 Minutes
+### Pitfall 3: Adding New Fields to Supabase Breaks Existing Published Pages
 
-**What goes wrong:**
-Creating a new homeowner page requires: looking up the address, finding comparable sales data, calculating appreciation, entering data into a form, reviewing the generated narrative, fixing any data issues, and publishing. What was designed as a 5-minute workflow becomes 15-20 minutes because the input process has too many fields, data validation catches errors that require re-entry, or the preview/publish cycle requires multiple rounds. At 20-30 pages per month, a 20-minute workflow eats 7-10 hours/month instead of the target 2.5-5 hours.
+**What goes wrong:** v1.1 adds new fields to the homeowners table: `value_low`, `value_high`, `condition` (for the value range selector), Cromford chart data fields, and possibly multi-timeline projection parameters. The migration adds these columns. Existing rows get `NULL` for all new fields. The updated calculation engine or page component now expects these fields to exist. Existing published pages -- the 200+ pages already shared with homeowners via text -- start throwing errors or rendering broken content because `value_low` is null and the new code tries to calculate a range from it.
 
-**Why it happens:**
-Developers optimize for output quality (more fields = more personalization = better page) without optimizing for input speed. Every "nice to have" field adds 30 seconds to input time. Preview workflows that require a full page reload add minutes per page. And there is no clear boundary between "required for narrative" and "optional enhancement" data.
+**Why it happens:** The current `rowToHomeownerRecord()` transform in `src/lib/supabase/transforms.ts` uses direct property access (`Number(row.value_low)`) which returns `NaN` for null values if not handled. The current `computeHomeownerMetrics()` in `src/lib/calculations.ts` takes a `HomeownerInput` with a single `currentValue: number` -- it has no concept of value ranges. Adding `valueLow` and `valueHigh` to `HomeownerInput` as required fields breaks the type contract for all existing records that only have `currentValue`.
 
-**How to avoid:**
-- Define a minimum viable input set and lock it: address, purchase price, purchase date, client first name. Everything else is derived or optional.
-- Auto-calculate everything possible: appreciation from purchase price + estimated current value, ownership duration from purchase date, equity from simple math.
-- Build a streamlined admin input form with exactly the required fields visible by default. Hide optional fields behind an "Advanced" toggle.
-- One-click publish: preview should be inline (not a separate page load), and publishing should be a single button.
-- Time the workflow during development. If creating a test page takes more than 5 minutes, the input process needs simplification.
-- Consider a batch creation mode for when Josh wants to create 10+ pages in a session.
+**Consequences:**
+- Existing homeowner pages 404 or show NaN/$NaN throughout
+- ISR-cached versions continue working until cache expires or revalidation triggers, then they break
+- Josh discovers the break when a homeowner texts "my page is broken"
 
-**Warning signs:**
-- The input form has more than 8 visible fields
-- Creating a page requires switching between tabs/tools to look up data
-- The preview requires a full page navigation away from the input form
-- Josh stops creating pages because "it takes too long"
+**Prevention:**
+- All new Supabase columns must have either a DEFAULT value or be nullable. For value range: `value_low numeric DEFAULT NULL`, `value_high numeric DEFAULT NULL`, `condition text DEFAULT NULL`
+- The `applyDefaults()` function in `src/lib/defaults.ts` must handle the absence of new fields gracefully. When `valueLow` and `valueHigh` are null, fall back to the existing `currentValue` as both low and high (range of one = single value, backwards compatible)
+- The `HomeownerInput` type must keep `currentValue` as the primary field and add `valueLow?: number` and `valueHigh?: number` as optional. The calculation engine uses `currentValue` when range fields are absent
+- Write a specific test: `computeHomeownerMetrics()` with a v1.0-shaped input (no range fields) must produce identical output to v1.0
+- Run the migration on a copy of production data first. Then load 5 existing pages and verify they render correctly with the new code
+- The `rowToHomeownerRecord()` transform must explicitly handle new nullable columns with `?? null` patterns (which it already does for existing optional fields -- extend the same pattern)
 
-**Phase to address:**
-Phase 3 (admin/input workflow). The admin experience is as critical as the homeowner-facing page. Design the input form with a stopwatch running.
+**Detection:**
+- TypeScript compilation: if `HomeownerInput` adds required fields, existing call sites fail to compile -- this is actually a good detection mechanism, but only if you run `tsc --noEmit` before deploying
+- Integration test: render a page with v1.0-shaped data (no new fields) and assert no NaN/undefined appears in the output
+- After migration: load 3 random existing published pages and visually verify
 
----
-
-### Pitfall 6: URL and Page Management Chaos at 200+ Pages
-
-**What goes wrong:**
-After 6 months of creating pages, there are 150+ URLs with no consistent naming scheme, no way to find a specific homeowner's page, no way to know which pages have stale data, and no way to unpublish a page for a homeowner who has sold and moved. A former client's page shows "Your home has appreciated 30%!" but they sold it two months ago. Or worse, two homeowners at the same address over time (previous owner and new buyer) have conflicting pages.
-
-**Why it happens:**
-URL management feels trivial when you have 5 pages. It becomes a crisis at 200. Developers build the page generation system without building the page management system. There is no concept of page lifecycle (active, stale, archived), no dashboard for Josh to see all pages at a glance, and no search/filter capability.
-
-**How to avoid:**
-- Design the URL scheme upfront: `/journey/[slug]` where slug is deterministic (e.g., `firstname-lastname-street-zip` or a short hash).
-- Build a simple admin dashboard from Phase 1 that lists all pages with: homeowner name, address, creation date, last updated, status (active/archived).
-- Add a "stale data" indicator: if a page hasn't been updated in 6+ months, flag it in the admin view.
-- Build archive/unpublish capability before you need it. A page for a homeowner who sold should be archivable, not deleted (they may buy again).
-- Prevent duplicate slugs at the database level with a unique constraint.
-- Plan for the "same address, different owner" scenario: slugs should include homeowner identity, not just address.
-
-**Warning signs:**
-- No admin view exists for listing all created pages
-- URLs are auto-generated with random strings instead of meaningful slugs
-- No way to search pages by homeowner name or address
-- No concept of page status (everything is permanently "live")
-
-**Phase to address:**
-Phase 1 (data model) for the schema and URL design. Phase 3 (admin workflow) for the management dashboard. The data model must support lifecycle states from day one even if the UI comes later.
+**Phase to address:** The very first plan in v1.1 must be the schema migration + backwards compatibility layer. No feature work should happen until existing pages are proven unbroken with the new schema.
 
 ---
 
-### Pitfall 7: Data Staleness Without a Refresh Strategy
+### Pitfall 4: Cascading Recalculation Turns the Narrative Page Into a Laggy Calculator
 
-**What goes wrong:**
-A homeowner receives their journey page in March 2026. They love it and bookmark it. They revisit it in September 2026. The page still shows March 2026 data. The appreciation numbers are 6 months stale, the market context is outdated, and the future scenarios use old projections. The page now undermines trust rather than building it. Or conversely, Josh manually updates some pages but not others, creating an inconsistent experience across his client base.
+**What goes wrong:** The value range selector lets homeowners pick a condition (original/updated/remodeled), which changes the estimated value, which cascades through every downstream calculation: equity, appreciation %, earnings reframe, S&P comparison, rent vs own, net proceeds, and all three scenario cards. On a 3-year-old iPhone on 4G, each condition change triggers a full recalculation of `computeHomeownerMetrics()` plus re-renders of 10+ section components. The slider/selector feels sluggish (200-400ms input lag), animations stutter during recalculation, and the page jumps as sections resize with new numbers. The homeowner taps "Remodeled," waits, sees numbers flash, and the premium narrative experience feels like a broken spreadsheet.
 
-**Why it happens:**
-The project scope says "moment-in-time touchpoint" (not recurring updates like Homebot), which is correct for v1. But developers don't build any mechanism for eventually refreshing data, and they don't clearly communicate to the homeowner that this is a snapshot. The homeowner expects the page to stay current because that is what every other real estate tool does.
+**Why it happens:** The current architecture runs `computeHomeownerMetrics()` once on the server as a pure function. That is fast because it runs once. But v1.1 moves this to the client side for interactive recalculation. The function itself is not expensive (< 1ms on desktop), but the cascade is: React re-renders every component that receives `metrics` as a prop. `HomeownerPage.tsx` passes `metrics` to 10 child components. Without memoization, a single condition change triggers a full tree re-render. On mobile, this combined cost (recalc + re-render + DOM update + animation) can exceed 100ms, causing visible jank.
 
-**How to avoid:**
-- Display the data date prominently: "Your Journey Map -- as of March 2026" near the top of the page.
-- In the data model, store a `created_at` and `data_as_of` date. These are different (you might create a page today with data from last week).
-- Design the admin workflow so that "refreshing" a page is updating the data fields and clicking save, not creating a new page. The URL stays the same.
-- For v1, accept manual refresh and document it. But design the data model so that automated refresh could be added later without schema changes.
-- Consider adding a footer note: "This snapshot was prepared for you on [date]. Want an updated view? Text Josh."
+The market rate slider in the Future Scenarios section compounds this: continuous slider input fires `onChange` events 30-60 times per second, each triggering a full recalculation cascade.
 
-**Warning signs:**
-- No date displayed anywhere on the homeowner-facing page
-- The data model has no timestamp fields for when values were captured
-- Updating a page's data requires creating a new URL (breaking the old bookmark)
-- No way to identify which pages have the oldest data
+**Consequences:**
+- Slider interactions feel laggy on mobile (the primary device)
+- Animations stutter during recalculation, breaking the premium feel
+- Users spam-click the condition selector, queuing up multiple recalculations
+- CountUpNumber animations restart on every recalc, creating visual chaos
 
-**Phase to address:**
-Phase 1 (data model) for timestamp fields. Phase 2 (template) for displaying the date. Phase 3 (admin) for the refresh workflow.
+**Prevention:**
+- Keep `computeHomeownerMetrics()` as a pure function but wrap the client-side call in `useMemo` with `[currentValue, condition]` as dependencies. Only recalculate when the effective value actually changes
+- Debounce the market rate slider: recalculate only when the slider stops moving (150ms debounce), not on every pixel of slider movement. Show the rate label updating in real-time but defer the expensive recalculation
+- Memoize child components with `React.memo()`: `SP500Callout`, `RentVsOwn`, `NetProceeds`, and each `ScenarioCard` should only re-render when their specific slice of metrics changes, not when any metric changes
+- Split the metrics object: instead of passing the entire `HomeownerMetrics` to every component, derive component-specific props. This way `React.memo` shallow comparison works effectively
+- Disable or pause CountUpNumber animations during recalculation. When the condition changes, skip the count-up and snap to the new value, or use a quick 200ms transition instead of a full count-up
+- For the ripple animation on condition change: use CSS transitions on the numbers themselves (opacity fade + value swap), not a full component unmount/remount cycle
+- Test on a real phone with CPU throttling. Chrome DevTools "4x slowdown" is the minimum bar
+
+**Detection:**
+- React DevTools Profiler: check that a condition change does not re-render all 10+ section components
+- Performance budget: condition change must complete (recalc + re-render + paint) in under 100ms on mobile
+- Input lag test: move the market rate slider rapidly on mobile -- if numbers lag behind the slider thumb by more than 200ms, optimization is needed
+
+**Phase to address:** Build the interactive recalculation infrastructure (condition selector + cascading recalc) as its own plan before wiring it to individual sections. Performance testing happens during this plan, not after all sections are updated.
 
 ---
 
-## Technical Debt Patterns
+### Pitfall 5: Server-to-Client Architecture Shift Creates a Hydration Nightmare
 
-Shortcuts that seem reasonable but create long-term problems.
+**What goes wrong:** v1.0's page renders entirely on the server: the Server Component in `/h/[slug]/page.tsx` calls `computeHomeownerMetrics()`, passes the result as props to the Client Component `HomeownerPage`. This is clean and fast. v1.1 needs client-side interactivity (condition picker, market rate slider), which means the calculation engine must also run on the client. But the initial render still happens on the server (for SEO, performance, and ISR caching). Now you have the same calculation running in two places: server for initial render, client for interactive updates. If the server-computed metrics and client-computed metrics differ by even a rounding error, React throws a hydration mismatch warning and the page flashes/flickers as it hydrates.
 
-| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
-|----------|-------------------|----------------|-----------------|
-| Hardcoding Phoenix market data (avg appreciation rates, rental yields) | Faster to build, no API needed | Cannot expand to other markets; numbers go stale silently | v1 only, with a clear data constants file that can be swapped later |
-| Single-file page component (all sections in one component) | Faster initial development | Cannot A/B test sections, cannot reorder narrative, hard to maintain at 1000+ lines | Never -- section components should be separate from day one |
-| No input validation on admin form | Faster form development | Bad data produces embarrassing pages (negative appreciation, future purchase dates, $0 home values) | Never -- basic validation is cheap and prevents visible errors |
-| Storing all page data in a single JSON blob | Simple data model, flexible schema | Cannot query across pages ("show me all pages with >$50K equity"), cannot update individual fields | v1 only, but migrate to structured fields before 50 pages |
-| Skip OpenGraph/social meta tags | Faster page development | When homeowner shares the link on social media, it shows a generic preview instead of a branded card with their address | Never -- this is a 30-minute task that dramatically improves shareability |
+**Why it happens:** The server runs `computeHomeownerMetrics(input)` with the default condition (e.g., "as-is" value). The client hydrates and immediately runs the same function. But `new Date()` is called inside `computeHomeownerMetrics` for `ownershipMonths` calculation. If the server renders at 11:59:59 PM and the client hydrates at 12:00:01 AM, `differenceInMonths` returns a different value. Even a 1-month difference cascades through every metric. Alternatively, floating-point arithmetic might differ between Node.js and the browser engine on edge cases.
 
-## Integration Gotchas
+**Consequences:**
+- Console floods with hydration mismatch warnings
+- Page content flickers on load (server HTML replaced by client-rendered HTML)
+- In worst case, React falls back to full client-side rendering, destroying the performance benefit of ISR
+- Homeowner sees numbers briefly flash to different values on page load
 
-Common mistakes when connecting to external services.
+**Prevention:**
+- Pass the server-computed `now` date as a serialized prop to the client component. The client uses this same date for initial render, ensuring identical calculations
+- Do NOT call `new Date()` in the client-side calculation during hydration. Only use `new Date()` when responding to a user interaction (condition change, slider move)
+- Structure the page so the initial render uses server-computed metrics (static), and client-side recalculation only activates after the first user interaction. Before any interaction, the page is pure server-rendered HTML with no client calculation
+- Use `suppressHydrationWarning` sparingly and only on elements that genuinely differ (e.g., timestamps), never on financial figures
+- Test hydration by comparing server-rendered HTML with client-rendered HTML using React's development mode warnings -- they must be zero
 
-| Integration | Common Mistake | Correct Approach |
-|-------------|----------------|------------------|
-| Supabase (page storage) | Exposing all page data via public API without Row Level Security | Use RLS policies: public can read individual pages by slug, only authenticated admin can create/update/list all pages |
-| Google Fonts (Source Serif 4, DM Sans) | Loading all font weights upfront, blocking page render | Use `font-display: swap`, load only weights 400 and 700, preconnect to fonts.googleapis.com |
-| Image CDN (hero photos, maps) | Serving full-resolution images on mobile | Use responsive images with `srcset`, serve WebP with JPEG fallback, max 200KB per image on mobile |
-| Chart library (Recharts/Chart.js) | Importing the entire library for 2-3 simple charts | Tree-shake or use lightweight alternatives (e.g., custom SVG for simple line charts, CSS for bar charts) |
+**Detection:**
+- React dev mode console: zero hydration warnings on page load
+- Visual test: no flickering of numbers on initial page load (record a video of page loading on slow 3G)
+- Unit test: `computeHomeownerMetrics(input, fixedDate)` on server matches `computeHomeownerMetrics(input, fixedDate)` on client with exact equality
 
-## Performance Traps
+**Phase to address:** The architecture for client-side interactivity must be designed before any interactive features are built. The pattern is: server renders with fixed date -> client hydrates passively -> user interacts -> client recalculates with `new Date()`. This pattern should be established in the first interactive feature (condition selector) and reused for all subsequent features.
 
-Patterns that work at small scale but fail as usage grows.
+---
 
-| Trap | Symptoms | Prevention | When It Breaks |
-|------|----------|------------|----------------|
-| Loading all chart data inline in the HTML | Slow initial page load, large HTML document size | Lazy-load chart data as JSON fetched when chart scrolls into view | At 5+ charts per page with real data |
-| CSS animations on scroll without GPU compositing | Janky scrolling on mid-range phones | Use only `transform` and `opacity` for animations; add `will-change` sparingly | Immediately on phones older than 2 years |
-| No image optimization pipeline | Hero images are 2-5MB each, page loads in 8+ seconds on mobile | Resize to max 1200px width, compress to WebP, lazy-load below-fold images | At first page view on a 4G connection |
-| Server-side rendering every page on request | Cold starts on Cloudflare/Vercel, slow response for first visitor | Use static generation (SSG) for all pages -- content changes only when Josh updates data | At 50+ concurrent visitors across all pages |
+### Pitfall 6: Merging S&P + Rent vs Own Into Investment Comparison Breaks Existing Page Structure
 
-## Security Mistakes
+**What goes wrong:** v1.0 has separate `SP500Callout` and `RentVsOwn` components rendered as distinct sections in `HomeownerPage.tsx` (sections 7-8 in the narrative arc). v1.1 merges these into a single "Investment Comparison" section. The merge seems simple -- combine two components into one. But the narrative arc depends on section ordering and emotional pacing: the appreciation chart builds confidence, SP500 reinforces it with a specific comparison, then Rent vs Own delivers the ownership triumph. Merging changes the pacing. More concretely:
 
-Domain-specific security issues beyond general web security.
+- The `narrative.ts` copy maps (`rentVsOwnCopy`, and any SP500-related copy) are keyed by `NarrativeVoice` and section type. Removing these sections and adding a new one means updating all three voice variants
+- The `HomeownerMetrics` interface has separate `sp500Comparison` and `rentVsOwn` fields that downstream components reference. Changing the interface propagates through types, tests, and components
+- Existing pages that are ISR-cached still serve the old HTML until revalidated. During the rollout window, some visitors see old layout, others see new layout
 
-| Mistake | Risk | Prevention |
-|---------|------|------------|
-| Guessable URL slugs (sequential IDs, `/journey/1`, `/journey/2`) | Anyone can enumerate and view all homeowner pages, exposing names, addresses, and financial data | Use slugs with enough entropy to prevent enumeration but still be readable: `firstname-lastname-[4-char-hash]` |
-| No robots.txt or noindex on journey pages | Google indexes personalized pages, homeowner data appears in search results | Add `<meta name="robots" content="noindex, nofollow">` to all journey pages; add to robots.txt |
-| Admin panel accessible without authentication | Anyone who finds the admin URL can create/edit/delete pages | Protect admin routes with authentication (at minimum, password-based like the Idea Pipeline project) |
-| Storing sensitive financial data in page source | Exact purchase prices, equity amounts visible in page source/API responses | This data is inherently visible on the page -- the protection is preventing enumeration and search indexing, not hiding data from the page viewer |
+**Consequences:**
+- If the merge is incomplete, some narrative copy references deleted sections and throws runtime errors
+- Tests that assert on `SP500Callout` or `RentVsOwn` components break
+- The narrative pacing is disrupted if the merged section does not maintain the emotional arc
+- ISR cache inconsistency during rollout (minor, self-resolving)
 
-## UX Pitfalls
+**Prevention:**
+- Keep `sp500Comparison` and `rentVsOwn` as separate fields in `HomeownerMetrics`. The calculation engine should not change. Only the presentation layer merges them into one visual section
+- Create a new `InvestmentComparison` component that receives both `sp500Comparison` and `rentVsOwn` as props. Do not refactor the calculation output
+- Add new narrative copy for the merged section to `narrative.ts` alongside the old copy. Remove the old copy only after the new component is fully tested
+- Update `HomeownerPage.tsx` to render `InvestmentComparison` in place of the two separate sections. Verify the section count remains correct for animation stagger timing
+- After deploy, trigger revalidation for all published pages (a simple script that calls `revalidatePath` for each slug) to clear stale ISR cache
+- Write the new section with the same emotional arc: S&P comparison builds leverage story, rent vs own delivers the triumph. The merge should feel like a tighter version of the same story, not a data dump
 
-Common user experience mistakes in this domain.
+**Detection:**
+- Narrative arc review: read the merged section aloud. Does it still build from comparison to triumph?
+- Component test: `InvestmentComparison` renders correctly with all three `NarrativeVoice` variants
+- Integration test: full page render produces the expected number of sections and no missing copy
+- Visual regression: screenshot comparison of v1.0 and v1.1 page layouts
 
-| Pitfall | User Impact | Better Approach |
-|---------|-------------|-----------------|
-| Overwhelming the homeowner with too many numbers on first scroll | Cognitive overload; they close the tab before reaching the narrative payoff | Lead with the emotional hook (story of their home), introduce numbers gradually within narrative context |
-| Charts without plain-language interpretation | Homeowner sees a line going up but doesn't know if that's good, average, or exceptional | Every chart must have a one-sentence takeaway below it: "Your home has outpaced the Phoenix metro average by 4%." |
-| Future scenarios presented as predictions | Homeowner makes financial decisions based on projections shown as facts, then blames Josh when reality differs | Label all projections: "If current trends continue..." and "This is an illustration, not a guarantee." Include a disclaimer. |
-| Generic narrative that doesn't feel personal | Homeowner can tell this is a template with their name inserted | Reference specific details: neighborhood name, purchase season ("the spring you bought"), ownership milestone ("approaching your 3rd year") |
-| No clear "what to do next" after reading | Homeowner finishes the page, feels good, but doesn't take any action | End with a single, soft CTA in guide position: "When you're ready to explore any of these paths, Josh is here to help." Include phone number. |
+**Phase to address:** The Investment Comparison section should be built as its own plan after the interactive infrastructure is in place but before the future scenarios rework (since scenarios also change section structure).
 
-## "Looks Done But Isn't" Checklist
+---
 
-Things that appear complete but are missing critical pieces.
+## Moderate Pitfalls
 
-- [ ] **Appreciation section:** Often missing source attribution and date -- verify every value has an "as of [date]" label
-- [ ] **Mobile layout:** Often tested only in Chrome DevTools -- verify on a real iPhone via text message link (the actual delivery method)
-- [ ] **Social sharing:** Often missing OpenGraph tags -- verify that sharing the URL on iMessage/Facebook shows a branded preview card, not a blank link
-- [ ] **Future scenarios:** Often missing disclaimer language -- verify projections include "illustration, not guarantee" language
-- [ ] **Page load on 4G:** Often only tested on WiFi -- verify page loads under 3 seconds on throttled 4G connection
-- [ ] **Print/screenshot appearance:** Homeowners will screenshot sections to share -- verify key sections look good as static screenshots (no half-rendered animations)
-- [ ] **Long names/addresses:** Often breaks layout -- verify with "Christopher & Alexandra Wellington-Bartholomew" and "12345 East Camelback Mountain Estates Boulevard, Unit 2401"
-- [ ] **Page at 12+ months old:** Often no visual indicator of data age -- verify stale pages clearly show their snapshot date
-- [ ] **SB7 compliance:** Often drifts during development -- verify word "just" is absent, homeowner is hero in every section, brand appears only as guide
+### Pitfall 7: Financial Projection Accuracy Drifts With Multi-Timeline Compounding
 
-## Recovery Strategies
+**What goes wrong:** v1.1 adds 5, 10, and 15-year projections for all scenarios. The existing `calcHoldAndRent` already projects forward up to 360 months with a simple monthly compounding model. Extending to 15 years with a user-adjustable market rate slider means compounding small floating-point errors over 180 months. At 4% annual appreciation, a $500K home projects to $900K at 15 years. A 0.1% rounding error per month compounds to a $15K-$25K discrepancy at the 15-year mark. This is within "illustration" tolerance but looks sloppy if two different sections show slightly different 15-year values because they calculated independently.
 
-When pitfalls occur despite prevention, how to recover.
+**Prevention:**
+- Use a single projection function that computes all timelines (5/10/15yr) in one pass, returning values at each checkpoint. Do not call three separate functions with the same inputs -- floating-point path differences will produce slightly different results
+- Round display values to the nearest $1,000 for projections beyond 5 years. Nobody needs to see "$912,347 projected value in 15 years" -- "$912,000" is more honest about the precision level
+- Store intermediate results and reuse them: the 5-year value is a waypoint on the path to 10 years, not an independent calculation
+- Add a disclaimer calibrated to timeline length: "5-year estimate based on current trends" vs "15-year illustration -- many factors will change over this period"
+- Use `Math.round()` at display time, not during intermediate calculations. Accumulate full precision, round only for presentation
 
-| Pitfall | Recovery Cost | Recovery Steps |
-|---------|---------------|----------------|
-| Wrong appreciation data sent to homeowner | MEDIUM | Immediately update the page data (URL stays the same), text the homeowner: "Updated your page with the latest numbers -- take a fresh look." Frame the update as attentiveness, not error correction. |
-| Page feels like Homebot/generic report | HIGH | Requires template redesign. Cannot be fixed with content changes alone -- the structural layout must change from dashboard to narrative flow. Do this before creating more pages. |
-| Mobile scroll performance is broken | MEDIUM | Disable animations first (ship content-only), then reintroduce animations one at a time with performance testing after each. |
-| SB7 drift across many pages | LOW | Run the SB7 compliance checklist against all existing pages. Fix template strings centrally -- all pages update because they share the template. |
-| URL/page management is chaotic | HIGH | Retroactively cataloging 100+ pages is painful. Export all pages to a spreadsheet, establish the naming convention, and migrate URLs (set up redirects from old URLs). Much cheaper to prevent than to fix. |
-| Data staleness across many pages | MEDIUM | Add "data as of" date to the template (all pages update). Create an admin view sorted by oldest data. Batch-refresh the stalest pages first. |
+**Detection:**
+- Unit test: project the same property at 5yr, 10yr, and 15yr. The 10yr result must exactly equal the 10-year checkpoint from the 15yr projection
+- Cross-section consistency check: if the Hold & Rent scenario and the Move-Up scenario both show a 10-year projected value, they must match
 
-## Pitfall-to-Phase Mapping
+**Phase to address:** Part of the future scenarios rework plan. Build the unified projection function before updating any scenario components.
 
-How roadmap phases should address these pitfalls.
+---
 
-| Pitfall | Prevention Phase | Verification |
-|---------|------------------|--------------|
-| Inaccurate appreciation data | Phase 1 (Data Model) | Data schema includes source, date, and range fields; input form has validation |
-| Automated report feel | Phase 2 (Template Design) | Show page to 3 non-technical people; none say "like Homebot" |
-| Mobile scroll performance | Phase 2-3 (Template + Visualization) | Lighthouse mobile score > 85; tested on real phone via text link |
-| SB7 narrative drift | Phase 2 (Template Design) | SB7 checklist passes on every section; "just" grep returns 0 results |
-| Production bottleneck (>5 min) | Phase 3 (Admin Workflow) | Timed test: create a page from scratch in under 5 minutes |
-| URL/page management chaos | Phase 1 + Phase 3 (Schema + Admin) | Admin dashboard lists all pages with search, filter, status |
-| Data staleness | Phase 1 + Phase 2 + Phase 3 (Schema + Display + Refresh) | Every page shows data date; admin view shows pages sorted by staleness |
+### Pitfall 8: Condition Selector UX Creates Decision Paralysis on a Narrative Page
+
+**What goes wrong:** The homeowner opens their journey page -- a curated, personal narrative experience -- and immediately encounters a dropdown: "What condition is your home in? Original / Updated / Remodeled." This transforms them from a story reader into a quiz taker. They do not know what "updated" means in appraisal terms. They worry about picking wrong. They wonder why Josh did not already know this. The interactive element at the top of the page breaks the narrative contract established in v1.0: "this is your story, we prepared it for you."
+
+**Why it happens:** Developers think of the condition picker as a simple UI element. But in the context of a narrative page, it is a cognitive mode shift. The homeowner was passive (reading their story) and is now active (making a decision that changes their numbers). This is the core tension of v1.1: adding interactivity to what was a guided experience.
+
+**Prevention:**
+- Do NOT place the condition selector at the top of the page or before the narrative begins. Place it after the current value reveal (section 4), framed as an exploration: "Your home's estimated value is $X. Want to see how improvements could change that?"
+- Default to a pre-selected condition (the one Josh chose when creating the page, stored in the admin data). The homeowner sees their numbers immediately without making a choice. The selector is optional exploration, not a required input
+- Use clear, homeowner-friendly labels with brief explanations: "As-is (no major updates)" / "Updated (new kitchen, bathrooms, or similar)" / "Fully remodeled (extensive renovation)" -- not technical appraisal terms
+- Show the value range visually (a simple bar from low to high) with the current condition highlighted. This makes the interaction feel like "see where you are on the spectrum" rather than "pick the right answer"
+- The cascading recalculation should feel delightful (smooth animation, numbers gracefully transitioning) not jarring (flash of new numbers). See Pitfall 4 for the performance side of this
+
+**Detection:**
+- User test: have someone unfamiliar with the page open it on their phone. Do they understand the condition picker without explanation? Do they hesitate?
+- Narrative flow test: read the page from top to bottom. Does the selector feel like a natural part of the story or an interruption?
+
+**Phase to address:** Design the UX of the condition selector as part of the interactive infrastructure plan. Wire it up in the value/equity sections before cascading to scenarios.
+
+---
+
+### Pitfall 9: Slider Fatigue -- Too Many Interactive Controls Dilute the Narrative
+
+**What goes wrong:** v1.1 adds a condition picker (3 options), a market rate slider (continuous), and 5/10/15yr timeline toggles. Combined with the existing scroll-based narrative, the page now has 3+ interactive controls scattered across sections. Each control demands attention, creates a decision point, and competes with the narrative for cognitive bandwidth. The homeowner stops reading the story and starts playing with sliders. They lose the emotional arc (calm context -> building confidence -> triumphant climax) and instead experience a fragmented calculator with nice fonts.
+
+Hick's Law: decision time increases logarithmically with the number of choices. Adding 3 interactive controls to a previously zero-interaction page is a significant cognitive load increase.
+
+**Prevention:**
+- Limit visible controls to 2 maximum on any single screen viewport. The condition picker and market rate slider should never be visible simultaneously
+- Make the 5/10/15yr timeline toggle lightweight: segmented control (tab-like), not a dropdown or slider. It should feel like reading different chapters, not adjusting a parameter
+- Progressive disclosure: the market rate slider appears only within the Future Scenarios section, not globally. It affects only scenario projections, not the backward-looking story
+- Default everything to reasonable values. The page must tell a complete, compelling story with zero interaction. Interactive controls are "explore further" options, not required inputs
+- Consider a "what-if" mode toggle: the narrative page is the default experience, and a "what-if explorer" mode reveals all interactive controls for homeowners who want to dig deeper
+
+**Detection:**
+- Count the controls: if more than 2 interactive elements are visible at once, the page has crossed into calculator territory
+- Read-through test: can someone scroll through the entire page without interacting with any control and still have a complete experience? If not, the interactivity has become a dependency rather than an enhancement
+
+**Phase to address:** UX design for all interactive elements should be planned holistically before individual features are built. Each interactive control should have a documented justification for why it exists and where in the narrative arc it appears.
+
+---
+
+### Pitfall 10: The 4th Combo Scenario Is Exponentially More Complex
+
+**What goes wrong:** The existing three scenarios (Hold & Rent, Move Up, Equity Play) are independent calculations. The 4th combo scenario ("Keep, rent, and buy another") combines elements of all three: keep current home (Hold & Rent cash flow), use equity (Equity Play HELOC), buy a second property (Move Up purchasing power). The calculation requires assumptions that compound: rental income from property 1, HELOC payment on property 1, mortgage on property 2, rental income or personal use of property 2. Each assumption has its own timeline. The projection space is vast, and the narrative framing is harder because there are multiple interacting outcomes.
+
+**Prevention:**
+- Keep the combo scenario simpler than the individual scenarios, not more complex. Show the concept and headline numbers, not a full analysis. "You could keep your home as a rental, tap your equity for a down payment, and buy a second property -- here is what that looks like at a high level"
+- Use a fixed set of assumptions (the same defaults from `DEFAULTS` in `defaults.ts`) rather than exposing all parameters. The combo scenario is an illustration of possibility, not an underwriting tool -- Josh's STR Analyzer already does detailed investment analysis
+- Calculate in stages: (1) Hold & Rent cash flow, (2) HELOC available after maintaining mortgage, (3) purchasing power with HELOC as down payment. These are already-built functions composed together, not a new calculation engine
+- Display as a timeline narrative, not a data table: "Year 1: rent your home for $X/mo while your new home builds equity. Year 5: both properties have appreciated, your rental covers its mortgage, and you've built $Y in combined equity."
+- Mark this scenario explicitly as an illustration with the strongest disclaimer of all four scenarios
+
+**Detection:**
+- Code review: the combo scenario function should call existing calculation functions, not duplicate their logic
+- Narrative review: the combo scenario card should be shorter than the individual scenario cards, not longer
+
+**Phase to address:** Build the combo scenario last among the four scenarios. The other three must be updated to v1.1 format (5/10/15yr timelines) first, establishing the pattern that the combo scenario follows.
+
+---
+
+## Minor Pitfalls
+
+### Pitfall 11: ISR Cache Stale During v1.1 Rollout
+
+**What goes wrong:** After deploying v1.1 code, existing ISR-cached pages still serve the v1.0 layout until revalidation. Some homeowners see old layout, some see new.
+
+**Prevention:** After deploying v1.1, run a bulk revalidation script that calls `revalidatePath('/h/${slug}')` for every published page. This is a one-time operation. The existing admin `actions.ts` already has revalidation logic -- extend it to support bulk revalidation.
+
+---
+
+### Pitfall 12: Market Rate Slider Allows Unrealistic Values
+
+**What goes wrong:** The slider has no bounds, and a homeowner drags it to 15% annual appreciation. The 15-year projection shows their $500K home worth $4M. This makes the entire page look like a scam.
+
+**Prevention:** Set slider bounds based on historical Phoenix data: -2% to +8% annual appreciation. Display the current Cromford/market rate as the default and clearly mark it. Add soft labels at bounds: "Conservative" at the low end, "Aggressive" at the high end.
+
+---
+
+### Pitfall 13: Cascading Animation Conflicts With Recalculation
+
+**What goes wrong:** The ripple animation on condition change fires at the same time as CountUpNumber animations, AnimatedSection entrance animations, and chart draw animations. Multiple competing animations create visual chaos on mobile.
+
+**Prevention:** Establish an animation priority system: (1) recalculation transitions take priority, (2) entrance animations only fire once on first view, (3) count-up animations are suppressed during recalculation (snap to value instead). Use a shared animation state flag (`isRecalculating`) that child components check before starting their animations.
+
+---
+
+## Phase-Specific Warnings
+
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|---------------|------------|
+| Schema migration + backwards compat | Breaking existing published pages (Pitfall 3) | All new columns nullable with defaults; `applyDefaults()` handles absence; integration test with v1.0 data |
+| Tableau scraper + OCR pipeline | Silent failure, confident wrong data (Pitfalls 1, 2) | Admin-side pipeline, not render-time; health checks; manual verification step |
+| Condition selector + cascading recalc | Mobile performance, hydration mismatch (Pitfalls 4, 5) | Debounce sliders, memoize components, server-date passthrough, passive hydration |
+| Merged Investment Comparison | Broken narrative arc, orphaned copy/tests (Pitfall 6) | Keep calc engine unchanged, merge only at presentation layer, update all voice variants |
+| Future scenarios rework (5/10/15yr) | Compounding errors, projection inconsistency (Pitfall 7) | Single-pass projection function, round at display only, cross-section consistency test |
+| 4th combo scenario | Exponential complexity, overengineered calc (Pitfall 10) | Compose existing functions, keep simpler than individual scenarios, strongest disclaimer |
+| UX: interactive controls | Decision paralysis, slider fatigue, calculator feel (Pitfalls 8, 9) | Defaults pre-selected, max 2 controls per viewport, page works with zero interaction |
+| Cascading animations | Visual chaos during recalculation (Pitfall 13) | Animation priority system, suppress count-ups during recalc, shared `isRecalculating` flag |
+| Deployment/rollout | Stale ISR cache (Pitfall 11) | Bulk revalidation script post-deploy |
+
+## Pitfall-to-Code Mapping
+
+Specific files in the existing codebase that each pitfall affects:
+
+| Pitfall | Files Impacted | Change Required |
+|---------|---------------|-----------------|
+| Pitfall 3 (schema) | `src/lib/types.ts`, `src/lib/supabase/transforms.ts`, `src/lib/defaults.ts` | Add optional fields to types, handle nulls in transform, extend `applyDefaults()` |
+| Pitfall 4 (recalc) | `src/lib/calculations.ts`, `src/components/homeowner/HomeownerPage.tsx` | Wrap in `useMemo`, split metrics prop passing, memoize child components |
+| Pitfall 5 (hydration) | `src/app/h/[slug]/page.tsx`, `src/components/homeowner/HomeownerPage.tsx` | Pass `now` date as serialized prop, defer client recalc to first interaction |
+| Pitfall 6 (merge) | `src/components/homeowner/SP500Callout.tsx`, `src/components/homeowner/RentVsOwn.tsx`, `src/lib/narrative.ts` | New `InvestmentComparison` component, new narrative copy, remove old sections from orchestrator |
+| Pitfall 7 (projections) | `src/lib/calculations.ts`, `src/lib/defaults.ts` | New unified projection function, extended DEFAULTS for timeline params |
+| Pitfall 8 (condition UX) | `src/components/homeowner/CurrentValue.tsx` (or new component) | Condition selector placed after value reveal, default pre-selected |
+| Pitfall 10 (combo) | `src/lib/calculations.ts`, `src/components/homeowner/ScenarioCards.tsx` | New `calcComboScenario()` composing existing functions, new ScenarioCard |
 
 ## Sources
 
-- [Zillow Zestimate Accuracy](https://www.zillow.com/learn/influencing-your-zestimate/) -- 7% median error on off-market homes
-- [Zestimate Accuracy Analysis](https://www.eatonrealty.com/blog/selling/how-accurate-zillows-zestimate) -- notable errors including Zillow founder's own home
-- [Homebot Analytics Approach](https://amplitude.com/blog/homebot-analytics-experiment) -- engagement patterns and A/B testing lessons
-- [Homebot Client Engagement](https://homebot.ai/blog/unlocking-homeownership-engagement-how-to-create-repeat-clients) -- 80% retention loss without consistent engagement
-- [Homebot Review](https://theclose.com/homebot-reviews/) -- pricing, pros and cons for agents
-- [Scrollytelling Best Practices (Pudding)](https://pudding.cool/process/responsive-scrollytelling/) -- mobile-specific scrollytelling patterns
-- [Complete Scrollytelling Guide 2025](https://ui-deploy.com/blog/complete-scrollytelling-guide-how-to-create-interactive-web-narratives-2025) -- performance budgets and mobile pitfalls
-- [StoryBrand SB7 Implementation Tips](https://hughesintegrated.com/tips-storybrand-agency/) -- 105 tips including common mistakes
-- [StoryBrand Framework Guide](https://www.gravityglobal.com/blog/complete-guide-storybrand-framework) -- hero/guide role confusion
-- [Next.js SSG Best Practices](https://nextjs.org/docs/pages/building-your-application/rendering/static-site-generation) -- static generation for page-heavy sites
-- [ISR with Next.js (Smashing Magazine)](https://www.smashingmagazine.com/2021/04/incremental-static-regeneration-nextjs/) -- incremental regeneration patterns
-- [Mobile Data Visualization (Smashing Magazine)](https://www.smashingmagazine.com/2020/05/data-visualization-mobile-web-experience/) -- chart design for small screens
+- [tableau-scraping GitHub Issues](https://github.com/bertrandmartel/tableau-scraping/issues) -- documented failures including empty worksheets (Issue #64), TypeError on filters (Issue #76), broken README example (Issue #77) -- HIGH confidence
+- [Tesseract OCR Accuracy](https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html) -- official documentation on quality requirements: 300 DPI minimum, preprocessing requirements -- HIGH confidence
+- [Tesseract Page Segmentation Modes](https://pyimagesearch.com/2021/11/15/tesseract-page-segmentation-modes-psms-explained-how-to-improve-your-ocr-accuracy/) -- PSM selection for structured content -- MEDIUM confidence
+- [Supabase Database Migrations](https://supabase.com/docs/guides/deployment/database-migrations) -- official migration patterns for adding columns -- HIGH confidence
+- [React useMemo](https://react.dev/reference/react/useMemo) -- official docs on memoization and when to use it -- HIGH confidence
+- [React Performance: Input Lag](https://dev.to/arindam1997007/improving-react-performance-dealing-with-input-lag-397) -- cascading re-render patterns and debounce strategies -- MEDIUM confidence
+- [Next.js Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components) -- official docs on hydration and component boundaries -- HIGH confidence
+- [Cognitive Overload in UX (Smashing Magazine)](https://www.smashingmagazine.com/2016/09/reducing-cognitive-overload-for-a-better-user-experience/) -- Hick's Law and progressive disclosure -- HIGH confidence
+- [Minimize Cognitive Load (NN/g)](https://www.nngroup.com/articles/minimize-cognitive-load/) -- interaction design principles -- HIGH confidence
+- [JavaScript Financial Precision](https://dev.to/benjamin_renoux/financial-precision-in-javascript-handle-money-without-losing-a-cent-1chc) -- floating-point rounding in financial calculations -- MEDIUM confidence
+- [JavaScript Rounding Errors](https://www.robinwieruch.de/javascript-rounding-errors/) -- IEEE 754 precision issues in compound calculations -- MEDIUM confidence
+- Direct codebase inspection of `/Users/joshuahogan/Projects/homeowner-journey-map/src/` -- all file-level claims verified against actual code -- HIGH confidence
 
 ---
-*Pitfalls research for: Personalized Homeowner Journey Pages (Live AZ Co)*
-*Researched: 2026-03-11*
+*Pitfalls research for: Homeowner Journey Map v1.1 Enhanced Intelligence*
+*Researched: 2026-03-13*

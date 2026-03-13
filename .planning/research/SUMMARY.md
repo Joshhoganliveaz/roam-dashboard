@@ -1,164 +1,197 @@
 # Project Research Summary
 
 **Project:** Homeowner Journey Map
-**Domain:** Personalized, data-driven homeowner narrative pages (real estate engagement tool)
-**Researched:** 2026-03-11
-**Confidence:** HIGH
+**Milestone:** v1.1 Enhanced Intelligence
+**Domain:** Interactive financial projections and real market data on personalized homeowner pages
+**Researched:** 2026-03-13
+**Confidence:** MEDIUM-HIGH
 
 ## Executive Summary
 
-The Homeowner Journey Map is a scrollytelling web application that generates personalized, shareable pages for homeowners showing their equity growth story. It competes with Homebot and Zillow not on data depth but on narrative experience -- no competitor tells a story. The recommended approach leverages Josh's existing Next.js/Supabase/Tailwind stack (identical to STR Analyzer) with the addition of Motion for scroll animations and Recharts for equity visualization. This eliminates learning curve and lets development focus on the product's actual differentiator: the SB7 narrative engine and scroll-driven presentation.
+The v1.1 milestone transforms the Homeowner Journey Map from a read-only narrative page into a guided interactive experience. The core shift is architectural: v1.0 pages are fully server-rendered with zero client-side state, while v1.1 introduces two focused interaction points -- a condition picker (original/updated/remodeled) and a market rate slider -- that cascade through all downstream financial calculations. This is a deliberate reversal of the v1.0 anti-feature "no interactive calculators," reframed as "guided interactivity" where Josh controls the bounds and the homeowner explores within them. The existing Next.js 16 / React 19 / Supabase / Tailwind / Motion / Recharts stack handles everything with zero new required dependencies.
 
-The architecture is straightforward: Admin Form writes to Supabase, a pure-function Calculation Engine computes equity metrics, a Narrative Engine selects SB7 story templates based on ownership duration, and Next.js ISR serves the result as cached static pages. Every component in this pipeline has a proven pattern in Josh's existing projects. The critical dependency chain is Calculation Engine then Narrative Engine then Page Components -- each layer must be correct before the next can work.
+The recommended approach is to pre-compute metrics for all three condition tiers server-side (avoiding shipping the calculation engine to the client), then let the client switch between pre-computed metric sets on condition change. The market rate slider is the exception -- it feeds a continuous value into scenario projection functions that must run client-side, extracted into a shared `scenario-calculations.ts` module. Cromford appreciation data should be manually entered by Josh into a city-level `cromford_data` Supabase table and rendered with the existing Recharts library. Automated Tableau scraping is explicitly rejected as fragile and unmaintainable -- manual entry at 5 minutes per city per quarter is the right tradeoff.
 
-The primary risks are (1) appreciation numbers that conflict with what homeowners believe their home is worth (mitigated by range-based framing and source attribution), (2) the page feeling like "another Homebot" instead of a narrative experience (mitigated by enforcing scrollytelling structure over dashboard patterns), and (3) mobile scroll performance death from animation overhead (mitigated by mobile-first development with Intersection Observer and GPU-composited-only animations). All three risks are preventable with deliberate design decisions in the correct phases.
+The primary risks are (1) breaking existing published pages when adding new schema columns (mitigated by nullable columns and backward-compatible `applyDefaults()`), (2) hydration mismatches from the server-to-client architecture shift (mitigated by passing server-computed `now` date as props and deferring client recalculation to first user interaction), and (3) the interactive controls undermining the narrative experience by turning the page into a calculator (mitigated by limiting to 2 visible controls max per viewport, pre-selecting defaults, and ensuring the page tells a complete story with zero interaction). The combo scenario ("keep, rent, and buy another") is the highest-complexity feature and should be built last.
 
 ## Key Findings
 
-### Recommended Stack
+### Stack Additions (from STACK-v1.1.md)
 
-The entire core stack mirrors STR Analyzer: Next.js 16.1.6, React 19, TypeScript 5, Tailwind CSS 4, Supabase, Zustand. This is deliberate -- zero new learning curve for framework-level decisions. New additions are limited to three libraries: Motion 12.x for scroll-triggered animations, Recharts 3.8.x for equity visualization charts, and date-fns 4.x for ownership duration calculations. Deployment targets Vercel (primary, native ISR support) with Cloudflare Pages as fallback.
+No new required libraries. The existing validated stack handles all v1.1 features. Calculations extend `calculations.ts` with pure TypeScript functions. UI sliders use native HTML range inputs + Tailwind. Cromford charts render via Recharts from manually-entered Supabase data. Cascading animations use Motion (already installed).
 
-**Core technologies:**
-- **Next.js 16 (App Router + ISR):** On-demand static generation. Pages generate on first visit, cache as static HTML, revalidate when Josh updates data. Scales to 1,000+ pages trivially.
-- **Supabase:** Same instance as STR Analyzer, new table. PostgreSQL with RLS. Free tier handles 200+ homeowner records easily.
-- **Motion 12.x:** Scroll-triggered section reveals and animated counters. React-idiomatic API, 32KB gzipped. Replaces need for GSAP complexity.
-- **Recharts 3.8.x:** SVG-based responsive charts for equity growth visualization. Crisp on high-DPI mobile screens.
-- **Zustand 5.x:** Admin form state management, same pattern as STR Analyzer.
+**Optional additions (only if design confirms):**
+- **@radix-ui/react-slider ^1.3.2:** Only if dual-thumb range slider UX is chosen over 3 preset buttons. 3.5KB, ARIA-compliant, Tailwind-compatible.
+- **tesseract.js ^7.0.0:** Only if OCR fallback for Cromford screenshots is needed. Defer unless there is a strong reason.
 
-### Expected Features
+**Key schema additions:**
+- `value_low` and `value_high` numeric columns on homeowners table (nullable for backward compat)
+- New `cromford_data` table: city-level price-per-sqft by year/quarter, shared across all homeowners in a city
 
-**Must have (table stakes):**
-- Current home value estimate with source attribution
-- Equity gained since purchase (the "wow" moment)
-- Agent branding and contact info (Live AZ Co identity)
-- Mobile-responsive scrolling design (most open via text)
-- Shareable unique URL (the distribution mechanism)
-- Appreciation visualization (chart or animated counter)
-- Net proceeds estimate ("what would I walk away with?")
-- Call-to-action to contact Josh
+**Explicitly rejected:**
+- Automated Tableau scraping (fragile, unmaintained libraries, serverless constraints)
+- Puppeteer on Vercel (50MB limit, 10-second timeout, memory issues)
+- Any new charting, animation, or state management library
+
+### Expected Features (from FEATURES.md / FEATURES-v1.1.md)
+
+**Must have (table stakes for v1.1):**
+- Value range selector with condition picker (original/updated/remodeled) -- the core v1.1 interaction
+- Cascading recalculation on condition change -- without this, the picker is cosmetic
+- Cromford appreciation chart with real market data -- even if manually entered
+- Merged Investment Comparison section (replaces separate S&P + Rent vs Own)
+- 5/10/15yr projection timelines for all scenarios
+- Market rate slider for exploring appreciation scenarios
+- Rate lock advantage callout (for sub-4% mortgage holders)
+- 4th combo scenario: "Keep, rent, and buy another"
 
 **Should have (differentiators):**
-- Scrolling narrative timeline (scrollytelling) -- the core differentiator
-- SB7 narrative framing (hero/guide structure)
-- Ownership-duration-adaptive narrative (3 tiers: recent, mid-term, long-term)
-- Reframing comparisons (vs S&P 500, vs renting, equity per week)
-- Animated data reveals on scroll
-- Future scenario projections (Hold & Rent, Move-Up, Equity Play)
-- Home anniversary / milestone markers
-- Dynamic OG social sharing card
+- Cascading ripple animation on condition change (numbers flow down the page)
+- Cromford data comparison to homeowner's specific appreciation rate
+- Enhanced scenario details (projected cash flow, purchasing power, HELOC cost at rates)
 
-**Defer (v2+):**
-- Interactive calculators or user-adjustable inputs (curated experience, not a tool)
-- Automated recurring email updates (personal touch is the differentiator)
-- Real-time MLS data integration (manual input is fine at 20-30 pages/month)
-- User accounts or login (friction-free link sharing)
-- PDF export (CMA tool handles print)
-- Market data feeds (manual data entry is acceptable at current volume)
+**Defer if timeline is tight:**
+- Cascading ripple animation (ship with simple opacity transitions, polish later)
+- 4th combo scenario (most complex; three existing scenarios are already strong)
+- OCR fallback for Cromford screenshots (manual entry works)
+- Tableau embedding (adds 200KB for marginal benefit over Recharts rendering)
 
-### Architecture Approach
+**Anti-features (do NOT build):**
+- Freeform home value slider (undermines Josh's comp-anchored authority)
+- Automated Cromford data refresh (over-engineering for quarterly data)
+- Editable mortgage assumptions (turns narrative into calculator)
+- Tax calculation integration (STR Analyzer handles that)
+- PDF export of interactive page (URL is the deliverable)
 
-Five-component pipeline: Admin Form, Supabase Database, Calculation Engine (pure functions), Narrative Engine (SB7 template selection returning structured data), and Page Renderer (Server Components with ISR). The system is a separate Next.js project from STR Analyzer, sharing the same Supabase instance. On-demand ISR is the correct rendering strategy -- pages are read-heavy, write-rare, and created ad-hoc. The calculation and narrative engines are co-located in the Next.js app (no microservices), imported directly by Server Components.
+### Architecture Approach (from ARCHITECTURE.md / ARCHITECTURE-v1.1.md)
 
-**Major components:**
-1. **Admin Form** (`/admin`) -- Password-protected input form for homeowner data entry. Target: under 5 minutes per page.
-2. **Calculation Engine** (`src/lib/calculations.ts`) -- Pure functions for equity, appreciation, S&P comparison, rental break-even, scenario projections. Testable in isolation.
-3. **Narrative Engine** (`src/lib/narrative.ts`) -- Selects SB7 story beats based on ownership duration, returns structured section data (not markup). Enables future reuse for email or PDF.
-4. **Page Renderer** (`/h/[slug]/page.tsx`) -- Server Component that orchestrates data fetch, calculation, narrative generation, and rendering. Cached via ISR.
-5. **Supabase Database** -- Single `homeowners` table with slug, financial data, timestamps, and status fields.
+The fundamental shift is from server-computed-only to a hybrid model. The server pre-computes metrics for all 3 conditions and passes them as props. The client holds 3 pieces of state via `useState` (NOT Zustand): `selectedCondition`, `projectionYears`, and `marketRateOverride`. Condition changes swap between pre-computed metric sets (no client-side recalculation). Rate slider changes trigger lightweight scenario projection functions extracted into `scenario-calculations.ts` that run client-side.
 
-### Critical Pitfalls
+**Key architectural decisions:**
+1. **Pre-compute 3 condition variants server-side** -- avoids shipping the calculation engine to the client
+2. **Use useState, not Zustand** -- homeowner page has exactly 3 state values; Zustand adds unnecessary indirection
+3. **Split calculation into two stages** -- `computeHomeownerMetrics()` for current-state (runs on condition change), `computeProjections()` for forward-looking (runs on rate/year change)
+4. **Cromford data is city-level, stored in a separate table** -- one data entry serves all homeowners in that city
+5. **Cromford data fetched server-side at render time from Supabase, never scraped at render time**
 
-1. **Appreciation numbers that conflict with homeowner expectations** -- Frame values as ranges with source attribution ("Based on comparable sales, homes like yours have appreciated approximately 18-24%"). Never present a single definitive number. Include "as of [date]" on all value-dependent sections.
-2. **Page feels like Homebot / generic dashboard** -- Design as vertical story, not dashboard. No sidebar nav, no data card grids. Every section opens with narrative hook, not a number. Limit to 2-3 charts maximum, each embedded in narrative context.
-3. **Mobile scroll performance failure** -- Build mobile-first with CPU throttling in dev. Use Intersection Observer (never scroll listeners). Animate only opacity and transform. Set Lighthouse mobile performance budget above 85. Implement `prefers-reduced-motion`.
-4. **SB7 narrative drift (hero/guide confusion)** -- Bake SB7 constraints into templates: homeowner is always the subject of the first sentence, "just" is banned, brand appears only in guide position. Run compliance checklist before every publish.
-5. **Admin workflow exceeds 5-minute target** -- Lock minimum viable input to 4-5 fields. Auto-calculate everything derivable. Inline preview, one-click publish. Time the workflow during development.
+**New files:**
+- `src/components/homeowner/ValueRangeSelector.tsx`
+- `src/components/homeowner/InvestmentComparison.tsx`
+- `src/components/homeowner/MarketRateSlider.tsx`
+- `src/lib/scenario-calculations.ts`
+
+**Removed files:**
+- `SP500Callout.tsx` and `RentVsOwn.tsx` (absorbed into InvestmentComparison)
+
+### Critical Pitfalls (from PITFALLS.md / PITFALLS-v1.1.md)
+
+1. **Breaking existing published pages with schema migration** -- All new columns must be nullable. `applyDefaults()` must handle absence. Integration test with v1.0-shaped data must produce identical output. This is the very first thing to build and verify.
+2. **Hydration mismatch from server/client metric divergence** -- Pass server-computed `now` date as serialized prop. Client uses passive hydration (server-computed metrics) until first user interaction triggers client-side recalculation.
+3. **Cascading recalculation turns page into laggy calculator on mobile** -- Debounce the market rate slider (150ms). Memoize child components with `React.memo()`. Split metrics props so shallow comparison works. Test on real phone with 4x CPU throttle. Performance budget: condition change under 100ms.
+4. **Condition picker creates decision paralysis** -- Place after the value reveal (not at page top). Default to admin-selected condition. Use homeowner-friendly labels. The page must work with zero interaction.
+5. **Combo scenario scope creep** -- Keep it simpler than individual scenarios, not more complex. Compose existing calculation functions. Display as timeline narrative, not data table. Build last.
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+Based on combined research, the dependency chain and risk profile suggest 5 phases.
 
-### Phase 1: Data Foundation + Calculation Engine
-**Rationale:** Everything downstream depends on correct data schema and accurate calculations. The calculation engine must be built and unit-tested before narrative templates can reference its outputs. The data model must include source attribution, timestamps, and status fields from day one to avoid the staleness and management pitfalls.
-**Delivers:** Supabase table schema, TypeScript interfaces, pure calculation functions (equity, appreciation, comparisons, scenarios), unit tests.
-**Addresses:** Shareable URL system (slug design), equity calculation, appreciation math, reframing comparisons (S&P, rent, per-week).
-**Avoids:** Pitfall 1 (inaccurate data -- schema includes source/date fields), Pitfall 6 (URL chaos -- deterministic slug generation with unique constraint), Pitfall 7 (data staleness -- timestamp fields built in).
+### Phase 1: Value Range Foundation + Backward Compatibility
+**Rationale:** Every other v1.1 feature depends on the condition-aware data flow. The schema migration and backward compatibility layer must be proven before any feature work. This is also the highest-risk area (breaking existing pages) and must be isolated and tested.
+**Delivers:** Schema migration (value_low, value_high columns), updated types, updated applyDefaults with null-safe fallbacks, server component computing conditionMetrics for all 3 tiers, ValueRangeSelector component, HomeownerPage gains useState for condition, cascading section updates, admin form with low/high value inputs.
+**Addresses:** Value range selector, condition picker, cascading recalculation, cascading animation (basic version).
+**Avoids:** Pitfall 1 (schema breaking existing pages), Pitfall 2 (hydration mismatch), Pitfall 4 (recalc performance -- establish the pattern here).
+**Research flag:** Standard patterns. No phase research needed -- this is React state management and Supabase column additions.
 
-### Phase 2: Admin Input Form + Data Entry Workflow
-**Rationale:** Need real data entry before page rendering can be meaningful. Validates the data model works in practice. The admin experience determines whether Josh actually creates 20-30 pages/month or abandons the tool.
-**Delivers:** Password-protected `/admin` routes, create/edit form, slug generation, Supabase CRUD, admin page list with search/filter/status.
-**Addresses:** Admin input form, page management dashboard, publish/archive workflow.
-**Avoids:** Pitfall 5 (production bottleneck -- streamlined form with minimal required fields, timed workflow test), Pitfall 6 (management chaos -- admin dashboard from day one).
+### Phase 2: Cromford Data Integration
+**Rationale:** Independent of interactivity work. High perceived value (real market data = authority). Isolated risk -- if it takes longer, it does not block other phases. The existing synthetic appreciation chart serves as automatic fallback.
+**Delivers:** `cromford_data` Supabase table, admin UI for manual data entry (city, year, price-per-sqft), AppreciationChart updated to use real data when available, Cromford vs homeowner appreciation comparison, graceful fallback when no city data exists.
+**Addresses:** Cromford appreciation chart, market context in narrative.
+**Avoids:** Pitfall 1 from PITFALLS-v1.1.md (automated scraping -- we skip it entirely in favor of manual entry).
+**Research flag:** No phase research needed. Manual data entry + Recharts rendering is well-understood.
 
-### Phase 3: Narrative Engine + Scrolling Page
-**Rationale:** This is the core product and the hardest phase. It requires real data (Phase 2) and correct calculations (Phase 1) to be meaningful. The narrative engine and scroll-driven presentation are what differentiate this from every competitor.
-**Delivers:** SB7 narrative engine, ownership-duration-adaptive content, scroll-triggered section components (Hero, Timeline, Equity, Comparison, Scenario, CTA), mobile-first responsive design, ISR-cached dynamic routes.
-**Addresses:** Scrollytelling framework, SB7 narrative framing, adaptive narrative tiers, animated data reveals, mobile-first design, appreciation visualization.
-**Avoids:** Pitfall 2 (automated report feel -- enforce narrative structure over dashboard), Pitfall 3 (mobile performance -- Intersection Observer, GPU-only animations, performance budget), Pitfall 4 (SB7 drift -- compliance checklist baked into templates).
+### Phase 3: Merged Investment Comparison + Rate Lock
+**Rationale:** Cleans up page structure before adding projection complexity. Removes two components, adds one. The leverage calculation is simple. Best done before future scenarios rework since it changes section ordering.
+**Delivers:** InvestmentComparison component (leverage callout + three-column comparison + net result narrative), rate lock advantage callout, removal of SP500Callout and RentVsOwn components, updated narrative copy for all 3 voice variants.
+**Addresses:** Merged Investment Comparison, rate lock advantage callout, information cliff removal for these sections.
+**Avoids:** Pitfall 6 (broken narrative arc from merge -- keep calc engine unchanged, merge only at presentation layer).
+**Research flag:** No phase research needed. Component refactoring with existing calculation outputs.
 
-### Phase 4: Polish + Production Readiness
-**Rationale:** Polish layer that makes the product shareable and production-grade but does not block initial testing with real homeowner data.
-**Delivers:** Dynamic OG image generation for social sharing, admin live preview, revalidation on edit, error handling (404s, error boundaries), analytics (simple view tracking), disclaimer language on projections, `noindex` meta tags.
-**Addresses:** Social sharing card, admin preview, future scenario projections (Hold & Rent, Move-Up, Equity Play), home anniversary markers.
-**Avoids:** Pitfall 7 (data staleness -- "as of" date displayed prominently, refresh workflow), security mistakes (noindex, RLS policies, admin auth verification).
+### Phase 4: Future Scenarios Rework (Projections + Rate Slider + Combo)
+**Rationale:** Heaviest calculation and UX work. Depends on condition picker (Phase 1) being stable since projections build on the selected value. The market rate slider introduces the only client-side recalculation in the app. The combo scenario is the most complex feature and highest conversation-generation potential.
+**Delivers:** `scenario-calculations.ts` (extracted, shared server/client), 5/10/15yr projection logic for all scenarios, MarketRateSlider component, updated ScenarioCards with projection tabs, 4th combo scenario card, rate slider bounds (conservative to aggressive), assumption disclosures on all projections.
+**Addresses:** 5/10/15yr projections, market rate slider, 4th combo scenario, enhanced Hold & Rent / Move-Up / Equity Play.
+**Avoids:** Pitfall 3 (mobile performance -- debounce slider, memoize components), Pitfall 5 (projection inconsistency -- single-pass projection function), Pitfall 7 (combo scope creep -- compose existing functions, keep simpler than individual scenarios).
+**Research flag:** Needs phase research. The combo scenario requirements need clarification with Josh (HELOC vs sale proceeds for down payment). Slider debounce and mobile performance need real-device profiling.
+
+### Phase 5: UX Polish + Deployment
+**Rationale:** All features are functional. This phase refines animations, handles edge cases, and ensures mobile performance across the board.
+**Delivers:** Cascading ripple animation refinement (value-to-value transitions if needed), information cliff removal across all sections, mobile responsive fixes for new components, loading/error states, animation priority system (suppress competing animations during recalc), bulk ISR revalidation script for rollout.
+**Addresses:** Cascading ripple animation (polished), slider fatigue mitigation (max 2 controls per viewport), information cliff removal.
+**Avoids:** Pitfall 8 (slider fatigue -- holistic UX review), Pitfall 9 (animation conflicts -- priority system).
+**Research flag:** No phase research needed. UX polish with established patterns.
 
 ### Phase Ordering Rationale
 
-- **Data before UI:** The calculation engine is the foundation. Incorrect math makes every downstream component wrong. Pure functions are testable without any UI, so Phase 1 can be validated with unit tests alone.
-- **Admin before public pages:** Josh needs to enter data before pages can render. Building the admin form second validates the data model with real input before investing in the narrative experience.
-- **Narrative is the product:** Phase 3 is the largest and most complex phase. It intentionally comes after data and admin are solid, so development can focus entirely on the scrollytelling experience without debugging data issues.
-- **Polish is separable:** OG images, analytics, and error handling are important but do not change the core product. Deferring them to Phase 4 lets Josh start testing with real homeowners after Phase 3.
+- **Schema and backward compatibility first:** The highest risk in v1.1 is breaking 200+ existing published pages. Isolating the migration and proving backward compatibility before any feature work eliminates this risk early.
+- **Cromford independent and early:** It has high perceived value and zero dependency on other v1.1 features. If it runs long, it does not block the critical path.
+- **Investment Comparison before scenarios:** The merge cleans up the page structure. Adding projections and a 4th scenario card to a messy section layout would compound complexity.
+- **Scenarios are the heaviest phase:** They depend on both the condition picker (Phase 1) and the clean page structure (Phase 3). The market rate slider introduces the only client-side recalculation, which needs careful performance work.
+- **Polish last:** The page must work correctly before it works beautifully. Animation refinement and edge case handling are separable from functionality.
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 3:** Scroll-triggered animation implementation with Motion on mobile devices. The intersection of performance, accessibility (`prefers-reduced-motion`), and visual impact needs prototyping and real-device testing. Research the Motion `useScroll` and `useInView` APIs for the specific section-reveal patterns needed.
-- **Phase 4:** Dynamic OG image generation with `@vercel/og` or Satori. The API for generating branded social cards with homeowner-specific data needs technical spike.
+- **Phase 4 (Future Scenarios):** Combo scenario requirements need Josh's input. Client-side projection performance needs real-device profiling. Rate slider UX (bounds, defaults, labels) needs design iteration.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1:** Pure calculation functions and Supabase schema -- well-documented, Josh has done this in STR Analyzer.
-- **Phase 2:** Admin form with password auth and Supabase CRUD -- identical pattern to Idea Pipeline. No new territory.
+- **Phase 1 (Value Range Foundation):** React useState, Supabase column additions, pre-computed condition switching. Well-understood.
+- **Phase 2 (Cromford Data):** Manual data entry + Recharts rendering. No novel patterns.
+- **Phase 3 (Investment Comparison):** Component refactoring. Existing calculations, new presentation.
+- **Phase 5 (UX Polish):** Motion animations and responsive CSS. Established patterns.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Every core technology is already in Josh's projects. Versions verified against current releases. No speculative choices. |
-| Features | HIGH | Competitive landscape well-documented (Homebot, Zillow, Buyside). Clear differentiation strategy. Anti-features list prevents scope creep. |
-| Architecture | HIGH | ISR + Server Components + Supabase is a proven pattern. Build order follows clear dependency chain. No architectural risks at target scale (200-1,000 pages). |
-| Pitfalls | HIGH | Domain-specific pitfalls identified with concrete prevention strategies and phase mappings. Recovery plans documented for each. |
+| Stack | HIGH | No new required libraries. All v1.1 features build on the validated v1.0 stack. Optional additions (Radix slider, tesseract) are well-documented if needed. |
+| Features | HIGH | Both researchers converge on the same table stakes and anti-features. Clear dependency graph. Phased prioritization with explicit deferral criteria. |
+| Architecture | HIGH | Two independent architecture researchers arrived at the same core pattern: pre-compute 3 conditions server-side, useState (not Zustand) for client state, extract scenario-calculations.ts for shared server/client use. Minor disagreement on Cromford storage (JSONB column vs separate table) -- separate table is correct for city-level shared data. |
+| Pitfalls | HIGH | 13 pitfalls identified across two researchers with significant overlap on the critical ones (schema migration, hydration, recalc performance). Concrete file-level mappings and phase-specific warnings. |
 
-**Overall confidence:** HIGH
+**Overall confidence:** MEDIUM-HIGH
+
+The MEDIUM-HIGH (rather than HIGH) reflects one genuine uncertainty: the Cromford data acquisition strategy. Research strongly recommends manual admin entry, which is the safest approach, but the Tableau embedding option and OCR fallback both have MEDIUM confidence. If Josh later wants automated data, the path is unclear. For v1.1, manual entry is the right call.
 
 ### Gaps to Address
 
-- **Appreciation data sourcing:** The research identifies that manual data entry is fine for v1, but does not specify where Josh will source "current value" estimates. During Phase 1 planning, define the data sourcing workflow (Zillow + Redfin + recent comps? County assessor? Josh's professional opinion?). This affects the credibility framing on the page.
-- **SB7 copy templates:** The narrative engine architecture is clear, but the actual copy templates (headline patterns, body text, callout language) need to be written. This is a content creation task, not a code task. Consider drafting 3-5 sample narratives for different ownership durations before Phase 3 development begins.
-- **Animation intensity calibration:** Motion is recommended over GSAP, but the research also flags an anti-pattern warning against heavy client-side animation libraries. The right level of animation (enough to feel cinematic, not enough to tank mobile performance) will need real-device testing during Phase 3.
-- **Multi-market expansion:** All research assumes Phoenix metro. If Josh wants to create pages for clients in other Arizona markets (Scottsdale, Tucson, Sedona), the hardcoded market data (appreciation rates, rental yields) needs to be parameterized. Design the data constants file for easy market expansion even if v1 is Phoenix-only.
+- **Combo scenario requirements:** The "keep, rent, and buy another" scenario needs Josh's input on key assumptions: does the new purchase use HELOC funds or sale proceeds? What vacancy rate and management fee to assume? What qualification model (75% rental income offset)? Clarify before Phase 4 planning.
+- **Cromford data coverage by city:** Research assumes Cromford publishes city-level price-per-sqft data for Phoenix metro cities. Need to verify which cities have data available (Scottsdale, Tempe, Mesa, Gilbert, Chandler, etc.) and what the data format looks like. Affects the `cromford_data` schema.
+- **Condition value mapping:** Research recommends original = valueLow, updated = 40th percentile, remodeled = valueHigh. The 40th percentile formula needs validation with Josh -- does this match how he anchors comp values?
+- **Market rate slider default:** Research suggests initializing from Cromford CAGR when available, falling back to DEFAULTS.appreciationRate (4%). Need to verify what appreciation rate Cromford data actually yields for Phoenix metro to ensure the default feels reasonable.
+- **Animation approach for number transitions:** Two approaches documented (key-based re-mount vs value-to-value animation). Phase 1 should start with key-based re-mount and Phase 5 should upgrade if it feels jarring. This is a design decision, not a technical gap.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Next.js 16 releases and ISR documentation -- verified current version 16.1.6
-- STR Analyzer codebase (`~/stranalyzer/str-analyzer/`) -- direct code review of existing patterns
-- Idea Pipeline codebase (`~/Projects/liveaz-idea-pipeline/`) -- auth pattern verification
-- Motion (formerly Framer Motion) documentation -- https://motion.dev/
-- Supabase + Next.js quickstart -- https://supabase.com/docs/guides/getting-started/quickstarts/nextjs
-- Tailwind CSS v4 -- https://tailwindcss.com/blog/tailwindcss-v4
+- Existing codebase: `/Users/joshuahogan/Projects/homeowner-journey-map/src/` -- direct code review of calculations.ts, types.ts, defaults.ts, transforms.ts, store.ts, HomeownerPage.tsx, page.tsx
+- Next.js 16 Server/Client Components: https://nextjs.org/docs/app/getting-started/server-and-client-components
+- Motion animation docs: https://motion.dev/docs
+- Radix UI Slider: https://www.radix-ui.com/primitives/docs/components/slider
+- Supabase migration patterns: https://supabase.com/docs/guides/deployment/database-migrations
+- React useMemo: https://react.dev/reference/react/useMemo
+- tesseract.js v7.0.0: https://github.com/naptha/tesseract.js/releases
 
 ### Secondary (MEDIUM confidence)
-- Homebot feature analysis -- https://help.homebotapp.com/en/articles/3975961-overview-of-the-home-digest
-- Homebot competitive positioning -- https://homebot.ai/blog/homebot-vs-alternatives-choosing-the-right-mortgage-marketing-tool
-- Zillow Zestimate accuracy -- https://www.zillow.com/learn/influencing-your-zestimate/ (7% median error on off-market homes)
-- Scrollytelling best practices (Pudding) -- https://pudding.cool/process/responsive-scrollytelling/
-- StoryBrand SB7 implementation -- https://hughesintegrated.com/tips-storybrand-agency/
-- Recharts npm -- https://www.npmjs.com/package/recharts (version 3.8.x verified)
+- Tableau Embedding API v3: https://help.tableau.com/current/api/embedding_api/en-us/index.html
+- Homebot "Tune Your Value": https://help.homebotapp.com/en/articles/3631274-module-overview-tune-your-value
+- Cromford Report: https://cromfordreport.com/
+- Zillow Zestimate Owner Updates: https://www.zillow.com/premier-agent/make-instant-updates-to-zestimate/
+- Cognitive Overload in UX (Smashing Magazine): https://www.smashingmagazine.com/2016/09/reducing-cognitive-overload-for-a-better-user-experience/
 
 ### Tertiary (LOW confidence)
-- Luxury real estate web design trends 2026 -- https://www.dmrmedia.org/blog/Real-Estate-Website-Design-Trends (industry trend piece, not technical documentation)
+- Cromford Tableau Public URL stability (may change without notice)
+- tableau-scraping library reliability (documented failures in GitHub issues)
 
 ---
-*Research completed: 2026-03-11*
+*Research completed: 2026-03-13*
 *Ready for roadmap: yes*
