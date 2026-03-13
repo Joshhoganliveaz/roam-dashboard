@@ -51,6 +51,40 @@
 - [x] **VAL-01**: validateHomeownerInputs flags out-of-range values
 - [x] **VAL-02**: validateHomeownerInputs returns empty for valid inputs
 
+## v1.1 Requirements
+
+### Value Range
+
+- [ ] **VALU-01**: Josh can enter low comp value and high comp value in admin form (replaces single currentValue)
+- [ ] **VALU-02**: Homeowner sees three condition choices (Mostly original / Made some updates / Completely remodeled) that map to positions within the comp range
+- [ ] **VALU-03**: Selecting a condition recalculates all downstream numbers (equity, scenarios, comparisons, net proceeds) using the condition-mapped value
+- [ ] **VALU-04**: Condition change triggers cascading ripple animation flowing down the page section by section
+
+### Cromford Chart
+
+- [ ] **CROM-01**: Josh can upload a Cromford Report screenshot in the admin form
+- [ ] **CROM-02**: System extracts price-per-sqft time-series data points from the uploaded screenshot via vision/OCR
+- [ ] **CROM-03**: Appreciation chart displays real market data as a branded, animated Recharts chart (replaces straight-line estimate)
+- [ ] **CROM-04**: Condition selector shifts the entire appreciation curve proportionally (price-per-sqft × home sqft × condition factor)
+
+### Investment Comparison
+
+- [ ] **INVS-01**: Single "Investment Comparison" section replaces separate S&P 500 and Rent vs Own sections
+- [ ] **INVS-02**: Section shows three key numbers: home ROI with leverage, S&P alternative return on down payment, and rent drag subtracted from S&P path
+- [ ] **INVS-03**: Personalized leverage callout using their specific numbers (e.g., "$25K down controlling a $500K asset = 165% return")
+- [ ] **INVS-04**: Rate lock advantage callout quantifying annual savings vs current market rates
+
+### Future Scenarios
+
+- [ ] **SCEN-04**: All three scenarios show 5-year, 10-year, and 15-year projection timelines
+- [ ] **SCEN-05**: One market rate slider affects all scenarios (refi rate for Hold & Rent, purchase rate for Move-Up, HELOC rate for Equity Play)
+- [ ] **SCEN-06**: Rate lock advantage narrative — if homeowner's rate is below market, highlight competitive advantage instead of refi option
+- [ ] **SCEN-07**: 4th combo scenario card: "Keep, rent, and buy another" chaining Hold & Rent + Equity Play + Move-Up math
+- [ ] **SCEN-08**: Enhanced Hold & Rent: projected cash flow and appreciation at 5/10/15yr, rent growth vs fixed mortgage gap widening
+- [ ] **SCEN-09**: Enhanced Move-Up: education on sell-to-buy paths (sell first, bridge loan, rent-back, simultaneous close)
+- [ ] **SCEN-10**: Enhanced Equity Play: HELOC potential with rate-adjusted costs from market rate slider
+- [ ] **SCEN-11**: Information cliffs removed — full information so homeowners feel empowered, conversations happen when ready
+
 ## v2 Requirements
 
 ### Sharing & Polish
@@ -62,17 +96,21 @@
 
 - **INTG-01**: Market data API integration (replace manual value entry)
 
+### Cromford Automation
+
+- **CROM-05**: Automated Tableau Public scraping (deferred — reverse-engineered API too fragile for v1.1)
+
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Interactive calculators / user-adjustable inputs | This is a curated experience, not a tool. Exploring scenarios = call Josh |
 | User accounts or login for homeowners | Friction-free: tap link, see story. No signup needed |
 | Automated email/text sending | Josh's personal touch is the differentiator |
 | PDF export / printable report | CMA tool already handles print. This is digital-native |
 | Neighborhood market reports | Homebot/Zillow already do this. This is about YOUR home, not the market |
 | Homeowner self-service page creation | Value is that Josh creates each page personally |
-| Complex dashboards or chart grids | This is a narrative, not a dashboard. Simple visualizations only |
+| Automated Tableau scraping | Reverse-engineered API too fragile; screenshot OCR is more reliable |
+| Appraisal-grade chart accuracy | Appreciation chart is narrative, not legal — directional accuracy sufficient |
 
 ## Traceability
 
@@ -110,12 +148,16 @@
 | VAL-01 | Phase 2.1 | Complete |
 | VAL-02 | Phase 2.1 | Complete |
 
-**Coverage:**
-- v1 requirements: 20 total
-- Phase 2.1 hardening requirements: 11 total
+**v1.0 Coverage:**
+- v1.0 requirements: 31 total
 - Mapped to phases: 31
-- Unmapped: 0
+- Unmapped: 0 ✓
+
+**v1.1 Coverage:**
+- v1.1 requirements: 20 total
+- Mapped to phases: 0 ⚠️ (pending roadmap)
+- Unmapped: 20
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-12 after Phase 04-01 execution*
+*Last updated: 2026-03-13 after v1.1 requirements definition*
