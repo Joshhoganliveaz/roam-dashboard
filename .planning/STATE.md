@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
-stopped_at: "Completed 05-01-PLAN.md and 05-02-PLAN.md"
-last_updated: "2026-03-13T15:08:43Z"
-last_activity: 2026-03-13 -- Completed Plan 01 of Phase 5 (Data Foundation)
+stopped_at: "Completed 05-03-PLAN.md (Tasks 1-2; Task 3 checkpoint pending)"
+last_updated: "2026-03-13T15:19:00Z"
+last_activity: 2026-03-13 -- Completed Tasks 1-2 of Plan 03 (Condition Picker + Cascading Animation)
 progress:
   total_phases: 8
   completed_phases: 5
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 ## Current Position
 
 Phase: 5 of 7 (Data Foundation)
-Plan: 2 of 5 complete
-Status: Executing
-Last activity: 2026-03-13 -- Completed Plans 01 and 02 (Data Foundation + Cromford OCR)
+Plan: 3 of 5 (Task 3 checkpoint pending)
+Status: Checkpoint -- awaiting human-verify
+Last activity: 2026-03-13 -- Completed Tasks 1-2 of Plan 03 (Condition Picker + Cascading Animation)
 
-Progress: [████░░░░░░] 40%
+Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
@@ -48,7 +48,7 @@ Progress: [████░░░░░░] 40%
 | 2.1 Financial Data Audit | 4 | ~10 min | ~2.5 min |
 | 3. Narrative Experience | 2 | ~6 min | ~3.0 min |
 | 4. Documentation Cleanup | 1 | ~3 min | ~3.0 min |
-| 5. Data Foundation | 2/5 | ~10 min | ~5.0 min |
+| 5. Data Foundation | 3/5 | ~14 min | ~4.7 min |
 
 ## Accumulated Context
 
@@ -65,6 +65,9 @@ Recent decisions affecting current work:
 - v1.1: Claude Vision OCR uses raw fetch (no SDK), deterministic shaped curve seeded from purchasePrice
 - v1.1: getConditionValues mapping: original=low, updated=midpoint, remodeled=high*1.03
 - v1.1: Graceful fallback -- when valueLow/valueHigh are null, all 3 variants use currentValue
+- v1.1: Counter-roll uses Motion animate() imperative API with easeInOut for odometer feel
+- v1.1: Cascade timing: 0/500/1000/1500/2000/2500ms across 6 sections for ~3s total
+- v1.1: AppreciationChart uses key={condition} for smooth remount morph, shaped fallback replaces linear curve
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T15:08:43Z
-Stopped at: Completed 05-01-PLAN.md and 05-02-PLAN.md
-Resume file: .planning/phases/05-data-foundation/05-01-SUMMARY.md
+Last session: 2026-03-13T15:19:00Z
+Stopped at: Completed 05-03-PLAN.md (Tasks 1-2; Task 3 checkpoint pending)
+Resume file: .planning/phases/05-data-foundation/05-03-SUMMARY.md

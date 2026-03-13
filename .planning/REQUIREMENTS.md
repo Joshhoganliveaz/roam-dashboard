@@ -58,14 +58,14 @@
 - [x] **VALU-01**: Josh can enter low comp value and high comp value in admin form (replaces single currentValue)
 - [x] **VALU-02**: Homeowner sees three condition choices (Mostly original / Made some updates / Completely remodeled) that map to positions within the comp range
 - [x] **VALU-03**: Selecting a condition recalculates all downstream numbers (equity, scenarios, comparisons, net proceeds) using the condition-mapped value
-- [ ] **VALU-04**: Condition change triggers cascading ripple animation flowing down the page section by section
+- [x] **VALU-04**: Condition change triggers cascading ripple animation flowing down the page section by section
 
 ### Cromford Chart
 
 - [x] **CROM-01**: Josh can upload a Cromford Report screenshot in the admin form
 - [x] **CROM-02**: System extracts price-per-sqft time-series data points from the uploaded screenshot via vision/OCR
-- [ ] **CROM-03**: Appreciation chart displays real market data as a branded, animated Recharts chart (replaces straight-line estimate)
-- [ ] **CROM-04**: Condition selector shifts the entire appreciation curve proportionally (price-per-sqft × home sqft × condition factor)
+- [x] **CROM-03**: Appreciation chart displays real market data as a branded, animated Recharts chart (replaces straight-line estimate)
+- [x] **CROM-04**: Condition selector shifts the entire appreciation curve proportionally (price-per-sqft × home sqft × condition factor)
 
 ### Investment Comparison
 
@@ -150,11 +150,11 @@
 | VALU-01 | Phase 5 | Complete |
 | VALU-02 | Phase 5 | Complete |
 | VALU-03 | Phase 5 | Complete |
-| VALU-04 | Phase 5 | Pending |
+| VALU-04 | Phase 5 | Complete |
 | CROM-01 | Phase 5 | Complete |
 | CROM-02 | Phase 5 | Complete |
-| CROM-03 | Phase 5 | Pending |
-| CROM-04 | Phase 5 | Pending |
+| CROM-03 | Phase 5 | Complete |
+| CROM-04 | Phase 5 | Complete |
 | INVS-01 | Phase 6 | Pending |
 | INVS-02 | Phase 6 | Pending |
 | INVS-03 | Phase 6 | Pending |

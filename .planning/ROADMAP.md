@@ -100,9 +100,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md -- Types, schema, condition value mapping, server pre-computation, admin form value range fields
-- [ ] 05-02-PLAN.md -- Cromford OCR pipeline, Claude Vision extraction, admin upload with preview/approve
-- [ ] 05-03-PLAN.md -- Condition picker UI, cascading counter-roll animation, appreciation chart with Cromford data
+- [x] 05-01-PLAN.md -- Types, schema, condition value mapping, server pre-computation, admin form value range fields
+- [x] 05-02-PLAN.md -- Cromford OCR pipeline, Claude Vision extraction, admin upload with preview/approve
+- [x] 05-03-PLAN.md -- Condition picker UI, cascading counter-roll animation, appreciation chart with Cromford data (Task 3 checkpoint pending)
 
 ### Phase 6: Investment Comparison + Narrative Cleanup
 **Goal**: The separate S&P 500 and Rent vs Own sections merge into a single, powerful Investment Comparison section that tells the leverage story, and all page sections provide full information without artificial cliffs
@@ -139,6 +139,6 @@ Phases execute in numeric order: 5 -> 6 -> 7
 | 2.1 Financial Data Audit | v1.0 | 4/4 | Complete | 2026-03-12 |
 | 3. Narrative Experience | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
-| 5. Data Foundation | 2/3 | In Progress|  | - |
+| 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
 | 6. Investment Comparison | v1.1 | 0/TBD | Not started | - |
 | 7. Future Scenarios Rework | v1.1 | 0/TBD | Not started | - |
