@@ -97,7 +97,12 @@ Plans:
   3. Changing condition recalculates all downstream numbers on the page -- equity, net proceeds, earnings-per-week, comparisons, and scenario projections -- without a page reload
   4. Josh can upload a Cromford Report screenshot in the admin form, and the appreciation chart on the homeowner page renders real market price-per-sqft data as a branded Recharts chart
   5. When the homeowner changes condition, the appreciation curve shifts proportionally (price-per-sqft times home sqft times condition factor)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md -- Types, schema, condition value mapping, server pre-computation, admin form value range fields
+- [ ] 05-02-PLAN.md -- Cromford OCR pipeline, Claude Vision extraction, admin upload with preview/approve
+- [ ] 05-03-PLAN.md -- Condition picker UI, cascading counter-roll animation, appreciation chart with Cromford data
 
 ### Phase 6: Investment Comparison + Narrative Cleanup
 **Goal**: The separate S&P 500 and Rent vs Own sections merge into a single, powerful Investment Comparison section that tells the leverage story, and all page sections provide full information without artificial cliffs
@@ -134,6 +139,6 @@ Phases execute in numeric order: 5 -> 6 -> 7
 | 2.1 Financial Data Audit | v1.0 | 4/4 | Complete | 2026-03-12 |
 | 3. Narrative Experience | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
-| 5. Data Foundation | v1.1 | 0/TBD | Not started | - |
+| 5. Data Foundation | v1.1 | 0/3 | Not started | - |
 | 6. Investment Comparison | v1.1 | 0/TBD | Not started | - |
 | 7. Future Scenarios Rework | v1.1 | 0/TBD | Not started | - |
