@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
-status: planning
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-13T14:38:54.596Z"
-last_activity: 2026-03-13 -- Roadmap created for v1.1 Enhanced Intelligence
+status: executing
+stopped_at: "Completed 05-01-PLAN.md and 05-02-PLAN.md"
+last_updated: "2026-03-13T15:08:43Z"
+last_activity: 2026-03-13 -- Completed Plan 01 of Phase 5 (Data Foundation)
 progress:
   total_phases: 8
   completed_phases: 5
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 5 - Data Foundation (ready to plan)
+**Current focus:** Phase 5 - Data Foundation (executing)
 
 ## Current Position
 
 Phase: 5 of 7 (Data Foundation)
-Plan: -- (phase not yet planned)
-Status: Ready to plan
-Last activity: 2026-03-13 -- Roadmap created for v1.1 Enhanced Intelligence
+Plan: 2 of 5 complete
+Status: Executing
+Last activity: 2026-03-13 -- Completed Plans 01 and 02 (Data Foundation + Cromford OCR)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
@@ -48,6 +48,7 @@ Progress: [░░░░░░░░░░] 0%
 | 2.1 Financial Data Audit | 4 | ~10 min | ~2.5 min |
 | 3. Narrative Experience | 2 | ~6 min | ~3.0 min |
 | 4. Documentation Cleanup | 1 | ~3 min | ~3.0 min |
+| 5. Data Foundation | 2/5 | ~10 min | ~5.0 min |
 
 ## Accumulated Context
 
@@ -61,6 +62,9 @@ Recent decisions affecting current work:
 - v1.1: Schema adds nullable value_low/value_high columns for backward compat with 200+ pages
 - v1.1: Market rate slider is the only client-side recalculation; everything else swaps pre-computed sets
 - v1.1: Combo scenario composes existing calculation functions, built last
+- v1.1: Claude Vision OCR uses raw fetch (no SDK), deterministic shaped curve seeded from purchasePrice
+- v1.1: getConditionValues mapping: original=low, updated=midpoint, remodeled=high*1.03
+- v1.1: Graceful fallback -- when valueLow/valueHigh are null, all 3 variants use currentValue
 
 ### Pending Todos
 
@@ -74,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T14:38:54.593Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-data-foundation/05-CONTEXT.md
+Last session: 2026-03-13T15:07:25Z
+Stopped at: Completed 05-02-PLAN.md
+Resume file: .planning/phases/05-data-foundation/05-02-SUMMARY.md

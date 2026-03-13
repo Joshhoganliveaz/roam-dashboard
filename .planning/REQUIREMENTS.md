@@ -62,8 +62,8 @@
 
 ### Cromford Chart
 
-- [ ] **CROM-01**: Josh can upload a Cromford Report screenshot in the admin form
-- [ ] **CROM-02**: System extracts price-per-sqft time-series data points from the uploaded screenshot via vision/OCR
+- [x] **CROM-01**: Josh can upload a Cromford Report screenshot in the admin form
+- [x] **CROM-02**: System extracts price-per-sqft time-series data points from the uploaded screenshot via vision/OCR
 - [ ] **CROM-03**: Appreciation chart displays real market data as a branded, animated Recharts chart (replaces straight-line estimate)
 - [ ] **CROM-04**: Condition selector shifts the entire appreciation curve proportionally (price-per-sqft × home sqft × condition factor)
 
@@ -151,8 +151,8 @@
 | VALU-02 | Phase 5 | Pending |
 | VALU-03 | Phase 5 | Pending |
 | VALU-04 | Phase 5 | Pending |
-| CROM-01 | Phase 5 | Pending |
-| CROM-02 | Phase 5 | Pending |
+| CROM-01 | Phase 5 | Complete |
+| CROM-02 | Phase 5 | Complete |
 | CROM-03 | Phase 5 | Pending |
 | CROM-04 | Phase 5 | Pending |
 | INVS-01 | Phase 6 | Pending |
