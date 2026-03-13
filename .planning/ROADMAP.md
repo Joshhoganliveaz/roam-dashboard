@@ -1,8 +1,9 @@
 # Roadmap: Homeowner Journey Map
 
-## Overview
+## Milestones
 
-This roadmap delivers a personalized, scrollytelling web page for homeowners that turns equity data into a narrative experience. The build follows three delivery boundaries: first, the data pipeline and admin workflow that lets Josh create pages; second, the core homeowner page with all financial data rendered in a branded, mobile-first layout; third, the scroll-driven narrative experience with animations, adaptive storytelling, future scenarios, and the CTA that makes this product unlike anything Homebot or Zillow offers.
+- ✅ **v1.0 Foundation** - Phases 1-4 (shipped 2026-03-12)
+- 🚧 **v1.1 Enhanced Intelligence** - Phases 5-7 (in progress)
 
 ## Phases
 
@@ -12,98 +13,127 @@ This roadmap delivers a personalized, scrollytelling web page for homeowners tha
 
 Decimal phases appear between their surrounding integers in numeric order.
 
+<details>
+<summary>✅ v1.0 Foundation (Phases 1-4) - SHIPPED 2026-03-12</summary>
+
 - [x] **Phase 1: Foundation + Admin** - Project scaffolding, Supabase schema, calculation engine, admin input form, and slug-based URL system
-- [x] **Phase 2: Core Homeowner Page** - Branded, mobile-first page at /h/[slug] displaying all financial data -- value, equity, appreciation chart, comparisons, and net proceeds
-- [x] **Phase 3: Narrative Experience** - Scroll-triggered animations, SB7 adaptive narrative, future scenario projections, milestone markers, and CTA (completed 2026-03-12)
-- [x] **Phase 4: Documentation & Tracking Cleanup** - Close audit documentation gaps: missing summaries, Phase 2 verification, stale ROADMAP checkboxes, requirements tracking
+- [x] **Phase 2: Core Homeowner Page** - Branded, mobile-first page at /h/[slug] displaying all financial data
+- [x] **Phase 2.1: Financial Data Audit & Edge Cases (INSERTED)** - Formatting fixes, S&P real data, edge case handling, admin preview
+- [x] **Phase 3: Narrative Experience** - Scroll-triggered animations, SB7 adaptive narrative, future scenario projections, milestone markers, and CTA
+- [x] **Phase 4: Documentation & Tracking Cleanup** - Close audit documentation gaps
+
+### Phase 1: Foundation + Admin
+**Goal**: Josh can enter homeowner data through a streamlined admin form and the system computes all financial metrics correctly
+**Depends on**: Nothing (first phase)
+**Requirements**: PROD-01, PROD-02
+**Plans**: 3/3 complete
+
+Plans:
+- [x] 01-01: Scaffold project, types, Supabase, auth middleware, slug generation
+- [x] 01-02: Calculation engine (TDD) with full unit test coverage
+- [x] 01-03: Admin form, CSV upload, photo upload, list view
+
+### Phase 2: Core Homeowner Page
+**Goal**: Homeowners can visit their unique URL and see a complete, branded, mobile-first page showing their home's financial story
+**Depends on**: Phase 1
+**Requirements**: DATA-01, DATA-02, DATA-03, DATA-04, DATA-05, DATA-06, DATA-07, NARR-01, NARR-02, NARR-06, NARR-07
+**Plans**: 3/3 complete
+
+Plans:
+- [x] 02-01: Format utilities, server component pipeline, hero section, personal note, page shell
+- [x] 02-02: Six data section components with SB7 narrative
+- [x] 02-03: Appreciation chart (Recharts), S&P callout card, visual verification
+
+### Phase 2.1: Financial Data Audit & Edge Cases (INSERTED)
+**Goal**: All financial data displays correctly for edge cases, formatting matches production standards, S&P uses real data
+**Depends on**: Phase 2
+**Requirements**: DATA-06, DATA-01, DATA-02, DATA-04, DATA-05, PROD-01, FMT-01, FMT-02, FMT-03, SP5-01, SP5-02, SP5-03, SP5-04, EDGE-01, EDGE-02, VAL-01, VAL-02
+**Plans**: 4/4 complete
+
+Plans:
+- [x] 02.1-01: Formatting fixes, validation module, edge case tests
+- [x] 02.1-02: S&P 500 real data file, lookup module, calculation wiring
+- [x] 02.1-03: SB7 underwater narrative for all data section components
+- [x] 02.1-04: Admin validation warnings and preview-before-publish workflow
+
+### Phase 3: Narrative Experience
+**Goal**: Page transforms from data display into cinematic narrative experience with scroll animations, adaptive storytelling, and future scenarios
+**Depends on**: Phase 2
+**Requirements**: NARR-03, NARR-04, NARR-05, NARR-08, SCEN-01, SCEN-02, SCEN-03
+**Plans**: 2/2 complete
+
+Plans:
+- [x] 03-01: Animation infrastructure, adaptive narrative voice, milestone markers
+- [x] 03-02: Future scenario cards, branded CTA section, visual verification
+
+### Phase 4: Documentation & Tracking Cleanup
+**Goal**: Close all documentation and tracking gaps from v1.0 milestone audit
+**Depends on**: Phase 3
+**Requirements**: DATA-03, DATA-07, NARR-01, NARR-02, NARR-06, NARR-07
+**Plans**: 1/1 complete
+
+Plans:
+- [x] 04-01: Create missing summaries, Phase 2 verification, update all tracking artifacts
+
+</details>
+
+### 🚧 v1.1 Enhanced Intelligence (In Progress)
+
+**Milestone Goal:** Transform the page from a static snapshot into an interactive, data-rich experience -- real market data, homeowner-driven value selection, deeper scenario projections, and a merged investment comparison story.
+
+- [ ] **Phase 5: Data Foundation** - Schema migration, value range selector with condition picker, Cromford appreciation chart with real market data, cascading recalculation architecture
+- [ ] **Phase 6: Investment Comparison + Narrative Cleanup** - Merged Investment Comparison section replacing separate S&P and Rent vs Own, rate lock callout, information cliffs removed across all sections
+- [ ] **Phase 7: Future Scenarios Rework** - 5/10/15yr projections, market rate slider, enhanced scenario details, and 4th combo scenario
 
 ## Phase Details
 
-### Phase 1: Foundation + Admin
-**Goal**: Josh can enter homeowner data through a streamlined admin form and the system computes all financial metrics correctly -- ready for page rendering
-**Depends on**: Nothing (first phase)
-**Requirements**: PROD-01, PROD-02
+### Phase 5: Data Foundation
+**Goal**: Homeowners see a condition-aware home value (original/updated/remodeled) that cascades through all financial numbers, and the appreciation chart shows real Cromford market data instead of a straight-line estimate
+**Depends on**: Phase 4 (v1.0 complete)
+**Requirements**: VALU-01, VALU-02, VALU-03, VALU-04, CROM-01, CROM-02, CROM-03, CROM-04
 **Success Criteria** (what must be TRUE):
-  1. Josh can fill out an admin form with minimal fields (address, client name, purchase price, purchase date, current value) and save a homeowner record to Supabase in under 5 minutes
-  2. The admin interface is password-protected and shows a list of all created pages with status
-  3. Each saved homeowner record generates a unique, URL-safe slug that will serve as the shareable URL
-  4. Pure calculation functions return correct results for equity, appreciation, net proceeds, earnings-per-period, S&P comparison, rent-vs-own, and all three scenario projections -- verified by unit tests
-**Plans**: 3 plans
+  1. Josh can enter a low comp value and high comp value in the admin form instead of a single current value, and existing pages with only a single value continue to render correctly (no breakage on 200+ published pages)
+  2. Homeowner sees three condition choices (Mostly original / Made some updates / Completely remodeled) on their page, and selecting one updates the displayed home value to the corresponding position within the comp range
+  3. Changing condition recalculates all downstream numbers on the page -- equity, net proceeds, earnings-per-week, comparisons, and scenario projections -- without a page reload
+  4. Josh can upload a Cromford Report screenshot in the admin form, and the appreciation chart on the homeowner page renders real market price-per-sqft data as a branded Recharts chart
+  5. When the homeowner changes condition, the appreciation curve shifts proportionally (price-per-sqft times home sqft times condition factor)
+**Plans**: TBD
 
-Plans:
-- [x] 01-01-PLAN.md — Scaffold project, types, Supabase, auth middleware, slug generation
-- [x] 01-02-PLAN.md — Calculation engine (TDD) with full unit test coverage
-- [x] 01-03-PLAN.md — Admin form, CSV upload, photo upload, list view
-
-### Phase 2: Core Homeowner Page
-**Goal**: Homeowners can visit their unique URL and see a complete, branded, mobile-first page showing their home's financial story -- current value, equity gained, appreciation over time, comparisons, and net proceeds
-**Depends on**: Phase 1
-**Requirements**: DATA-01, DATA-02, DATA-03, DATA-04, DATA-05, DATA-06, DATA-07, NARR-01, NARR-02, NARR-06, NARR-07
+### Phase 6: Investment Comparison + Narrative Cleanup
+**Goal**: The separate S&P 500 and Rent vs Own sections merge into a single, powerful Investment Comparison section that tells the leverage story, and all page sections provide full information without artificial cliffs
+**Depends on**: Phase 5
+**Requirements**: INVS-01, INVS-02, INVS-03, INVS-04, SCEN-11
 **Success Criteria** (what must be TRUE):
-  1. Visiting /h/[slug] renders a page showing current home value, equity gained since purchase, an appreciation chart over time, net proceeds estimate, earnings-per-week reframing, S&P 500 comparison, and ownership-vs-renting comparison
-  2. The page uses a scrolling narrative timeline structure with SB7 framing -- homeowner is the hero, Live AZ Co is the guide, every section opens with narrative context rather than raw numbers
-  3. The page is fully branded with Live AZ Co design language (Olive, Canyon, Gold, Cream, Charcoal palette; Source Serif 4 headings; DM Sans body)
-  4. The page is mobile-first responsive and renders correctly on phone screens (primary viewing context is opening a text message link)
-**Plans**: 3 plans
+  1. A single "Investment Comparison" section replaces the separate S&P 500 callout and Rent vs Own sections, showing three key numbers side by side: home ROI with leverage, S&P alternative return on the down payment, and rent drag subtracted from the S&P path
+  2. The section includes a personalized leverage callout using the homeowner's specific numbers (e.g., "$25K down controlling a $500K asset = 165% return")
+  3. If the homeowner's locked mortgage rate is below current market rates, a rate lock advantage callout quantifies their annual savings vs current rates
+  4. All page sections present full information -- no data hidden behind "click to reveal" or truncation -- so homeowners feel empowered to explore on their own terms
+**Plans**: TBD
 
-Plans:
-- [x] 02-01-PLAN.md — Format utilities, server component pipeline, hero section, personal note, page shell
-- [x] 02-02-PLAN.md — Six data section components (purchase story through net proceeds) with SB7 narrative
-- [x] 02-03-PLAN.md — Appreciation chart (Recharts), S&P callout card, visual verification
-
-### Phase 02.1: Financial Data Audit & Edge Cases (INSERTED)
-
-**Goal:** All financial data displays correctly for edge cases (underwater homes, negative appreciation, cash purchases), number formatting matches production standards, S&P 500 comparison uses real historical data, and Josh can preview pages before publishing
-**Requirements**: DATA-06, DATA-01, DATA-02, DATA-04, DATA-05, PROD-01, FMT-01, FMT-02, FMT-03, SP5-01, SP5-02, SP5-03, SP5-04, EDGE-01, EDGE-02, VAL-01, VAL-02
-**Depends on:** Phase 2
-**Plans:** 4/4 plans complete
-
-Plans:
-- [x] 02.1-01-PLAN.md — Formatting fixes, validation module, edge case tests
-- [x] 02.1-02-PLAN.md — S&P 500 real data file, lookup module, calculation wiring
-- [x] 02.1-03-PLAN.md — SB7 underwater narrative for all data section components
-- [x] 02.1-04-PLAN.md — Admin validation warnings and preview-before-publish workflow
-
-### Phase 3: Narrative Experience
-**Goal**: The page transforms from a data display into a cinematic narrative experience -- sections animate on scroll, the story adapts to how long the homeowner has owned their home, future scenarios spark conversations, and a soft CTA brings them back to Josh
-**Depends on**: Phase 2
-**Requirements**: NARR-03, NARR-04, NARR-05, NARR-08, SCEN-01, SCEN-02, SCEN-03
+### Phase 7: Future Scenarios Rework
+**Goal**: All scenario projections show multi-horizon timelines, respond to a market rate slider, include deeper financial details, and a 4th combo scenario chains the three existing scenarios into a unified wealth-building narrative
+**Depends on**: Phase 5 (condition picker must be stable), Phase 6 (page structure cleaned up)
+**Requirements**: SCEN-04, SCEN-05, SCEN-06, SCEN-07, SCEN-08, SCEN-09, SCEN-10
 **Success Criteria** (what must be TRUE):
-  1. Data sections animate on scroll -- counters count up, charts draw themselves, sections reveal as the user scrolls down
-  2. The narrative adapts based on ownership duration: recent buyers (under 2 years) see forward-looking "where you are headed" language; long-term owners (5+ years) see a rich retrospective of what they have built
-  3. Three future scenario sections are visible and populated: Hold and Rent (when rental income covers the mortgage), Move-Up (net proceeds and what that buys as a down payment), and Equity Play (HELOC potential for investment property leverage)
-  4. Timeline includes milestone markers (purchase anniversary, equity milestones) that anchor the homeowner's story in real moments
-  5. The page ends with a soft CTA to contact Josh ("Ready to explore your options? Let's talk.") that feels like a natural conclusion to the narrative, not a sales pitch
-**Plans**: 2 plans
-
-Plans:
-- [x] 03-01-PLAN.md — Animation infrastructure, adaptive narrative voice, milestone markers, wired into all sections
-- [x] 03-02-PLAN.md — Future scenario cards (Hold & Rent, Move-Up, Equity Play), branded CTA section, visual verification
-
-### Phase 4: Documentation & Tracking Cleanup
-**Goal**: Close all documentation and tracking gaps identified by the v1.0 milestone audit so that every requirement has proper verification evidence and all tracking artifacts are accurate
-**Depends on**: Phase 3
-**Requirements**: DATA-03, DATA-07, NARR-01, NARR-02, NARR-06, NARR-07
-**Gap Closure:** Closes gaps from audit
-**Success Criteria** (what must be TRUE):
-  1. 02-03-SUMMARY.md exists documenting the completed appreciation chart plan
-  2. 02-VERIFICATION.md exists and formally verifies all Phase 2 requirements (DATA-03, DATA-07, NARR-01, NARR-02, NARR-06, NARR-07)
-  3. DATA-03 is marked [x] Complete in REQUIREMENTS.md with traceability updated
-  4. All ROADMAP.md checkboxes and status fields accurately reflect actual execution state
-**Plans**: 1 plan
-
-Plans:
-- [x] 04-01-PLAN.md — Create missing summaries, Phase 2 verification, update all tracking artifacts
+  1. All three existing scenarios (Hold and Rent, Move-Up, Equity Play) show projections at 5-year, 10-year, and 15-year horizons with specific dollar amounts
+  2. A single market rate slider affects all scenarios differently -- refi rate for Hold and Rent, purchase rate for Move-Up, HELOC rate for Equity Play -- and updates projections in real time on mobile without lag
+  3. When the homeowner's rate is below the current market rate, the rate lock advantage narrative highlights their competitive position instead of suggesting a refi
+  4. A 4th combo scenario card ("Keep, rent, and buy another") chains outputs from the other three scenarios into a unified wealth-building path
+  5. Enhanced scenario details: Hold and Rent shows projected cash flow and rent-vs-mortgage gap widening, Move-Up educates on sell-to-buy paths, Equity Play shows HELOC costs at the slider rate
+**Plans**: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4
+Phases execute in numeric order: 5 -> 6 -> 7
 
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 1. Foundation + Admin | 3/3 | Complete | 2026-03-12 |
-| 2. Core Homeowner Page | 3/3 | Complete | 2026-03-12 |
-| 2.1 Financial Data Audit | 4/4 | Complete | 2026-03-12 |
-| 3. Narrative Experience | 2/2 | Complete | 2026-03-12 |
-| 4. Documentation & Tracking Cleanup | 1/1 | Complete | 2026-03-12 |
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1. Foundation + Admin | v1.0 | 3/3 | Complete | 2026-03-12 |
+| 2. Core Homeowner Page | v1.0 | 3/3 | Complete | 2026-03-12 |
+| 2.1 Financial Data Audit | v1.0 | 4/4 | Complete | 2026-03-12 |
+| 3. Narrative Experience | v1.0 | 2/2 | Complete | 2026-03-12 |
+| 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
+| 5. Data Foundation | v1.1 | 0/TBD | Not started | - |
+| 6. Investment Comparison | v1.1 | 0/TBD | Not started | - |
+| 7. Future Scenarios Rework | v1.1 | 0/TBD | Not started | - |

@@ -147,6 +147,26 @@
 | EDGE-02 | Phase 2.1 | Complete |
 | VAL-01 | Phase 2.1 | Complete |
 | VAL-02 | Phase 2.1 | Complete |
+| VALU-01 | Phase 5 | Pending |
+| VALU-02 | Phase 5 | Pending |
+| VALU-03 | Phase 5 | Pending |
+| VALU-04 | Phase 5 | Pending |
+| CROM-01 | Phase 5 | Pending |
+| CROM-02 | Phase 5 | Pending |
+| CROM-03 | Phase 5 | Pending |
+| CROM-04 | Phase 5 | Pending |
+| INVS-01 | Phase 6 | Pending |
+| INVS-02 | Phase 6 | Pending |
+| INVS-03 | Phase 6 | Pending |
+| INVS-04 | Phase 6 | Pending |
+| SCEN-11 | Phase 6 | Pending |
+| SCEN-04 | Phase 7 | Pending |
+| SCEN-05 | Phase 7 | Pending |
+| SCEN-06 | Phase 7 | Pending |
+| SCEN-07 | Phase 7 | Pending |
+| SCEN-08 | Phase 7 | Pending |
+| SCEN-09 | Phase 7 | Pending |
+| SCEN-10 | Phase 7 | Pending |
 
 **v1.0 Coverage:**
 - v1.0 requirements: 31 total
@@ -155,9 +175,9 @@
 
 **v1.1 Coverage:**
 - v1.1 requirements: 20 total
-- Mapped to phases: 0 ⚠️ (pending roadmap)
-- Unmapped: 20
+- Mapped to phases: 20
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-13 after v1.1 requirements definition*
+*Last updated: 2026-03-13 after v1.1 roadmap creation*
