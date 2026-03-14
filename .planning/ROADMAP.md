@@ -129,7 +129,12 @@ Plans:
   3. When the homeowner's rate is below the current market rate, the rate lock advantage narrative highlights their competitive position instead of suggesting a refi
   4. A 4th combo scenario card ("Keep, rent, and buy another") chains outputs from the other three scenarios into a unified wealth-building path
   5. Enhanced scenario details: Hold and Rent shows projected cash flow and rent-vs-mortgage gap widening, Move-Up educates on sell-to-buy paths, Equity Play shows HELOC costs at the slider rate
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md -- Multi-horizon projection calculation functions (TDD) for Hold & Rent, Move-Up, and Equity Play
+- [ ] 07-02-PLAN.md -- Market rate slider, horizon tabs, enhanced scenario cards with projections and rate lock narrative
+- [ ] 07-03-PLAN.md -- Combo scenario card ("Keep, rent, and buy another") + visual verification
 
 ## Progress
 
@@ -145,4 +150,4 @@ Phases execute in numeric order: 5 -> 6 -> 7
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 7. Future Scenarios Rework | v1.1 | 0/TBD | Not started | - |
+| 7. Future Scenarios Rework | v1.1 | 0/3 | Not started | - |
