@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
-stopped_at: Completed 06-02-PLAN.md
-last_updated: "2026-03-14T01:32:28.896Z"
-last_activity: 2026-03-14 -- Completed Plan 02 (Investment Comparison Component + Narrative Cleanup)
+stopped_at: Completed 07-01-PLAN.md
+last_updated: "2026-03-14T02:10:42.507Z"
+last_activity: 2026-03-14 -- Completed 07-01 (Multi-Horizon Projection Calculations)
 progress:
   total_phases: 8
   completed_phases: 7
-  total_plans: 18
-  completed_plans: 18
-  percent: 94
+  total_plans: 21
+  completed_plans: 19
+  percent: 90
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 7 - Future Scenarios Rework (next)
+**Current focus:** Phase 7 - Future Scenarios Rework (plan 1 of 3 complete)
 
 ## Current Position
 
 Phase: 7 of 7 (Future Scenarios Rework)
-Plan: 0 of TBD
-Status: Not started
-Last activity: 2026-03-14 -- Phase 6 verified and complete
+Plan: 1 of 3
+Status: executing
+Last activity: 2026-03-14 -- Completed 07-01 (Multi-Horizon Projection Calculations)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
@@ -75,6 +75,7 @@ Recent decisions affecting current work:
 - v1.1: Rent contrast conditional on sub-24-month ownership only
 - v1.1: Rate lock callout triple-gated: negative appreciation AND rate gap >= 0.5%
 - v1.1: Kept SP500Callout.tsx and RentVsOwn.tsx as dead code for reference (not deleted)
+- [Phase 07]: Refi in Hold & Rent recalculates remaining balance at marketRate for new 30yr term
 
 ### Pending Todos
 
@@ -88,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T01:30:52Z
-Stopped at: Completed 06-02-PLAN.md
-Resume file: .planning/phases/06-investment-comparison-narrative-cleanup/06-02-SUMMARY.md
+Last session: 2026-03-14T02:10:40.762Z
+Stopped at: Completed 07-01-PLAN.md
+Resume file: None

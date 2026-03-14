@@ -76,13 +76,13 @@
 
 ### Future Scenarios
 
-- [ ] **SCEN-04**: All three scenarios show 5-year, 10-year, and 15-year projection timelines
+- [x] **SCEN-04**: All three scenarios show 5-year, 10-year, and 15-year projection timelines
 - [ ] **SCEN-05**: One market rate slider affects all scenarios (refi rate for Hold & Rent, purchase rate for Move-Up, HELOC rate for Equity Play)
 - [ ] **SCEN-06**: Rate lock advantage narrative — if homeowner's rate is below market, highlight competitive advantage instead of refi option
 - [ ] **SCEN-07**: 4th combo scenario card: "Keep, rent, and buy another" chaining Hold & Rent + Equity Play + Move-Up math
-- [ ] **SCEN-08**: Enhanced Hold & Rent: projected cash flow and appreciation at 5/10/15yr, rent growth vs fixed mortgage gap widening
+- [x] **SCEN-08**: Enhanced Hold & Rent: projected cash flow and appreciation at 5/10/15yr, rent growth vs fixed mortgage gap widening
 - [ ] **SCEN-09**: Enhanced Move-Up: education on sell-to-buy paths (sell first, bridge loan, rent-back, simultaneous close)
-- [ ] **SCEN-10**: Enhanced Equity Play: HELOC potential with rate-adjusted costs from market rate slider
+- [x] **SCEN-10**: Enhanced Equity Play: HELOC potential with rate-adjusted costs from market rate slider
 - [x] **SCEN-11**: Information cliffs removed — full information so homeowners feel empowered, conversations happen when ready
 
 ## v2 Requirements
@@ -160,13 +160,13 @@
 | INVS-03 | Phase 6 | Complete |
 | INVS-04 | Phase 6 | Complete |
 | SCEN-11 | Phase 6 | Complete |
-| SCEN-04 | Phase 7 | Pending |
+| SCEN-04 | Phase 7 | Complete |
 | SCEN-05 | Phase 7 | Pending |
 | SCEN-06 | Phase 7 | Pending |
 | SCEN-07 | Phase 7 | Pending |
-| SCEN-08 | Phase 7 | Pending |
+| SCEN-08 | Phase 7 | Complete |
 | SCEN-09 | Phase 7 | Pending |
-| SCEN-10 | Phase 7 | Pending |
+| SCEN-10 | Phase 7 | Complete |
 
 **v1.0 Coverage:**
 - v1.0 requirements: 31 total
