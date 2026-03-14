@@ -116,8 +116,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md -- Leverage ROI + rate lock savings calculations (TDD), FRED API market rate utility, type extensions
-- [ ] 06-02-PLAN.md -- InvestmentComparison component, page wiring + section reorder, scenario card cliff question removal
+- [x] 06-01-PLAN.md -- Leverage ROI + rate lock savings calculations (TDD), FRED API market rate utility, type extensions
+- [x] 06-02-PLAN.md -- InvestmentComparison component, page wiring + section reorder, scenario card cliff question removal
 
 ### Phase 7: Future Scenarios Rework
 **Goal**: All scenario projections show multi-horizon timelines, respond to a market rate slider, include deeper financial details, and a 4th combo scenario chains the three existing scenarios into a unified wealth-building narrative
@@ -144,5 +144,5 @@ Phases execute in numeric order: 5 -> 6 -> 7
 | 3. Narrative Experience | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
-| 6. Investment Comparison | 2/2 | Complete   | 2026-03-14 | - |
+| 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
 | 7. Future Scenarios Rework | v1.1 | 0/TBD | Not started | - |

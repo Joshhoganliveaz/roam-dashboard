@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 6 - Investment Comparison + Narrative Cleanup (executing)
+**Current focus:** Phase 7 - Future Scenarios Rework (next)
 
 ## Current Position
 
-Phase: 6 of 7 (Investment Comparison + Narrative Cleanup)
-Plan: 2 of 2 (complete)
-Status: Phase 6 Complete
-Last activity: 2026-03-14 -- Completed Plan 02 (Investment Comparison Component + Narrative Cleanup)
+Phase: 7 of 7 (Future Scenarios Rework)
+Plan: 0 of TBD
+Status: Not started
+Last activity: 2026-03-14 -- Phase 6 verified and complete
 
 Progress: [██████████] 100%
 
