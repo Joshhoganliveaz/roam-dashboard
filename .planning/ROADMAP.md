@@ -161,7 +161,12 @@ Plans:
   5. Stay & Invest shows HELOC available, monthly cost, investment property framing, tax advantages callout for W-2 earners, and CTAs to STR Analyzer and Josh & Jacqui
   6. Move & Keep as Rental shows the effective interest rate as the hero metric -- the rate that produces their actual out-of-pocket payment after rental cash flow offsets the new mortgage
   7. Each scenario has its own contextual CTA (lender connect, STR Analyzer, talk to Josh & Jacqui)
-**Plans**: 0 plans
+**Plans**: 3 plans
+
+Plans:
+- [ ] 09-01-PLAN.md -- Types, calcEffectiveInterestRate (TDD), date horizon utility, sell cost constants
+- [ ] 09-02-PLAN.md -- HorizonTabs refactor (date-based), MiniMortgageCalculator, StayAndBuildCard, SellAndMoveUpCard
+- [ ] 09-03-PLAN.md -- StayAndInvestCard, MoveAndKeepAsRentalCard, wire all four into ScenarioCards.tsx, update tests
 
 ## Progress
 
@@ -179,4 +184,4 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
 | 7. Page Flow & Hook Rework | v1.1 | 0/2 | Planned | - |
 | 8. Condition Picker & Comp Context | v1.1 | 0/0 | Not started | - |
-| 9. Scenario Cards Rework | v1.1 | 0/0 | Not started | - |
+| 9. Scenario Cards Rework | v1.1 | 0/3 | Planned | - |
