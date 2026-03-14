@@ -97,8 +97,8 @@
 ### Condition Picker & Comp Context (Phase 8)
 
 - [ ] **COMP-01**: Condition picker reframed as "How does your home compare to your neighbors?"
-- [ ] **COMP-02**: 2-3 nearby recent sales shown inline from CSV comp data (address, sold price, optional photo) — no external links
-- [ ] **COMP-03**: Value range tightened to +/-3-5% from base value
+- [x] **COMP-02**: 2-3 nearby recent sales shown inline from CSV comp data (address, sold price, optional photo) — no external links
+- [x] **COMP-03**: Value range tightened to +/-3-5% from base value
 - [ ] **COMP-04**: Comp display kept minimal and clean — informs selection without visual clutter
 
 ### Scenario Cards Rework (Phase 9)
@@ -197,8 +197,8 @@
 | PAGE-05 | Phase 7 | Complete |
 | PAGE-06 | Phase 7 | Pending |
 | COMP-01 | Phase 8 | Pending |
-| COMP-02 | Phase 8 | Pending |
-| COMP-03 | Phase 8 | Pending |
+| COMP-02 | Phase 8 | Complete |
+| COMP-03 | Phase 8 | Complete |
 | COMP-04 | Phase 8 | Pending |
 | SCNR-01 | Phase 9 | Pending |
 | SCNR-02 | Phase 9 | Complete |

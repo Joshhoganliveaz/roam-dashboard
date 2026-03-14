@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-03-14T06:01:00Z"
-last_activity: 2026-03-14 -- Completed 09-01 (Foundation Types & Calculations)
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-03-14T06:01:27Z"
+last_activity: 2026-03-14 -- Completed 08-01 (Condition Picker Data Layer)
 progress:
   total_phases: 10
   completed_phases: 7
@@ -64,7 +64,7 @@ Recent decisions affecting current work:
 - v1.1: Market rate slider is the only client-side recalculation; everything else swaps pre-computed sets
 - v1.1: Combo scenario composes existing calculation functions, built last
 - v1.1: Claude Vision OCR uses raw fetch (no SDK), deterministic shaped curve seeded from purchasePrice
-- v1.1: getConditionValues mapping: original=low, updated=midpoint, remodeled=high*1.03
+- v1.1: getConditionValues clamped to -3%/+5% from baseValue (asymmetric, SB7-informed)
 - v1.1: Graceful fallback -- when valueLow/valueHigh are null, all 3 variants use currentValue
 - v1.1: Counter-roll uses Motion animate() imperative API with easeInOut for odometer feel
 - v1.1: Cascade timing: 0/500/1000/1500/2000/2500ms across 6 sections for ~3s total
@@ -82,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 07]: HorizonTabs stopPropagation prevents card collapse on tab click
 - [Phase 07]: Inline tel/sms links instead of button CTA for warm SB7 guide closing
 - [Phase 07]: Rotated XAxis labels (-45deg) + reduced interval + bottom margin for mobile Cromford chart readability
+- [Phase 08]: conditionCompLinks enriched with optional soldPrice, plumbed server->HomeownerPage->CurrentValue
+- [Phase 08]: soldPrice optional for backward compat with 200+ existing records
 - [Phase 09]: Card-local sell costs (6%+1%) separate from global DEFAULTS (5%+2%)
 - [Phase 09]: Bisection tolerance $0.01, 100 max iterations for calcEffectiveInterestRate
 - [Phase 09]: HorizonYears = 0|5|10|15, NEW_PROJECTION_HORIZONS includes year 0
@@ -98,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T06:01:00Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-03-14T06:01:27Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None
