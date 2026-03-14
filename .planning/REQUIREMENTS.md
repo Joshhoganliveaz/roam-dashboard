@@ -70,9 +70,9 @@
 ### Investment Comparison
 
 - [ ] **INVS-01**: Single "Investment Comparison" section replaces separate S&P 500 and Rent vs Own sections
-- [ ] **INVS-02**: Section shows three key numbers: home ROI with leverage, S&P alternative return on down payment, and rent drag subtracted from S&P path
-- [ ] **INVS-03**: Personalized leverage callout using their specific numbers (e.g., "$25K down controlling a $500K asset = 165% return")
-- [ ] **INVS-04**: Rate lock advantage callout quantifying annual savings vs current market rates
+- [x] **INVS-02**: Section shows three key numbers: home ROI with leverage, S&P alternative return on down payment, and rent drag subtracted from S&P path
+- [x] **INVS-03**: Personalized leverage callout using their specific numbers (e.g., "$25K down controlling a $500K asset = 165% return")
+- [x] **INVS-04**: Rate lock advantage callout quantifying annual savings vs current market rates
 
 ### Future Scenarios
 
@@ -156,9 +156,9 @@
 | CROM-03 | Phase 5 | Complete |
 | CROM-04 | Phase 5 | Complete |
 | INVS-01 | Phase 6 | Pending |
-| INVS-02 | Phase 6 | Pending |
-| INVS-03 | Phase 6 | Pending |
-| INVS-04 | Phase 6 | Pending |
+| INVS-02 | Phase 6 | Complete |
+| INVS-03 | Phase 6 | Complete |
+| INVS-04 | Phase 6 | Complete |
 | SCEN-11 | Phase 6 | Pending |
 | SCEN-04 | Phase 7 | Pending |
 | SCEN-05 | Phase 7 | Pending |

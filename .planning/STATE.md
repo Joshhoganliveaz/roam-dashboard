@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
-status: verifying
-stopped_at: Phase 6 context gathered
-last_updated: "2026-03-14T00:18:51.840Z"
-last_activity: 2026-03-13 -- Completed Tasks 1-2 of Plan 03 (Condition Picker + Cascading Animation)
+status: executing
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-14T00:37:35.965Z"
+last_activity: 2026-03-14 -- Completed Plan 01 (Leverage ROI + Rate Lock Calculations)
 progress:
   total_phases: 8
   completed_phases: 6
-  total_plans: 16
-  completed_plans: 16
+  total_plans: 18
+  completed_plans: 17
   percent: 60
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 5 - Data Foundation (executing)
+**Current focus:** Phase 6 - Investment Comparison + Narrative Cleanup (executing)
 
 ## Current Position
 
-Phase: 5 of 7 (Data Foundation)
-Plan: 3 of 5 (Task 3 checkpoint pending)
-Status: Checkpoint -- awaiting human-verify
-Last activity: 2026-03-13 -- Completed Tasks 1-2 of Plan 03 (Condition Picker + Cascading Animation)
+Phase: 6 of 7 (Investment Comparison + Narrative Cleanup)
+Plan: 1 of 2 (complete)
+Status: Executing
+Last activity: 2026-03-14 -- Completed Plan 01 (Leverage ROI + Rate Lock Calculations)
 
-Progress: [██████░░░░] 60%
+Progress: [█████████░] 94%
 
 ## Performance Metrics
 
@@ -68,6 +68,9 @@ Recent decisions affecting current work:
 - v1.1: Counter-roll uses Motion animate() imperative API with easeInOut for odometer feel
 - v1.1: Cascade timing: 0/500/1000/1500/2000/2500ms across 6 sections for ~3s total
 - v1.1: AppreciationChart uses key={condition} for smooth remount morph, shaped fallback replaces linear curve
+- v1.1: FRED API MORTGAGE30US for current rate with DEFAULTS.interestRate fallback
+- v1.1: LeverageROI returns 0 for zero/negative down payment (cash purchase guard)
+- v1.1: calcRateLockSavings reuses calcMortgagePayment for consistent amortization math
 
 ### Pending Todos
 
@@ -81,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T00:18:51.835Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-investment-comparison-narrative-cleanup/06-CONTEXT.md
+Last session: 2026-03-14T00:37:00.000Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: .planning/phases/06-investment-comparison-narrative-cleanup/06-01-SUMMARY.md
