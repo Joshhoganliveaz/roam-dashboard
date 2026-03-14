@@ -113,7 +113,11 @@ Plans:
   2. The section includes a personalized leverage callout using the homeowner's specific numbers (e.g., "$25K down controlling a $500K asset = 165% return")
   3. If the homeowner's locked mortgage rate is below current market rates, a rate lock advantage callout quantifies their annual savings vs current rates
   4. All page sections present full information -- no data hidden behind "click to reveal" or truncation -- so homeowners feel empowered to explore on their own terms
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 06-01-PLAN.md -- Leverage ROI + rate lock savings calculations (TDD), FRED API market rate utility, type extensions
+- [ ] 06-02-PLAN.md -- InvestmentComparison component, page wiring + section reorder, scenario card cliff question removal
 
 ### Phase 7: Future Scenarios Rework
 **Goal**: All scenario projections show multi-horizon timelines, respond to a market rate slider, include deeper financial details, and a 4th combo scenario chains the three existing scenarios into a unified wealth-building narrative
@@ -140,5 +144,5 @@ Phases execute in numeric order: 5 -> 6 -> 7
 | 3. Narrative Experience | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
-| 6. Investment Comparison | v1.1 | 0/TBD | Not started | - |
+| 6. Investment Comparison | v1.1 | 0/2 | Planning | - |
 | 7. Future Scenarios Rework | v1.1 | 0/TBD | Not started | - |
