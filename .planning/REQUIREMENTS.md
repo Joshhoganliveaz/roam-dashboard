@@ -104,14 +104,14 @@
 ### Scenario Cards Rework (Phase 9)
 
 - [ ] **SCNR-01**: Four scenario cards: Stay & Build Wealth, Sell & Move Up, Stay & Invest, Move & Keep as Rental
-- [ ] **SCNR-02**: Dynamic date horizons calculated from page view date (e.g., Mar '26 | Mar '31 | Mar '36 | Mar '41), year-only fallback on mobile
+- [x] **SCNR-02**: Dynamic date horizons calculated from page view date (e.g., Mar '26 | Mar '31 | Mar '36 | Mar '41), year-only fallback on mobile
 - [ ] **SCNR-03**: One market rate slider above all scenario cards; individual card calculators can override
 - [ ] **SCNR-04**: Stay & Build Wealth shows home value, mortgage balance, and equity at each horizon
 - [ ] **SCNR-05**: Sell & Move Up shows net proceeds ("cost to sell*" with "(title fees & broker fees)"), mini mortgage calculator (30yr, adjustable rate, 5/10/15/20% down payment presets)
-- [ ] **SCNR-06**: Sell & Move Up uses 6% commission + 1% seller closing costs
+- [x] **SCNR-06**: Sell & Move Up uses 6% commission + 1% seller closing costs
 - [ ] **SCNR-07**: Stay & Invest shows HELOC available, monthly cost, rental investment framing, tax advantages callout (depreciation for W-2 earners), CTAs to STR Analyzer and Josh & Jacqui
 - [ ] **SCNR-08**: Move & Keep as Rental shows rental income, cash flow, effective interest rate as hero metric, mini mortgage calculator
-- [ ] **SCNR-09**: Effective interest rate: the rate that would produce the out-of-pocket payment (new mortgage minus rental cash flow) on the same loan amount
+- [x] **SCNR-09**: Effective interest rate: the rate that would produce the out-of-pocket payment (new mortgage minus rental cash flow) on the same loan amount
 - [ ] **SCNR-10**: Each scenario has contextual CTAs (lender connect, STR Analyzer, talk to Josh & Jacqui about investing)
 
 ## v2 Requirements
@@ -201,14 +201,14 @@
 | COMP-03 | Phase 8 | Pending |
 | COMP-04 | Phase 8 | Pending |
 | SCNR-01 | Phase 9 | Pending |
-| SCNR-02 | Phase 9 | Pending |
+| SCNR-02 | Phase 9 | Complete |
 | SCNR-03 | Phase 9 | Pending |
 | SCNR-04 | Phase 9 | Pending |
 | SCNR-05 | Phase 9 | Pending |
-| SCNR-06 | Phase 9 | Pending |
+| SCNR-06 | Phase 9 | Complete |
 | SCNR-07 | Phase 9 | Pending |
 | SCNR-08 | Phase 9 | Pending |
-| SCNR-09 | Phase 9 | Pending |
+| SCNR-09 | Phase 9 | Complete |
 | SCNR-10 | Phase 9 | Pending |
 
 **v1.0 Coverage:**

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
-stopped_at: Completed 07-02-PLAN.md
-last_updated: "2026-03-14T05:01:25.426Z"
-last_activity: 2026-03-14 -- Completed 07-02 (Interactive Scenario Cards with Slider & Horizons)
+stopped_at: Completed 09-01-PLAN.md
+last_updated: "2026-03-14T06:01:00Z"
+last_activity: 2026-03-14 -- Completed 09-01 (Foundation Types & Calculations)
 progress:
   total_phases: 10
   completed_phases: 7
   total_plans: 20
-  completed_plans: 19
-  percent: 95
+  completed_plans: 20
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 7 - Future Scenarios Rework (plan 2 of 3 complete)
+**Current focus:** Phase 9 - Scenario Cards Rework (plan 1 of 3 complete)
 
 ## Current Position
 
-Phase: 7 of 7 (Future Scenarios Rework)
-Plan: 2 of 3
+Phase: 9 of 10 (Scenario Cards Rework)
+Plan: 1 of 3
 Status: executing
-Last activity: 2026-03-14 -- Completed 07-02 (Interactive Scenario Cards with Slider & Horizons)
+Last activity: 2026-03-14 -- Completed 09-01 (Foundation Types & Calculations)
 
-Progress: [██████████] 95%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -82,6 +82,9 @@ Recent decisions affecting current work:
 - [Phase 07]: HorizonTabs stopPropagation prevents card collapse on tab click
 - [Phase 07]: Inline tel/sms links instead of button CTA for warm SB7 guide closing
 - [Phase 07]: Rotated XAxis labels (-45deg) + reduced interval + bottom margin for mobile Cromford chart readability
+- [Phase 09]: Card-local sell costs (6%+1%) separate from global DEFAULTS (5%+2%)
+- [Phase 09]: Bisection tolerance $0.01, 100 max iterations for calcEffectiveInterestRate
+- [Phase 09]: HorizonYears = 0|5|10|15, NEW_PROJECTION_HORIZONS includes year 0
 
 ### Pending Todos
 
@@ -95,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T05:01:25.424Z
-Stopped at: Completed 07-02-PLAN.md
+Last session: 2026-03-14T06:01:00Z
+Stopped at: Completed 09-01-PLAN.md
 Resume file: None
