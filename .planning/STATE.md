@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-03-14T06:01:27Z"
-last_activity: 2026-03-14 -- Completed 08-01 (Condition Picker Data Layer)
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-14T06:12:32.029Z"
+last_activity: 2026-03-14 -- Completed 09-02 (Shared Components & First Two Scenario Cards)
 progress:
   total_phases: 10
   completed_phases: 7
-  total_plans: 20
-  completed_plans: 20
-  percent: 100
+  total_plans: 25
+  completed_plans: 22
+  percent: 88
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 9 - Scenario Cards Rework (plan 1 of 3 complete)
+**Current focus:** Phase 9 - Scenario Cards Rework (plan 2 of 3 complete)
 
 ## Current Position
 
 Phase: 9 of 10 (Scenario Cards Rework)
-Plan: 1 of 3
+Plan: 2 of 3
 Status: executing
-Last activity: 2026-03-14 -- Completed 09-01 (Foundation Types & Calculations)
+Last activity: 2026-03-14 -- Completed 09-02 (Shared Components & First Two Scenario Cards)
 
-Progress: [██████████] 100%
+Progress: [█████████░] 88%
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Progress: [██████████] 100%
 | 4. Documentation Cleanup | 1 | ~3 min | ~3.0 min |
 | 5. Data Foundation | 3/5 | ~14 min | ~4.7 min |
 | Phase 07 P02 | 1min | 2 tasks | 3 files |
+| Phase 09 P02 | 6min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,13 @@ Recent decisions affecting current work:
 - [Phase 09]: Card-local sell costs (6%+1%) separate from global DEFAULTS (5%+2%)
 - [Phase 09]: Bisection tolerance $0.01, 100 max iterations for calcEffectiveInterestRate
 - [Phase 09]: HorizonYears = 0|5|10|15, NEW_PROJECTION_HORIZONS includes year 0
+- [Phase 09]: StayAndBuildCard defaults to 5yr tab (not Now) per research pitfall #6
+- [Phase 09]: MiniMortgageCalculator owns all state locally via useState -- never lifted to parent
+- [Phase 09]: ScenarioCard.horizonContent uses Partial<Record<HorizonYears, ...>> for backward compat
+- [Phase 09]: SellAndMoveUpCard CTA uses inline tel link per SB7 warm pattern
+- [Phase 09]: StayAndBuildCard defaults to 5yr tab (not Now) per research pitfall #6
+- [Phase 09]: MiniMortgageCalculator owns all state locally via useState -- never lifted to parent
+- [Phase 09]: ScenarioCard.horizonContent uses Partial<Record<HorizonYears, ...>> for backward compat
 
 ### Pending Todos
 
@@ -100,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T06:01:27Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-03-14T06:12:22.130Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: None
