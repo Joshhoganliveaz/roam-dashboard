@@ -132,7 +132,11 @@ Plans:
   4. No external links take the homeowner off the page (the "see a similar home" link is removed)
   5. Cromford chart date labels are readable on mobile (no squished/overlapping text)
   6. Net proceeds no longer appears as a standalone data section (it will live inside the Sell & Move Up scenario card in Phase 9)
-**Plans**: 0 plans
+**Plans**: 2 plans
+
+Plans:
+- [ ] 07-01-PLAN.md -- Hero paycheck hook, page section reorder, remove net proceeds and external links
+- [ ] 07-02-PLAN.md -- Simple CTA replacement, Cromford chart mobile date label fix
 
 ### Phase 8: Condition Picker & Comp Context
 **Goal**: The condition picker feels like a natural neighbor comparison rather than a self-assessment, with real comp data providing context, and the value range is tight enough to be credible
@@ -173,6 +177,6 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 7. Page Flow & Hook Rework | v1.1 | 0/0 | Not started | - |
+| 7. Page Flow & Hook Rework | v1.1 | 0/2 | Planned | - |
 | 8. Condition Picker & Comp Context | v1.1 | 0/0 | Not started | - |
 | 9. Scenario Cards Rework | v1.1 | 0/0 | Not started | - |
