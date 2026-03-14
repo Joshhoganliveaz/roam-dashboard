@@ -94,6 +94,16 @@
 - [x] **PAGE-05**: Cromford chart date labels readable on mobile (spacing fix, no overlapping text)
 - [x] **PAGE-06**: Net proceeds removed from standalone section — lives only in Sell & Move Up scenario card (Phase 9)
 
+### Hero Section Redesign (Phase 07.1)
+
+- [ ] **HERO-01**: Hero renders full-bleed home photo with warm gradient overlay, gradient fallback when no photo
+- [ ] **HERO-02**: Desktop layout: two frosted glass panels — top-left (logo + name + address), bottom-right (weekly paycheck stat)
+- [ ] **HERO-03**: Mobile layout: logo floats top-left, single full-width frosted panel at bottom with name, gold divider, and stat
+- [ ] **HERO-04**: Weekly paycheck stat displayed in Playfair Display 700 at 112px (desktop) / 76px (mobile) in gold (#C9953E)
+- [ ] **HERO-05**: Stat panel hidden when earningsPerWeek <= 0 — hero shows photo + gradient + name only
+- [ ] **HERO-06**: Live AZ Co white logo renders in hero section (resized PNG from brand assets)
+- [ ] **HERO-07**: PaycheckHook component deleted — stat absorbed into HeroSection, HomeownerPage no longer imports it
+
 ### Condition Picker & Comp Context (Phase 8)
 
 - [ ] **COMP-01**: Condition picker reframed as "How does your home compare to your neighbors?"
@@ -189,13 +199,20 @@
 | INVS-03 | Phase 6 | Complete |
 | INVS-04 | Phase 6 | Complete |
 | SCEN-11 | Phase 6 | Complete |
-| SCEN-04–10 | — | Superseded by PAGE/COMP/SCNR requirements |
+| SCEN-04-10 | -- | Superseded by PAGE/COMP/SCNR requirements |
 | PAGE-01 | Phase 7 | Complete |
 | PAGE-02 | Phase 7 | Complete |
 | PAGE-03 | Phase 7 | Complete |
 | PAGE-04 | Phase 7 | Complete |
 | PAGE-05 | Phase 7 | Complete |
 | PAGE-06 | Phase 7 | Complete |
+| HERO-01 | Phase 07.1 | Pending |
+| HERO-02 | Phase 07.1 | Pending |
+| HERO-03 | Phase 07.1 | Pending |
+| HERO-04 | Phase 07.1 | Pending |
+| HERO-05 | Phase 07.1 | Pending |
+| HERO-06 | Phase 07.1 | Pending |
+| HERO-07 | Phase 07.1 | Pending |
 | COMP-01 | Phase 8 | Pending |
 | COMP-02 | Phase 8 | Complete |
 | COMP-03 | Phase 8 | Complete |
@@ -217,10 +234,10 @@
 - Unmapped: 0
 
 **v1.1 Coverage:**
-- v1.1 requirements: 28 total (8 VALU/CROM + 4 INVS + 1 SCEN-11 + 6 PAGE + 4 COMP + 10 SCNR, minus 7 superseded SCEN-04–10)
-- Mapped to phases: 28
+- v1.1 requirements: 35 total (8 VALU/CROM + 4 INVS + 1 SCEN-11 + 6 PAGE + 7 HERO + 4 COMP + 10 SCNR, minus 7 superseded SCEN-04-10)
+- Mapped to phases: 35
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-11*
-*Last updated: 2026-03-13 after v1.1 roadmap creation*
+*Last updated: 2026-03-14 after Phase 07.1 planning*

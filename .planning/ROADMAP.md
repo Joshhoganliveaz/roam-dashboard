@@ -84,6 +84,7 @@ Plans:
 - [ ] **Phase 5: Data Foundation** - Schema migration, value range selector with condition picker, Cromford appreciation chart with real market data, cascading recalculation architecture
 - [x] **Phase 6: Investment Comparison + Narrative Cleanup** - Merged Investment Comparison section replacing separate S&P and Rent vs Own, rate lock callout, information cliffs removed across all sections (completed 2026-03-14)
 - [x] **Phase 7: Page Flow & Hook Rework** - Weekly paycheck hook to hero position, page section reorder (scenarios up, data down), simple CTA, Cromford mobile fix, remove external links (completed 2026-03-14)
+- [ ] **Phase 07.1: Hero Section Redesign (INSERTED)** - Premium frosted-glass hero with Playfair Display gold stat, full-bleed photo, responsive mobile layout, logo integration
 - [ ] **Phase 8: Condition Picker & Comp Context** - Reframe condition picker as neighbor comparison, inline comp data from CSV, tighter value range
 - [ ] **Phase 9: Scenario Cards Rework** - Four new scenarios (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental), market rate slider, dynamic date horizons, mini mortgage calculators, effective interest rate
 
@@ -135,8 +136,26 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 07-01-PLAN.md -- Hero paycheck hook, page section reorder, remove net proceeds and external links
-- [ ] 07-02-PLAN.md -- Simple CTA replacement, Cromford chart mobile date label fix
+- [x] 07-01-PLAN.md -- Hero paycheck hook, page section reorder, remove net proceeds and external links
+- [x] 07-02-PLAN.md -- Simple CTA replacement, Cromford chart mobile date label fix
+
+### Phase 07.1: Hero Section Redesign (INSERTED)
+**Goal**: The hero section is a premium, screenshot-worthy presentation with full-bleed home photo, frosted glass panels, and an oversized Playfair Display gold stat -- replacing the separate HeroSection + PaycheckHook layout with a single unified component
+**Depends on**: Phase 7
+**Requirements**: HERO-01, HERO-02, HERO-03, HERO-04, HERO-05, HERO-06, HERO-07
+**Success Criteria** (what must be TRUE):
+  1. Hero displays full-bleed home photo with warm gradient overlay, or branded gradient fallback when no photo
+  2. Desktop shows two asymmetric frosted glass panels: top-left (logo + name + address), bottom-right (weekly paycheck stat in gold)
+  3. Mobile shows single full-width frosted panel at bottom with name, gold divider, and stat; logo floats top-left
+  4. Gold stat number uses Playfair Display 700 at 112px desktop / 76px mobile
+  5. Stat panel is hidden when earningsPerWeek <= 0 -- hero shows photo + gradient + name only
+  6. Live AZ Co white logo renders in hero from resized PNG asset
+  7. PaycheckHook component is deleted and HomeownerPage passes earningsPerWeek directly to HeroSection
+**Plans**: 2 plans
+
+Plans:
+- [ ] 07.1-01-PLAN.md -- Font infrastructure, logo asset, HeroSection rewrite, HomeownerPage wiring, tests
+- [ ] 07.1-02-PLAN.md -- Visual verification checkpoint (desktop, mobile, Safari, negative equity)
 
 ### Phase 8: Condition Picker & Comp Context
 **Goal**: The condition picker feels like a natural neighbor comparison rather than a self-assessment, with real comp data providing context, and the value range is tight enough to be credible
@@ -171,7 +190,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9
+Phases execute in numeric order: 5 -> 6 -> 7 -> 07.1 -> 8 -> 9
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -182,6 +201,7 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 7. Page Flow & Hook Rework | 2/2 | Complete   | 2026-03-14 | - |
+| 7. Page Flow & Hook Rework | v1.1 | 2/2 | Complete | 2026-03-14 |
+| 07.1 Hero Section Redesign | v1.1 | 0/2 | Planned | - |
 | 8. Condition Picker & Comp Context | v1.1 | 0/0 | Not started | - |
 | 9. Scenario Cards Rework | v1.1 | 0/3 | Planned | - |
