@@ -83,7 +83,9 @@ Plans:
 
 - [ ] **Phase 5: Data Foundation** - Schema migration, value range selector with condition picker, Cromford appreciation chart with real market data, cascading recalculation architecture
 - [x] **Phase 6: Investment Comparison + Narrative Cleanup** - Merged Investment Comparison section replacing separate S&P and Rent vs Own, rate lock callout, information cliffs removed across all sections (completed 2026-03-14)
-- [ ] **Phase 7: Future Scenarios Rework** - 5/10/15yr projections, market rate slider, enhanced scenario details, and 4th combo scenario
+- [ ] **Phase 7: Page Flow & Hook Rework** - Weekly paycheck hook to hero position, page section reorder (scenarios up, data down), simple CTA, Cromford mobile fix, remove external links
+- [ ] **Phase 8: Condition Picker & Comp Context** - Reframe condition picker as neighbor comparison, inline comp data from CSV, tighter value range
+- [ ] **Phase 9: Scenario Cards Rework** - Four new scenarios (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental), market rate slider, dynamic date horizons, mini mortgage calculators, effective interest rate
 
 ## Phase Details
 
@@ -119,27 +121,48 @@ Plans:
 - [x] 06-01-PLAN.md -- Leverage ROI + rate lock savings calculations (TDD), FRED API market rate utility, type extensions
 - [x] 06-02-PLAN.md -- InvestmentComparison component, page wiring + section reorder, scenario card cliff question removal
 
-### Phase 7: Future Scenarios Rework
-**Goal**: All scenario projections show multi-horizon timelines, respond to a market rate slider, include deeper financial details, and a 4th combo scenario chains the three existing scenarios into a unified wealth-building narrative
-**Depends on**: Phase 5 (condition picker must be stable), Phase 6 (page structure cleaned up)
-**Requirements**: SCEN-04, SCEN-05, SCEN-06, SCEN-07, SCEN-08, SCEN-09, SCEN-10
+### Phase 7: Page Flow & Hook Rework
+**Goal**: The weekly paycheck hook leads the page, scenario cards move up closer to the action, data/proof sections move below, and the page feels like a narrative that hooks immediately and drives engagement
+**Depends on**: Phase 6 (page structure from investment comparison cleanup)
+**Requirements**: PAGE-01, PAGE-02, PAGE-03, PAGE-04, PAGE-05, PAGE-06
 **Success Criteria** (what must be TRUE):
-  1. All three existing scenarios (Hold and Rent, Move-Up, Equity Play) show projections at 5-year, 10-year, and 15-year horizons with specific dollar amounts
-  2. A single market rate slider affects all scenarios differently -- refi rate for Hold and Rent, purchase rate for Move-Up, HELOC rate for Equity Play -- and updates projections in real time on mobile without lag
-  3. When the homeowner's rate is below the current market rate, the rate lock advantage narrative highlights their competitive position instead of suggesting a refi
-  4. A 4th combo scenario card ("Keep, rent, and buy another") chains outputs from the other three scenarios into a unified wealth-building path
-  5. Enhanced scenario details: Hold and Rent shows projected cash flow and rent-vs-mortgage gap widening, Move-Up educates on sell-to-buy paths, Equity Play shows HELOC costs at the slider rate
-**Plans**: 3 plans
+  1. "Your home earned $X this week" is the first compelling number a homeowner sees on page load, positioned in or near the hero section
+  2. Scenario cards appear before the appreciation chart, investment comparison, and mortgage details sections -- the opportunity comes before the proof
+  3. Bottom CTA is simple: Josh & Jacqui contact info + photo + "Let's talk about your options" (replaces previous CTA style)
+  4. No external links take the homeowner off the page (the "see a similar home" link is removed)
+  5. Cromford chart date labels are readable on mobile (no squished/overlapping text)
+  6. Net proceeds no longer appears as a standalone data section (it will live inside the Sell & Move Up scenario card in Phase 9)
+**Plans**: 0 plans
 
-Plans:
-- [ ] 07-01-PLAN.md -- Multi-horizon projection calculation functions (TDD) for Hold & Rent, Move-Up, and Equity Play
-- [ ] 07-02-PLAN.md -- Market rate slider, horizon tabs, enhanced scenario cards with projections and rate lock narrative
-- [ ] 07-03-PLAN.md -- Combo scenario card ("Keep, rent, and buy another") + visual verification
+### Phase 8: Condition Picker & Comp Context
+**Goal**: The condition picker feels like a natural neighbor comparison rather than a self-assessment, with real comp data providing context, and the value range is tight enough to be credible
+**Depends on**: Phase 7 (page flow settled)
+**Requirements**: COMP-01, COMP-02, COMP-03, COMP-04
+**Success Criteria** (what must be TRUE):
+  1. Condition picker is reframed as "How does your home compare to your neighbors?" instead of "Select your home's condition"
+  2. 2-3 nearby recent sales from CSV comp data are shown inline (address, sold price, optional photo) with no external links
+  3. Value range is tightened to +/-3-5% from base value so selections feel meaningful but don't wildly change downstream numbers
+  4. Comp display is minimal and clean -- informs the selection without making the section feel busy
+**Plans**: 0 plans
+
+### Phase 9: Scenario Cards Rework
+**Goal**: Four scenario cards match real homeowner decision paths (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental) with a market rate slider, dynamic date horizons, mini mortgage calculators, and the effective interest rate concept
+**Depends on**: Phase 7 (page flow with scenarios in correct position), Phase 8 (condition picker stable)
+**Requirements**: SCNR-01, SCNR-02, SCNR-03, SCNR-04, SCNR-05, SCNR-06, SCNR-07, SCNR-08, SCNR-09, SCNR-10
+**Success Criteria** (what must be TRUE):
+  1. Four scenario cards render: Stay & Build Wealth, Sell & Move Up, Stay & Invest, Move & Keep as Rental -- each representing a distinct homeowner path
+  2. Dynamic date horizons show actual dates (e.g., Mar '26 | Mar '31 | Mar '36 | Mar '41) calculated from the page view date, with year-only fallback on mobile if needed
+  3. One market rate slider above all cards sets the baseline rate; mini mortgage calculators inside Sell & Move Up and Move & Keep as Rental can override independently
+  4. Sell & Move Up shows net proceeds with "cost to sell*" label (title fees & broker fees), mini mortgage calculator with 30yr term, adjustable rate, and 5/10/15/20% down payment presets
+  5. Stay & Invest shows HELOC available, monthly cost, investment property framing, tax advantages callout for W-2 earners, and CTAs to STR Analyzer and Josh & Jacqui
+  6. Move & Keep as Rental shows the effective interest rate as the hero metric -- the rate that produces their actual out-of-pocket payment after rental cash flow offsets the new mortgage
+  7. Each scenario has its own contextual CTA (lender connect, STR Analyzer, talk to Josh & Jacqui)
+**Plans**: 0 plans
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 5 -> 6 -> 7
+Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -150,4 +173,6 @@ Phases execute in numeric order: 5 -> 6 -> 7
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 7. Future Scenarios Rework | 2/3 | In Progress|  | - |
+| 7. Page Flow & Hook Rework | v1.1 | 0/0 | Not started | - |
+| 8. Condition Picker & Comp Context | v1.1 | 0/0 | Not started | - |
+| 9. Scenario Cards Rework | v1.1 | 0/0 | Not started | - |

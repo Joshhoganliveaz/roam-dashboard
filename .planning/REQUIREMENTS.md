@@ -74,16 +74,45 @@
 - [x] **INVS-03**: Personalized leverage callout using their specific numbers (e.g., "$25K down controlling a $500K asset = 165% return")
 - [x] **INVS-04**: Rate lock advantage callout quantifying annual savings vs current market rates
 
-### Future Scenarios
+### Future Scenarios (v1.0)
 
-- [x] **SCEN-04**: All three scenarios show 5-year, 10-year, and 15-year projection timelines
-- [x] **SCEN-05**: One market rate slider affects all scenarios (refi rate for Hold & Rent, purchase rate for Move-Up, HELOC rate for Equity Play)
-- [x] **SCEN-06**: Rate lock advantage narrative — if homeowner's rate is below market, highlight competitive advantage instead of refi option
-- [ ] **SCEN-07**: 4th combo scenario card: "Keep, rent, and buy another" chaining Hold & Rent + Equity Play + Move-Up math
-- [x] **SCEN-08**: Enhanced Hold & Rent: projected cash flow and appreciation at 5/10/15yr, rent growth vs fixed mortgage gap widening
-- [x] **SCEN-09**: Enhanced Move-Up: education on sell-to-buy paths (sell first, bridge loan, rent-back, simultaneous close)
-- [x] **SCEN-10**: Enhanced Equity Play: HELOC potential with rate-adjusted costs from market rate slider
+- [x] **SCEN-01**: Hold & Rent projection -- when rental income would cover the mortgage
+- [x] **SCEN-02**: Move-Up projection -- net proceeds and what that buys as a down payment
+- [x] **SCEN-03**: Equity Play projection -- HELOC potential for investment property leverage
 - [x] **SCEN-11**: Information cliffs removed — full information so homeowners feel empowered, conversations happen when ready
+
+### Future Scenarios (v1.1 — superseded by Phases 7-9 rework)
+
+*SCEN-04 through SCEN-10 superseded by PAGE-*, COMP-*, SCNR-* requirements below.*
+
+### Page Flow & Hook (Phase 7)
+
+- [ ] **PAGE-01**: Weekly paycheck ("Your home earned $X this week") is the hero hook, visible immediately on page load
+- [ ] **PAGE-02**: Page sections reordered: Hero+hook → home value+equity → scenarios → appreciation chart → investment comparison → mortgage details → CTA
+- [ ] **PAGE-03**: Simple CTA at bottom with Josh & Jacqui contact info, photo, and "Let's talk about your options"
+- [ ] **PAGE-04**: "See a similar home" external link removed — no links that take homeowner off the page
+- [ ] **PAGE-05**: Cromford chart date labels readable on mobile (spacing fix, no overlapping text)
+- [ ] **PAGE-06**: Net proceeds removed from standalone section — lives only in Sell & Move Up scenario card (Phase 9)
+
+### Condition Picker & Comp Context (Phase 8)
+
+- [ ] **COMP-01**: Condition picker reframed as "How does your home compare to your neighbors?"
+- [ ] **COMP-02**: 2-3 nearby recent sales shown inline from CSV comp data (address, sold price, optional photo) — no external links
+- [ ] **COMP-03**: Value range tightened to +/-3-5% from base value
+- [ ] **COMP-04**: Comp display kept minimal and clean — informs selection without visual clutter
+
+### Scenario Cards Rework (Phase 9)
+
+- [ ] **SCNR-01**: Four scenario cards: Stay & Build Wealth, Sell & Move Up, Stay & Invest, Move & Keep as Rental
+- [ ] **SCNR-02**: Dynamic date horizons calculated from page view date (e.g., Mar '26 | Mar '31 | Mar '36 | Mar '41), year-only fallback on mobile
+- [ ] **SCNR-03**: One market rate slider above all scenario cards; individual card calculators can override
+- [ ] **SCNR-04**: Stay & Build Wealth shows home value, mortgage balance, and equity at each horizon
+- [ ] **SCNR-05**: Sell & Move Up shows net proceeds ("cost to sell*" with "(title fees & broker fees)"), mini mortgage calculator (30yr, adjustable rate, 5/10/15/20% down payment presets)
+- [ ] **SCNR-06**: Sell & Move Up uses 6% commission + 1% seller closing costs
+- [ ] **SCNR-07**: Stay & Invest shows HELOC available, monthly cost, rental investment framing, tax advantages callout (depreciation for W-2 earners), CTAs to STR Analyzer and Josh & Jacqui
+- [ ] **SCNR-08**: Move & Keep as Rental shows rental income, cash flow, effective interest rate as hero metric, mini mortgage calculator
+- [ ] **SCNR-09**: Effective interest rate: the rate that would produce the out-of-pocket payment (new mortgage minus rental cash flow) on the same loan amount
+- [ ] **SCNR-10**: Each scenario has contextual CTAs (lender connect, STR Analyzer, talk to Josh & Jacqui about investing)
 
 ## v2 Requirements
 
@@ -160,23 +189,37 @@
 | INVS-03 | Phase 6 | Complete |
 | INVS-04 | Phase 6 | Complete |
 | SCEN-11 | Phase 6 | Complete |
-| SCEN-04 | Phase 7 | Complete |
-| SCEN-05 | Phase 7 | Complete |
-| SCEN-06 | Phase 7 | Complete |
-| SCEN-07 | Phase 7 | Pending |
-| SCEN-08 | Phase 7 | Complete |
-| SCEN-09 | Phase 7 | Complete |
-| SCEN-10 | Phase 7 | Complete |
+| SCEN-04–10 | — | Superseded by PAGE/COMP/SCNR requirements |
+| PAGE-01 | Phase 7 | Pending |
+| PAGE-02 | Phase 7 | Pending |
+| PAGE-03 | Phase 7 | Pending |
+| PAGE-04 | Phase 7 | Pending |
+| PAGE-05 | Phase 7 | Pending |
+| PAGE-06 | Phase 7 | Pending |
+| COMP-01 | Phase 8 | Pending |
+| COMP-02 | Phase 8 | Pending |
+| COMP-03 | Phase 8 | Pending |
+| COMP-04 | Phase 8 | Pending |
+| SCNR-01 | Phase 9 | Pending |
+| SCNR-02 | Phase 9 | Pending |
+| SCNR-03 | Phase 9 | Pending |
+| SCNR-04 | Phase 9 | Pending |
+| SCNR-05 | Phase 9 | Pending |
+| SCNR-06 | Phase 9 | Pending |
+| SCNR-07 | Phase 9 | Pending |
+| SCNR-08 | Phase 9 | Pending |
+| SCNR-09 | Phase 9 | Pending |
+| SCNR-10 | Phase 9 | Pending |
 
 **v1.0 Coverage:**
 - v1.0 requirements: 31 total
 - Mapped to phases: 31
-- Unmapped: 0 ✓
+- Unmapped: 0
 
 **v1.1 Coverage:**
-- v1.1 requirements: 20 total
-- Mapped to phases: 20
-- Unmapped: 0 ✓
+- v1.1 requirements: 28 total (8 VALU/CROM + 4 INVS + 1 SCEN-11 + 6 PAGE + 4 COMP + 10 SCNR, minus 7 superseded SCEN-04–10)
+- Mapped to phases: 28
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-11*
