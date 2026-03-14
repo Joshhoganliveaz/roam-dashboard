@@ -150,4 +150,4 @@ Phases execute in numeric order: 5 -> 6 -> 7
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 7. Future Scenarios Rework | v1.1 | 0/3 | Not started | - |
+| 7. Future Scenarios Rework | 2/3 | In Progress|  | - |

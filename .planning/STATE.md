@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
-stopped_at: Completed 07-01-PLAN.md
+stopped_at: Completed 07-02-PLAN.md
 last_updated: "2026-03-14T02:10:42.507Z"
 last_activity: 2026-03-14 -- Completed 07-01 (Multi-Horizon Projection Calculations)
 progress:
   total_phases: 8
   completed_phases: 7
   total_plans: 21
-  completed_plans: 19
-  percent: 90
+  completed_plans: 20
+  percent: 95
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 7 - Future Scenarios Rework (plan 1 of 3 complete)
+**Current focus:** Phase 7 - Future Scenarios Rework (plan 2 of 3 complete)
 
 ## Current Position
 
 Phase: 7 of 7 (Future Scenarios Rework)
-Plan: 1 of 3
+Plan: 2 of 3
 Status: executing
-Last activity: 2026-03-14 -- Completed 07-01 (Multi-Horizon Projection Calculations)
+Last activity: 2026-03-14 -- Completed 07-02 (Interactive Scenario Cards with Slider & Horizons)
 
-Progress: [█████████░] 90%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
@@ -76,6 +76,9 @@ Recent decisions affecting current work:
 - v1.1: Rate lock callout triple-gated: negative appreciation AND rate gap >= 0.5%
 - v1.1: Kept SP500Callout.tsx and RentVsOwn.tsx as dead code for reference (not deleted)
 - [Phase 07]: Refi in Hold & Rent recalculates remaining balance at marketRate for new 30yr term
+- [Phase 07]: ScenarioCards owns slider state via useState, not lifted to HomeownerPage
+- [Phase 07]: ScenarioCard uses children prop for custom expanded content (rate lock, sell-to-buy edu)
+- [Phase 07]: HorizonTabs stopPropagation prevents card collapse on tab click
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T02:10:40.762Z
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-03-14T02:15:24Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None
