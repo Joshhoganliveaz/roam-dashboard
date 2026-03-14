@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-14T00:37:35.965Z"
-last_activity: 2026-03-14 -- Completed Plan 01 (Leverage ROI + Rate Lock Calculations)
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-03-14T01:32:28.896Z"
+last_activity: 2026-03-14 -- Completed Plan 02 (Investment Comparison Component + Narrative Cleanup)
 progress:
   total_phases: 8
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 18
-  completed_plans: 17
-  percent: 60
+  completed_plans: 18
+  percent: 94
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 ## Current Position
 
 Phase: 6 of 7 (Investment Comparison + Narrative Cleanup)
-Plan: 1 of 2 (complete)
-Status: Executing
-Last activity: 2026-03-14 -- Completed Plan 01 (Leverage ROI + Rate Lock Calculations)
+Plan: 2 of 2 (complete)
+Status: Phase 6 Complete
+Last activity: 2026-03-14 -- Completed Plan 02 (Investment Comparison Component + Narrative Cleanup)
 
-Progress: [█████████░] 94%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -71,6 +71,10 @@ Recent decisions affecting current work:
 - v1.1: FRED API MORTGAGE30US for current rate with DEFAULTS.interestRate fallback
 - v1.1: LeverageROI returns 0 for zero/negative down payment (cash purchase guard)
 - v1.1: calcRateLockSavings reuses calcMortgagePayment for consistent amortization math
+- v1.1: S&P one-liner conditional on home outperforming S&P (hidden when S&P wins)
+- v1.1: Rent contrast conditional on sub-24-month ownership only
+- v1.1: Rate lock callout triple-gated: negative appreciation AND rate gap >= 0.5%
+- v1.1: Kept SP500Callout.tsx and RentVsOwn.tsx as dead code for reference (not deleted)
 
 ### Pending Todos
 
@@ -84,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T00:37:00.000Z
-Stopped at: Completed 06-01-PLAN.md
-Resume file: .planning/phases/06-investment-comparison-narrative-cleanup/06-01-SUMMARY.md
+Last session: 2026-03-14T01:30:52Z
+Stopped at: Completed 06-02-PLAN.md
+Resume file: .planning/phases/06-investment-comparison-narrative-cleanup/06-02-SUMMARY.md

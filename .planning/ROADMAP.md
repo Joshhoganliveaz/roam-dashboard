@@ -82,7 +82,7 @@ Plans:
 **Milestone Goal:** Transform the page from a static snapshot into an interactive, data-rich experience -- real market data, homeowner-driven value selection, deeper scenario projections, and a merged investment comparison story.
 
 - [ ] **Phase 5: Data Foundation** - Schema migration, value range selector with condition picker, Cromford appreciation chart with real market data, cascading recalculation architecture
-- [ ] **Phase 6: Investment Comparison + Narrative Cleanup** - Merged Investment Comparison section replacing separate S&P and Rent vs Own, rate lock callout, information cliffs removed across all sections
+- [x] **Phase 6: Investment Comparison + Narrative Cleanup** - Merged Investment Comparison section replacing separate S&P and Rent vs Own, rate lock callout, information cliffs removed across all sections (completed 2026-03-14)
 - [ ] **Phase 7: Future Scenarios Rework** - 5/10/15yr projections, market rate slider, enhanced scenario details, and 4th combo scenario
 
 ## Phase Details
@@ -144,5 +144,5 @@ Phases execute in numeric order: 5 -> 6 -> 7
 | 3. Narrative Experience | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
-| 6. Investment Comparison | v1.1 | 0/2 | Planning | - |
+| 6. Investment Comparison | 2/2 | Complete   | 2026-03-14 | - |
 | 7. Future Scenarios Rework | v1.1 | 0/TBD | Not started | - |

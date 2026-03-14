@@ -69,7 +69,7 @@
 
 ### Investment Comparison
 
-- [ ] **INVS-01**: Single "Investment Comparison" section replaces separate S&P 500 and Rent vs Own sections
+- [x] **INVS-01**: Single "Investment Comparison" section replaces separate S&P 500 and Rent vs Own sections
 - [x] **INVS-02**: Section shows three key numbers: home ROI with leverage, S&P alternative return on down payment, and rent drag subtracted from S&P path
 - [x] **INVS-03**: Personalized leverage callout using their specific numbers (e.g., "$25K down controlling a $500K asset = 165% return")
 - [x] **INVS-04**: Rate lock advantage callout quantifying annual savings vs current market rates
@@ -83,7 +83,7 @@
 - [ ] **SCEN-08**: Enhanced Hold & Rent: projected cash flow and appreciation at 5/10/15yr, rent growth vs fixed mortgage gap widening
 - [ ] **SCEN-09**: Enhanced Move-Up: education on sell-to-buy paths (sell first, bridge loan, rent-back, simultaneous close)
 - [ ] **SCEN-10**: Enhanced Equity Play: HELOC potential with rate-adjusted costs from market rate slider
-- [ ] **SCEN-11**: Information cliffs removed — full information so homeowners feel empowered, conversations happen when ready
+- [x] **SCEN-11**: Information cliffs removed — full information so homeowners feel empowered, conversations happen when ready
 
 ## v2 Requirements
 
@@ -155,11 +155,11 @@
 | CROM-02 | Phase 5 | Complete |
 | CROM-03 | Phase 5 | Complete |
 | CROM-04 | Phase 5 | Complete |
-| INVS-01 | Phase 6 | Pending |
+| INVS-01 | Phase 6 | Complete |
 | INVS-02 | Phase 6 | Complete |
 | INVS-03 | Phase 6 | Complete |
 | INVS-04 | Phase 6 | Complete |
-| SCEN-11 | Phase 6 | Pending |
+| SCEN-11 | Phase 6 | Complete |
 | SCEN-04 | Phase 7 | Pending |
 | SCEN-05 | Phase 7 | Pending |
 | SCEN-06 | Phase 7 | Pending |
