@@ -87,12 +87,12 @@
 
 ### Page Flow & Hook (Phase 7)
 
-- [ ] **PAGE-01**: Weekly paycheck ("Your home earned $X this week") is the hero hook, visible immediately on page load
-- [ ] **PAGE-02**: Page sections reordered: Hero+hook → home value+equity → scenarios → appreciation chart → investment comparison → mortgage details → CTA
+- [x] **PAGE-01**: Weekly paycheck ("Your home earned $X this week") is the hero hook, visible immediately on page load
+- [x] **PAGE-02**: Page sections reordered: Hero+hook → home value+equity → scenarios → appreciation chart → investment comparison → mortgage details → CTA
 - [x] **PAGE-03**: Simple CTA at bottom with Josh & Jacqui contact info, photo, and "Let's talk about your options"
-- [ ] **PAGE-04**: "See a similar home" external link removed — no links that take homeowner off the page
+- [x] **PAGE-04**: "See a similar home" external link removed — no links that take homeowner off the page
 - [x] **PAGE-05**: Cromford chart date labels readable on mobile (spacing fix, no overlapping text)
-- [ ] **PAGE-06**: Net proceeds removed from standalone section — lives only in Sell & Move Up scenario card (Phase 9)
+- [x] **PAGE-06**: Net proceeds removed from standalone section — lives only in Sell & Move Up scenario card (Phase 9)
 
 ### Condition Picker & Comp Context (Phase 8)
 
@@ -190,12 +190,12 @@
 | INVS-04 | Phase 6 | Complete |
 | SCEN-11 | Phase 6 | Complete |
 | SCEN-04–10 | — | Superseded by PAGE/COMP/SCNR requirements |
-| PAGE-01 | Phase 7 | Pending |
-| PAGE-02 | Phase 7 | Pending |
+| PAGE-01 | Phase 7 | Complete |
+| PAGE-02 | Phase 7 | Complete |
 | PAGE-03 | Phase 7 | Complete |
-| PAGE-04 | Phase 7 | Pending |
+| PAGE-04 | Phase 7 | Complete |
 | PAGE-05 | Phase 7 | Complete |
-| PAGE-06 | Phase 7 | Pending |
+| PAGE-06 | Phase 7 | Complete |
 | COMP-01 | Phase 8 | Pending |
 | COMP-02 | Phase 8 | Complete |
 | COMP-03 | Phase 8 | Complete |

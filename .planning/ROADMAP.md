@@ -83,7 +83,7 @@ Plans:
 
 - [ ] **Phase 5: Data Foundation** - Schema migration, value range selector with condition picker, Cromford appreciation chart with real market data, cascading recalculation architecture
 - [x] **Phase 6: Investment Comparison + Narrative Cleanup** - Merged Investment Comparison section replacing separate S&P and Rent vs Own, rate lock callout, information cliffs removed across all sections (completed 2026-03-14)
-- [ ] **Phase 7: Page Flow & Hook Rework** - Weekly paycheck hook to hero position, page section reorder (scenarios up, data down), simple CTA, Cromford mobile fix, remove external links
+- [x] **Phase 7: Page Flow & Hook Rework** - Weekly paycheck hook to hero position, page section reorder (scenarios up, data down), simple CTA, Cromford mobile fix, remove external links (completed 2026-03-14)
 - [ ] **Phase 8: Condition Picker & Comp Context** - Reframe condition picker as neighbor comparison, inline comp data from CSV, tighter value range
 - [ ] **Phase 9: Scenario Cards Rework** - Four new scenarios (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental), market rate slider, dynamic date horizons, mini mortgage calculators, effective interest rate
 
@@ -182,6 +182,6 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8 -> 9
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 7. Page Flow & Hook Rework | v1.1 | 0/2 | Planned | - |
+| 7. Page Flow & Hook Rework | 2/2 | Complete   | 2026-03-14 | - |
 | 8. Condition Picker & Comp Context | v1.1 | 0/0 | Not started | - |
 | 9. Scenario Cards Rework | v1.1 | 0/3 | Planned | - |
