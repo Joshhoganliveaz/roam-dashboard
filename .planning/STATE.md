@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
-stopped_at: Completed 07-01-PLAN.md
-last_updated: "2026-03-14T14:12:37.304Z"
+stopped_at: Completed 07.1-01-PLAN.md
+last_updated: "2026-03-14T15:54:17.766Z"
 last_activity: 2026-03-14 -- Completed 07-01 (Hero Paycheck Hook & Page Reorder)
 progress:
-  total_phases: 10
+  total_phases: 11
   completed_phases: 9
-  total_plans: 25
-  completed_plans: 24
+  total_plans: 27
+  completed_plans: 25
   percent: 96
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 7 - Future Scenarios Rework (07-01 complete)
+**Current focus:** Phase 7.1 - Hero Section Redesign (07.1-01 complete)
 
 ## Current Position
 
-Phase: 7 of 10 (Future Scenarios Rework)
-Plan: 1 of 2
+Phase: 7.1 of 10 (Hero Section Redesign)
+Plan: 1 of 1
 Status: executing
-Last activity: 2026-03-14 -- Completed 07-01 (Hero Paycheck Hook & Page Reorder)
+Last activity: 2026-03-14 -- Completed 07.1-01 (Premium Hero with Frosted Glass Panels)
 
-Progress: [██████████] 96%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [██████████] 96%
 | Phase 09 P02 | 6min | 2 tasks | 8 files |
 | Phase 09 P03 | 4min | 2 tasks | 4 files |
 | Phase 07 P01 | 1min | 2 tasks | 3 files |
+| Phase 07.1 P01 | 3min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,13 @@ Recent decisions affecting current work:
 - [Phase 09]: ComboScenario file kept as dead code per convention, only import removed from ScenarioCards
 - [Phase 07]: PaycheckHook as separate component below hero with charcoal background for readability (user design feedback)
 - [Phase 07]: HeroSection kept clean: photo + name + address + branding only, no number overlays
+- [Phase 07.1]: Playfair Display 700 via next/font/google for hero stat, frosted glass panels with webkit backdrop-filter prefix
+- [Phase 07.1]: Mobile logo uses text fallback with text-shadow; desktop uses img inside frosted panel
+- [Phase 07.1]: PaycheckHook deleted -- earningsPerWeek absorbed into HeroSection frosted glass stat panel
+
+### Roadmap Evolution
+
+- Phase 07.1 inserted after Phase 07: Hero Section Redesign (URGENT) — premium frosted-glass hero with Playfair Display stat, full-bleed photo, responsive mobile layout. Spec at .planning/phases/07.1-hero-section-redesign/HERO-REDESIGN-SPEC.md
 
 ### Pending Todos
 
@@ -116,6 +124,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T14:10:10.859Z
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-03-14T15:54:17.764Z
+Stopped at: Completed 07.1-01-PLAN.md
 Resume file: None

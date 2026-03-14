@@ -202,6 +202,6 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 07.1 -> 8 -> 9
 | 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
 | 7. Page Flow & Hook Rework | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 07.1 Hero Section Redesign | v1.1 | 0/2 | Planned | - |
+| 07.1 Hero Section Redesign | 1/2 | In Progress|  | - |
 | 8. Condition Picker & Comp Context | v1.1 | 0/0 | Not started | - |
 | 9. Scenario Cards Rework | v1.1 | 0/3 | Planned | - |

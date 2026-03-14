@@ -96,13 +96,13 @@
 
 ### Hero Section Redesign (Phase 07.1)
 
-- [ ] **HERO-01**: Hero renders full-bleed home photo with warm gradient overlay, gradient fallback when no photo
-- [ ] **HERO-02**: Desktop layout: two frosted glass panels — top-left (logo + name + address), bottom-right (weekly paycheck stat)
-- [ ] **HERO-03**: Mobile layout: logo floats top-left, single full-width frosted panel at bottom with name, gold divider, and stat
-- [ ] **HERO-04**: Weekly paycheck stat displayed in Playfair Display 700 at 112px (desktop) / 76px (mobile) in gold (#C9953E)
-- [ ] **HERO-05**: Stat panel hidden when earningsPerWeek <= 0 — hero shows photo + gradient + name only
-- [ ] **HERO-06**: Live AZ Co white logo renders in hero section (resized PNG from brand assets)
-- [ ] **HERO-07**: PaycheckHook component deleted — stat absorbed into HeroSection, HomeownerPage no longer imports it
+- [x] **HERO-01**: Hero renders full-bleed home photo with warm gradient overlay, gradient fallback when no photo
+- [x] **HERO-02**: Desktop layout: two frosted glass panels — top-left (logo + name + address), bottom-right (weekly paycheck stat)
+- [x] **HERO-03**: Mobile layout: logo floats top-left, single full-width frosted panel at bottom with name, gold divider, and stat
+- [x] **HERO-04**: Weekly paycheck stat displayed in Playfair Display 700 at 112px (desktop) / 76px (mobile) in gold (#C9953E)
+- [x] **HERO-05**: Stat panel hidden when earningsPerWeek <= 0 — hero shows photo + gradient + name only
+- [x] **HERO-06**: Live AZ Co white logo renders in hero section (resized PNG from brand assets)
+- [x] **HERO-07**: PaycheckHook component deleted — stat absorbed into HeroSection, HomeownerPage no longer imports it
 
 ### Condition Picker & Comp Context (Phase 8)
 
@@ -206,13 +206,13 @@
 | PAGE-04 | Phase 7 | Complete |
 | PAGE-05 | Phase 7 | Complete |
 | PAGE-06 | Phase 7 | Complete |
-| HERO-01 | Phase 07.1 | Pending |
-| HERO-02 | Phase 07.1 | Pending |
-| HERO-03 | Phase 07.1 | Pending |
-| HERO-04 | Phase 07.1 | Pending |
-| HERO-05 | Phase 07.1 | Pending |
-| HERO-06 | Phase 07.1 | Pending |
-| HERO-07 | Phase 07.1 | Pending |
+| HERO-01 | Phase 07.1 | Complete |
+| HERO-02 | Phase 07.1 | Complete |
+| HERO-03 | Phase 07.1 | Complete |
+| HERO-04 | Phase 07.1 | Complete |
+| HERO-05 | Phase 07.1 | Complete |
+| HERO-06 | Phase 07.1 | Complete |
+| HERO-07 | Phase 07.1 | Complete |
 | COMP-01 | Phase 8 | Pending |
 | COMP-02 | Phase 8 | Complete |
 | COMP-03 | Phase 8 | Complete |
