@@ -109,10 +109,10 @@
 - [x] **SCNR-04**: Stay & Build Wealth shows home value, mortgage balance, and equity at each horizon
 - [x] **SCNR-05**: Sell & Move Up shows net proceeds ("cost to sell*" with "(title fees & broker fees)"), mini mortgage calculator (30yr, adjustable rate, 5/10/15/20% down payment presets)
 - [x] **SCNR-06**: Sell & Move Up uses 6% commission + 1% seller closing costs
-- [ ] **SCNR-07**: Stay & Invest shows HELOC available, monthly cost, rental investment framing, tax advantages callout (depreciation for W-2 earners), CTAs to STR Analyzer and Josh & Jacqui
-- [ ] **SCNR-08**: Move & Keep as Rental shows rental income, cash flow, effective interest rate as hero metric, mini mortgage calculator
+- [x] **SCNR-07**: Stay & Invest shows HELOC available, monthly cost, rental investment framing, tax advantages callout (depreciation for W-2 earners), CTAs to STR Analyzer and Josh & Jacqui
+- [x] **SCNR-08**: Move & Keep as Rental shows rental income, cash flow, effective interest rate as hero metric, mini mortgage calculator
 - [x] **SCNR-09**: Effective interest rate: the rate that would produce the out-of-pocket payment (new mortgage minus rental cash flow) on the same loan amount
-- [ ] **SCNR-10**: Each scenario has contextual CTAs (lender connect, STR Analyzer, talk to Josh & Jacqui about investing)
+- [x] **SCNR-10**: Each scenario has contextual CTAs (lender connect, STR Analyzer, talk to Josh & Jacqui about investing)
 
 ## v2 Requirements
 
@@ -206,10 +206,10 @@
 | SCNR-04 | Phase 9 | Complete |
 | SCNR-05 | Phase 9 | Complete |
 | SCNR-06 | Phase 9 | Complete |
-| SCNR-07 | Phase 9 | Pending |
-| SCNR-08 | Phase 9 | Pending |
+| SCNR-07 | Phase 9 | Complete |
+| SCNR-08 | Phase 9 | Complete |
 | SCNR-09 | Phase 9 | Complete |
-| SCNR-10 | Phase 9 | Pending |
+| SCNR-10 | Phase 9 | Complete |
 
 **v1.0 Coverage:**
 - v1.0 requirements: 31 total
