@@ -4,13 +4,13 @@ milestone: v1.1
 milestone_name: Enhanced Intelligence
 status: executing
 stopped_at: Completed 07-02-PLAN.md
-last_updated: "2026-03-14T02:10:42.507Z"
-last_activity: 2026-03-14 -- Completed 07-01 (Multi-Horizon Projection Calculations)
+last_updated: "2026-03-14T05:01:25.426Z"
+last_activity: 2026-03-14 -- Completed 07-02 (Interactive Scenario Cards with Slider & Horizons)
 progress:
-  total_phases: 8
+  total_phases: 10
   completed_phases: 7
-  total_plans: 21
-  completed_plans: 20
+  total_plans: 20
+  completed_plans: 19
   percent: 95
 ---
 
@@ -49,6 +49,7 @@ Progress: [██████████] 95%
 | 3. Narrative Experience | 2 | ~6 min | ~3.0 min |
 | 4. Documentation Cleanup | 1 | ~3 min | ~3.0 min |
 | 5. Data Foundation | 3/5 | ~14 min | ~4.7 min |
+| Phase 07 P02 | 1min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,8 @@ Recent decisions affecting current work:
 - [Phase 07]: ScenarioCards owns slider state via useState, not lifted to HomeownerPage
 - [Phase 07]: ScenarioCard uses children prop for custom expanded content (rate lock, sell-to-buy edu)
 - [Phase 07]: HorizonTabs stopPropagation prevents card collapse on tab click
+- [Phase 07]: Inline tel/sms links instead of button CTA for warm SB7 guide closing
+- [Phase 07]: Rotated XAxis labels (-45deg) + reduced interval + bottom margin for mobile Cromford chart readability
 
 ### Pending Todos
 
@@ -92,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T02:15:24Z
+Last session: 2026-03-14T05:01:25.424Z
 Stopped at: Completed 07-02-PLAN.md
 Resume file: None
