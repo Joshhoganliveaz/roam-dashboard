@@ -2,132 +2,52 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Enhanced Intelligence
-status: completed
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-03-15T01:52:46.859Z"
-last_activity: 2026-03-15 -- Completed 11-01 (Hero Logo Fix & Dead Code Cleanup)
+status: milestone_complete
+stopped_at: v1.1 milestone archived
+last_updated: "2026-03-15"
+last_activity: 2026-03-15 -- v1.1 milestone completed and archived
 progress:
   total_phases: 13
-  completed_phases: 11
-  total_plans: 29
+  completed_phases: 13
+  total_plans: 27
   completed_plans: 27
-  percent: 93
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-13)
+See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** Show homeowners the full journey of their home -- where they've been, where they are, and where they could go -- so they feel empowered about their investment and keep Live AZ Co top-of-mind as their guide.
-**Current focus:** Phase 11 - Hero Logo & Dead Code Cleanup (11-01 complete)
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 11 of 11 (Hero Logo & Dead Code Cleanup)
-Plan: 1 of 1
-Status: complete
-Last activity: 2026-03-15 -- Completed 11-01 (Hero Logo Fix & Dead Code Cleanup)
+Milestone: v1.1 Enhanced Intelligence — SHIPPED 2026-03-15
+Status: milestone_complete
+Last activity: 2026-03-15 -- v1.1 milestone completed and archived
 
-Progress: [█████████░] 93%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
-**Velocity:**
-- Total plans completed: 13 (v1.0)
-- Average duration: ~2.8 min
-- Total execution time: ~0.60 hours
-
-**By Phase (v1.0):**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1. Foundation + Admin | 3 | ~8 min | ~2.7 min |
-| 2. Core Homeowner Page | 3 | ~9 min | ~3.0 min |
-| 2.1 Financial Data Audit | 4 | ~10 min | ~2.5 min |
-| 3. Narrative Experience | 2 | ~6 min | ~3.0 min |
-| 4. Documentation Cleanup | 1 | ~3 min | ~3.0 min |
-| 5. Data Foundation | 3/5 | ~14 min | ~4.7 min |
-| Phase 07 P02 | 1min | 2 tasks | 3 files |
-| Phase 09 P02 | 6min | 2 tasks | 8 files |
-| Phase 09 P03 | 4min | 2 tasks | 4 files |
-| Phase 07 P01 | 1min | 2 tasks | 3 files |
-| Phase 07.1 P01 | 3min | 2 tasks | 7 files |
-| Phase 10 P01 | 3min | 2 tasks | 6 files |
-| Phase 11 P01 | 1min | 2 tasks | 6 files |
+**v1.0:** 5 phases, 13 plans, ~0.60 hours
+**v1.1:** 8 phases, 14 plans, 70 commits, 2 days (2026-03-13 → 2026-03-15)
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- v1.1: Pre-compute 3 condition variants server-side, switch client-side via useState (not Zustand)
-- v1.1: Cromford data via manual screenshot upload + OCR, not automated scraping
-- v1.1: Schema adds nullable value_low/value_high columns for backward compat with 200+ pages
-- v1.1: Market rate slider is the only client-side recalculation; everything else swaps pre-computed sets
-- v1.1: Combo scenario composes existing calculation functions, built last
-- v1.1: Claude Vision OCR uses raw fetch (no SDK), deterministic shaped curve seeded from purchasePrice
-- v1.1: getConditionValues clamped to -3%/+5% from baseValue (asymmetric, SB7-informed)
-- v1.1: Graceful fallback -- when valueLow/valueHigh are null, all 3 variants use currentValue
-- v1.1: Counter-roll uses Motion animate() imperative API with easeInOut for odometer feel
-- v1.1: Cascade timing: 0/500/1000/1500/2000/2500ms across 6 sections for ~3s total
-- v1.1: AppreciationChart uses key={condition} for smooth remount morph, shaped fallback replaces linear curve
-- v1.1: FRED API MORTGAGE30US for current rate with DEFAULTS.interestRate fallback
-- v1.1: LeverageROI returns 0 for zero/negative down payment (cash purchase guard)
-- v1.1: calcRateLockSavings reuses calcMortgagePayment for consistent amortization math
-- v1.1: S&P one-liner conditional on home outperforming S&P (hidden when S&P wins)
-- v1.1: Rent contrast conditional on sub-24-month ownership only
-- v1.1: Rate lock callout triple-gated: negative appreciation AND rate gap >= 0.5%
-- v1.1: Kept SP500Callout.tsx and RentVsOwn.tsx as dead code for reference (not deleted)
-- [Phase 07]: Refi in Hold & Rent recalculates remaining balance at marketRate for new 30yr term
-- [Phase 07]: ScenarioCards owns slider state via useState, not lifted to HomeownerPage
-- [Phase 07]: ScenarioCard uses children prop for custom expanded content (rate lock, sell-to-buy edu)
-- [Phase 07]: HorizonTabs stopPropagation prevents card collapse on tab click
-- [Phase 07]: Inline tel/sms links instead of button CTA for warm SB7 guide closing
-- [Phase 07]: Rotated XAxis labels (-45deg) + reduced interval + bottom margin for mobile Cromford chart readability
-- [Phase 08]: conditionCompLinks enriched with optional soldPrice, plumbed server->HomeownerPage->CurrentValue
-- [Phase 08]: soldPrice optional for backward compat with 200+ existing records
-- [Phase 09]: Card-local sell costs (6%+1%) separate from global DEFAULTS (5%+2%)
-- [Phase 09]: Bisection tolerance $0.01, 100 max iterations for calcEffectiveInterestRate
-- [Phase 09]: HorizonYears = 0|5|10|15, NEW_PROJECTION_HORIZONS includes year 0
-- [Phase 09]: StayAndBuildCard defaults to 5yr tab (not Now) per research pitfall #6
-- [Phase 09]: MiniMortgageCalculator owns all state locally via useState -- never lifted to parent
-- [Phase 09]: ScenarioCard.horizonContent uses Partial<Record<HorizonYears, ...>> for backward compat
-- [Phase 09]: SellAndMoveUpCard CTA uses inline tel link per SB7 warm pattern
-- [Phase 09]: StayAndBuildCard defaults to 5yr tab (not Now) per research pitfall #6
-- [Phase 09]: MiniMortgageCalculator owns all state locally via useState -- never lifted to parent
-- [Phase 09]: ScenarioCard.horizonContent uses Partial<Record<HorizonYears, ...>> for backward compat
-- [Phase 09]: Effective rate only shown when rental cash flow is positive -- negative cash flow gets advisory message
-- [Phase 09]: MoveAndKeepAsRentalCard defaults to Now tab -- effective rate best grounded in current numbers
-- [Phase 09]: STR Analyzer URL as placeholder constant pointing to Vercel primary deploy
-- [Phase 09]: ComboScenario file kept as dead code per convention, only import removed from ScenarioCards
-- [Phase 07]: PaycheckHook as separate component below hero with charcoal background for readability (user design feedback)
-- [Phase 07]: HeroSection kept clean: photo + name + address + branding only, no number overlays
-- [Phase 07.1]: Playfair Display 700 via next/font/google for hero stat, frosted glass panels with webkit backdrop-filter prefix
-- [Phase 07.1]: Mobile logo uses text fallback with text-shadow; desktop uses img inside frosted panel
-- [Phase 07.1]: PaycheckHook deleted -- earningsPerWeek absorbed into HeroSection frosted glass stat panel
-- [Phase 10]: HERO-06 marked PARTIAL in 07.1-VERIFICATION.md -- text logo on mobile deferred to Phase 11
-- [Phase 11]: PNG logo uses plain img with eslint-disable (not next/image) per project convention
-
-### Roadmap Evolution
-
-- Phase 07.1 inserted after Phase 07: Hero Section Redesign (URGENT) — premium frosted-glass hero with Playfair Display stat, full-bleed photo, responsive mobile layout. Spec at .planning/phases/07.1-hero-section-redesign/HERO-REDESIGN-SPEC.md
-
-### Pending Todos
-
-None yet.
+See PROJECT.md Key Decisions table for full history.
 
 ### Blockers/Concerns
 
-- Combo scenario requirements need Josh's input (HELOC vs sale proceeds for down payment)
-- Condition value mapping (original=low, updated=40th pct, remodeled=high) needs Josh's validation
-- Cromford data city coverage needs verification (which Phoenix metro cities have data)
+None active.
 
 ## Session Continuity
 
-Last session: 2026-03-15T01:50:19.445Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-03-15
+Stopped at: v1.1 milestone archived
 Resume file: None
