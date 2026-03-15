@@ -206,6 +206,10 @@ Plans:
 **Depends on**: Phase 10
 **Requirements**: HERO-06
 **Gap Closure:** Closes gaps from v1.1 audit
+**Plans**: 1 plan
+
+Plans:
+- [ ] 11-01-PLAN.md -- Replace text logo with PNG in HeroSection (HERO-06), delete 4 dead code component files
 
 ## Progress
 
@@ -225,5 +229,5 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 07.1 -> 8 -> 9 -> 10 -> 11
 | 07.1 Hero Section Redesign | v1.1 | 1/1 | Complete | 2026-03-14 |
 | 8. Condition Picker & Comp Context | v1.1 | 1/1 | Complete | 2026-03-14 |
 | 9. Scenario Cards Rework | v1.1 | 3/3 | Complete | 2026-03-15 |
-| 10. Verification & Tracking Closure | v1.1 | Complete    | 2026-03-15 | 2026-03-15 |
-| 11. Hero Logo Fix & Dead Code Cleanup | v1.1 | 0/0 | Not started | - |
+| 10. Verification & Tracking Closure | v1.1 | 1/1 | Complete | 2026-03-15 |
+| 11. Hero Logo Fix & Dead Code Cleanup | v1.1 | 0/1 | Not started | - |
