@@ -88,7 +88,7 @@ Plans:
 - [x] **Phase 8: Condition Picker & Comp Context** - Reframe condition picker as neighbor comparison, inline comp data from CSV, tighter value range
 - [x] **Phase 9: Scenario Cards Rework** - Four new scenarios (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental), market rate slider, dynamic date horizons, mini mortgage calculators, effective interest rate
 - [x] **Phase 10: Verification & Tracking Closure** - Create VERIFICATION.md for Phases 05/07.1/08, fix COMP-01/COMP-04 doc gaps, update ROADMAP progress table (completed 2026-03-15)
-- [ ] **Phase 11: Hero Logo Fix & Dead Code Cleanup** - Replace text logo with PNG in HeroSection (HERO-06), delete 4 dead code files
+- [x] **Phase 11: Hero Logo Fix & Dead Code Cleanup** - Replace text logo with PNG in HeroSection (HERO-06), delete 4 dead code files (completed 2026-03-15)
 
 ## Phase Details
 
@@ -230,4 +230,4 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 07.1 -> 8 -> 9 -> 10 -> 11
 | 8. Condition Picker & Comp Context | v1.1 | 1/1 | Complete | 2026-03-14 |
 | 9. Scenario Cards Rework | v1.1 | 3/3 | Complete | 2026-03-15 |
 | 10. Verification & Tracking Closure | v1.1 | 1/1 | Complete | 2026-03-15 |
-| 11. Hero Logo Fix & Dead Code Cleanup | v1.1 | 0/1 | Not started | - |
+| 11. Hero Logo Fix & Dead Code Cleanup | 1/1 | Complete   | 2026-03-15 | - |
