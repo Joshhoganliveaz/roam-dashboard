@@ -41,7 +41,7 @@ patterns-established:
   - "Clamped condition values: always use currentValue as base, never map directly to raw comp range"
   - "Enrichment pattern: add optional fields to existing interfaces rather than breaking changes"
 
-requirements-completed: [COMP-02, COMP-03]
+requirements-completed: [COMP-01, COMP-02, COMP-03, COMP-04]
 
 # Metrics
 duration: 5min
