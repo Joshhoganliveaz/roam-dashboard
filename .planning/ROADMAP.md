@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Foundation** - Phases 1-4 (shipped 2026-03-12)
-- 🚧 **v1.1 Enhanced Intelligence** - Phases 5-7 (in progress)
+- 🚧 **v1.1 Enhanced Intelligence** - Phases 5-11 (in progress)
 
 ## Phases
 
@@ -87,6 +87,8 @@ Plans:
 - [ ] **Phase 07.1: Hero Section Redesign (INSERTED)** - Premium frosted-glass hero with Playfair Display gold stat, full-bleed photo, responsive mobile layout, logo integration
 - [ ] **Phase 8: Condition Picker & Comp Context** - Reframe condition picker as neighbor comparison, inline comp data from CSV, tighter value range
 - [ ] **Phase 9: Scenario Cards Rework** - Four new scenarios (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental), market rate slider, dynamic date horizons, mini mortgage calculators, effective interest rate
+- [ ] **Phase 10: Verification & Tracking Closure** - Create VERIFICATION.md for Phases 05/07.1/08, fix COMP-01/COMP-04 doc gaps, update ROADMAP progress table
+- [ ] **Phase 11: Hero Logo Fix & Dead Code Cleanup** - Replace text logo with PNG in HeroSection (HERO-06), delete 4 dead code files
 
 ## Phase Details
 
@@ -187,6 +189,18 @@ Plans:
 - [ ] 09-02-PLAN.md -- HorizonTabs refactor (date-based), MiniMortgageCalculator, StayAndBuildCard, SellAndMoveUpCard
 - [ ] 09-03-PLAN.md -- StayAndInvestCard, MoveAndKeepAsRentalCard, wire all four into ScenarioCards.tsx, update tests
 
+### Phase 10: Verification & Tracking Closure
+**Goal**: All v1.1 phases have VERIFICATION.md files, all implemented requirements are tracked in SUMMARY frontmatter and REQUIREMENTS.md, and ROADMAP progress table reflects actual state
+**Depends on**: Phase 9 (all implementation phases complete)
+**Requirements**: COMP-01, COMP-04
+**Gap Closure:** Closes gaps from v1.1 audit
+
+### Phase 11: Hero Logo Fix & Dead Code Cleanup
+**Goal**: HERO-06 cosmetic gap closed (PNG logo replaces text), and dead code files from superseded components are removed
+**Depends on**: Phase 10
+**Requirements**: HERO-06
+**Gap Closure:** Closes gaps from v1.1 audit
+
 ## Progress
 
 **Execution Order:**
@@ -199,9 +213,11 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 07.1 -> 8 -> 9
 | 2.1 Financial Data Audit | v1.0 | 4/4 | Complete | 2026-03-12 |
 | 3. Narrative Experience | v1.0 | 2/2 | Complete | 2026-03-12 |
 | 4. Documentation Cleanup | v1.0 | 1/1 | Complete | 2026-03-12 |
-| 5. Data Foundation | v1.1 | 3/3 | Checkpoint | - |
+| 5. Data Foundation | v1.1 | 3/3 | Complete | 2026-03-13 |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
 | 7. Page Flow & Hook Rework | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 07.1 Hero Section Redesign | 1/2 | In Progress|  | - |
-| 8. Condition Picker & Comp Context | v1.1 | 0/0 | Not started | - |
-| 9. Scenario Cards Rework | v1.1 | 0/3 | Planned | - |
+| 07.1 Hero Section Redesign | v1.1 | 2/2 | Complete | 2026-03-14 |
+| 8. Condition Picker & Comp Context | v1.1 | 1/1 | Complete | 2026-03-14 |
+| 9. Scenario Cards Rework | v1.1 | 3/3 | Complete | 2026-03-15 |
+| 10. Verification & Tracking Closure | v1.1 | 0/0 | Not started | - |
+| 11. Hero Logo Fix & Dead Code Cleanup | v1.1 | 0/0 | Not started | - |
