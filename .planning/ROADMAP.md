@@ -81,12 +81,12 @@ Plans:
 
 **Milestone Goal:** Transform the page from a static snapshot into an interactive, data-rich experience -- real market data, homeowner-driven value selection, deeper scenario projections, and a merged investment comparison story.
 
-- [ ] **Phase 5: Data Foundation** - Schema migration, value range selector with condition picker, Cromford appreciation chart with real market data, cascading recalculation architecture
+- [x] **Phase 5: Data Foundation** - Schema migration, value range selector with condition picker, Cromford appreciation chart with real market data, cascading recalculation architecture
 - [x] **Phase 6: Investment Comparison + Narrative Cleanup** - Merged Investment Comparison section replacing separate S&P and Rent vs Own, rate lock callout, information cliffs removed across all sections (completed 2026-03-14)
 - [x] **Phase 7: Page Flow & Hook Rework** - Weekly paycheck hook to hero position, page section reorder (scenarios up, data down), simple CTA, Cromford mobile fix, remove external links (completed 2026-03-14)
-- [ ] **Phase 07.1: Hero Section Redesign (INSERTED)** - Premium frosted-glass hero with Playfair Display gold stat, full-bleed photo, responsive mobile layout, logo integration
-- [ ] **Phase 8: Condition Picker & Comp Context** - Reframe condition picker as neighbor comparison, inline comp data from CSV, tighter value range
-- [ ] **Phase 9: Scenario Cards Rework** - Four new scenarios (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental), market rate slider, dynamic date horizons, mini mortgage calculators, effective interest rate
+- [x] **Phase 07.1: Hero Section Redesign (INSERTED)** - Premium frosted-glass hero with Playfair Display gold stat, full-bleed photo, responsive mobile layout, logo integration
+- [x] **Phase 8: Condition Picker & Comp Context** - Reframe condition picker as neighbor comparison, inline comp data from CSV, tighter value range
+- [x] **Phase 9: Scenario Cards Rework** - Four new scenarios (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental), market rate slider, dynamic date horizons, mini mortgage calculators, effective interest rate
 - [ ] **Phase 10: Verification & Tracking Closure** - Create VERIFICATION.md for Phases 05/07.1/08, fix COMP-01/COMP-04 doc gaps, update ROADMAP progress table
 - [ ] **Phase 11: Hero Logo Fix & Dead Code Cleanup** - Replace text logo with PNG in HeroSection (HERO-06), delete 4 dead code files
 
@@ -102,7 +102,7 @@ Plans:
   3. Changing condition recalculates all downstream numbers on the page -- equity, net proceeds, earnings-per-week, comparisons, and scenario projections -- without a page reload
   4. Josh can upload a Cromford Report screenshot in the admin form, and the appreciation chart on the homeowner page renders real market price-per-sqft data as a branded Recharts chart
   5. When the homeowner changes condition, the appreciation curve shifts proportionally (price-per-sqft times home sqft times condition factor)
-**Plans**: 3 plans
+**Plans**: 3/3 complete
 
 Plans:
 - [x] 05-01-PLAN.md -- Types, schema, condition value mapping, server pre-computation, admin form value range fields
@@ -153,11 +153,10 @@ Plans:
   5. Stat panel is hidden when earningsPerWeek <= 0 -- hero shows photo + gradient + name only
   6. Live AZ Co white logo renders in hero from resized PNG asset
   7. PaycheckHook component is deleted and HomeownerPage passes earningsPerWeek directly to HeroSection
-**Plans**: 2 plans
+**Plans**: 1/1 complete
 
 Plans:
-- [ ] 07.1-01-PLAN.md -- Font infrastructure, logo asset, HeroSection rewrite, HomeownerPage wiring, tests
-- [ ] 07.1-02-PLAN.md -- Visual verification checkpoint (desktop, mobile, Safari, negative equity)
+- [x] 07.1-01-PLAN.md -- Font infrastructure, logo asset, HeroSection rewrite, HomeownerPage wiring, tests
 
 ### Phase 8: Condition Picker & Comp Context
 **Goal**: The condition picker feels like a natural neighbor comparison rather than a self-assessment, with real comp data providing context, and the value range is tight enough to be credible
@@ -168,7 +167,10 @@ Plans:
   2. 2-3 nearby recent sales from CSV comp data are shown inline (address, sold price, optional photo) with no external links
   3. Value range is tightened to +/-3-5% from base value so selections feel meaningful but don't wildly change downstream numbers
   4. Comp display is minimal and clean -- informs the selection without making the section feel busy
-**Plans**: 0 plans
+**Plans**: 1/1 complete
+
+Plans:
+- [x] 08-01-PLAN.md -- Clamped condition values, soldPrice enrichment, inline comp wiring
 
 ### Phase 9: Scenario Cards Rework
 **Goal**: Four scenario cards match real homeowner decision paths (Stay & Build, Sell & Move Up, Stay & Invest, Move & Keep as Rental) with a market rate slider, dynamic date horizons, mini mortgage calculators, and the effective interest rate concept
@@ -182,18 +184,22 @@ Plans:
   5. Stay & Invest shows HELOC available, monthly cost, investment property framing, tax advantages callout for W-2 earners, and CTAs to STR Analyzer and Josh & Jacqui
   6. Move & Keep as Rental shows the effective interest rate as the hero metric -- the rate that produces their actual out-of-pocket payment after rental cash flow offsets the new mortgage
   7. Each scenario has its own contextual CTA (lender connect, STR Analyzer, talk to Josh & Jacqui)
-**Plans**: 3 plans
+**Plans**: 3/3 complete
 
 Plans:
-- [ ] 09-01-PLAN.md -- Types, calcEffectiveInterestRate (TDD), date horizon utility, sell cost constants
-- [ ] 09-02-PLAN.md -- HorizonTabs refactor (date-based), MiniMortgageCalculator, StayAndBuildCard, SellAndMoveUpCard
-- [ ] 09-03-PLAN.md -- StayAndInvestCard, MoveAndKeepAsRentalCard, wire all four into ScenarioCards.tsx, update tests
+- [x] 09-01-PLAN.md -- Types, calcEffectiveInterestRate (TDD), date horizon utility, sell cost constants
+- [x] 09-02-PLAN.md -- HorizonTabs refactor (date-based), MiniMortgageCalculator, StayAndBuildCard, SellAndMoveUpCard
+- [x] 09-03-PLAN.md -- StayAndInvestCard, MoveAndKeepAsRentalCard, wire all four into ScenarioCards.tsx, update tests
 
 ### Phase 10: Verification & Tracking Closure
 **Goal**: All v1.1 phases have VERIFICATION.md files, all implemented requirements are tracked in SUMMARY frontmatter and REQUIREMENTS.md, and ROADMAP progress table reflects actual state
 **Depends on**: Phase 9 (all implementation phases complete)
 **Requirements**: COMP-01, COMP-04
 **Gap Closure:** Closes gaps from v1.1 audit
+**Plans**: 1 plan
+
+Plans:
+- [ ] 10-01-PLAN.md -- VERIFICATION.md creation for phases 05/07.1/08, COMP-01/COMP-04 tracking fixes, ROADMAP progress update
 
 ### Phase 11: Hero Logo Fix & Dead Code Cleanup
 **Goal**: HERO-06 cosmetic gap closed (PNG logo replaces text), and dead code files from superseded components are removed
@@ -204,7 +210,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 5 -> 6 -> 7 -> 07.1 -> 8 -> 9
+Phases execute in numeric order: 5 -> 6 -> 7 -> 07.1 -> 8 -> 9 -> 10 -> 11
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -216,8 +222,8 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 07.1 -> 8 -> 9
 | 5. Data Foundation | v1.1 | 3/3 | Complete | 2026-03-13 |
 | 6. Investment Comparison | v1.1 | 2/2 | Complete | 2026-03-14 |
 | 7. Page Flow & Hook Rework | v1.1 | 2/2 | Complete | 2026-03-14 |
-| 07.1 Hero Section Redesign | v1.1 | 2/2 | Complete | 2026-03-14 |
+| 07.1 Hero Section Redesign | v1.1 | 1/1 | Complete | 2026-03-14 |
 | 8. Condition Picker & Comp Context | v1.1 | 1/1 | Complete | 2026-03-14 |
 | 9. Scenario Cards Rework | v1.1 | 3/3 | Complete | 2026-03-15 |
-| 10. Verification & Tracking Closure | v1.1 | 0/0 | Not started | - |
+| 10. Verification & Tracking Closure | v1.1 | 0/1 | In progress | - |
 | 11. Hero Logo Fix & Dead Code Cleanup | v1.1 | 0/0 | Not started | - |
